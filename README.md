@@ -1,67 +1,122 @@
-# MindBridge AI — Vishnu Institute of Technology (VIT)
+# MindBridge AI — Official Institutional Website & Web Platform
+**Vishnu Institute of Technology (VIT) & Sri Vishnu Educational Society (SVES) Wellness Centre**
 
+> **"Empowering Minds. Inspiring Lives."**  
 > **"No Student Should Suffer in Silence."**
-> **Dedicated AI-Assisted Anonymous Mental Health Mobile Application for Vishnu Institute of Technology.**
 
-MindBridge AI is a tailored institutional mobile application designed exclusively for **Vishnu Institute of Technology (VIT)**. It provides a highly empathetic, secure, and fully anonymous space for students to seek immediate psychological support without fear of stigma. Simultaneously, it equips institutional counselors and psychologists with real-time AI risk triage tools and gives college administration macro-level campus wellbeing insight.
-
----
-
-## 🏛️ Three-Level Architecture
-MindBridge AI avoids unnecessary multi-tenant complexity and operates on a streamlined **Three-Level Role-Based Access Control** protocol:
-1. **🟢 Student Level**: Access to anonymous AI counseling, mood logging, daily sleep & habit tracking, interactive wellness plans, and peer peer discussion forums.
-2. **🔵 Psychologist Level (Clinical Triage)**: Real-time risk prioritization queue, clinical appointment management (`/psychologist/calendar` & `/psychologist/patients`), encrypted emergency identity reveal protocol, and case notes.
-3. **🟣 Admin Level (Institutional Oversight)**: Real-time campus wellbeing analytics across academic departments (CSE, AI&DS, ECE, EEE, MECH, CIVIL), staff personnel user management (`/admin/users`), audit trail logs, and CSV/JSON wellbeing reporting (`/admin/reports`).
+MindBridge AI is the dedicated, confidential, and anonymous institutional mental health ecosystem engineered for **Vishnu Institute of Technology (VIT)**. It bridges the gap between academic pressures and professional support, providing 24/7 AI-assisted therapy, interactive CBT studios, and direct confidential booking with certified campus counselors.
 
 ---
 
-## ✨ Core Technical Features
-- **🛡️ AES-256 Encrypted Identity Vault**: Students register with their `@vishnu.edu.in` email, which is salted, hashed, and symmetrically encrypted in an offline vault. During standard interactions, only anonymous tokens (e.g., *Blue Sparrow #4821*) are displayed.
-- **🚨 Multi-Factor Burnout & Risk Engine**: Synthesizes daily habit adherence, sleep duration, mood check-in sentiment, and natural language chat biomarkers to dynamically predict academic burnout and suicidal ideation with zero false-positive fatigue.
-- **🎙️ Multilingual Native Audio Support**: Integrated Web Speech API enables native speech dictation and text-to-speech audio feedback across English, Telugu, Hindi, and Tamil to accommodate all VIT students.
-- **⚡ Real-Time WebSockets Alert Triage**: Instantaneous background clinical alerting when an acute critical biomarker (e.g., severe self-harm ideation) is expressed during an AI counseling session.
+## 🌐 Web Platform Overview
+
+This repository hosts the **official MindBridge web platform**, built with **100% feature parity** to the native mobile APK (`MindBridge-VIT-v1.7.apk`), adding a high-impact institutional landing page, dual desktop/mobile responsive navigation, and direct APK distribution.
+
+### 🌟 Key Web Features
+- **🏛️ Institutional Landing Page (`/`)**: Features official Vishnu Institute of Technology branding, SVES Wellness Centre insignia, and direct 24/7 emergency hotline (*Tele-MANAS: 14416*).
+- **🛡️ Interactive Zero-PII Anonymity Demo**: Live interactive generator demonstrating how student `@vishnu.edu.in` emails are salted, hashed, and never displayed to peers or faculty.
+- **👩‍⚕️ Verified SVES Counselors Showcase (`#counselors`)**: Complete profiles of all 7 certified campus psychologists across SVES institutions with credentials, degrees, and bio modals:
+  1. **Ram Prudhvi Teja (CRN5259951)** — Senior Wellness Counsellor • Author • Mind-Body Therapist (*VIT*)
+  2. **Devika Babu** — Wellness Counsellor (*Vishnu Women's University*)
+  3. **Angel Mariam Benny** — Wellness Counsellor (*Vishnu Dental College*)
+  4. **Akshitha Selvaraj** — Wellness Counsellor (*Shri Vishnu College of Pharmacy*)
+  5. **Gadi Navya Sri** — Wellness Counsellor (*B.V. Raju College*)
+  6. **Sahithi Challa** — Wellness Counsellor • Forensic Psychologist (*Vishnu School*)
+  7. **Bantu Anumitha** — Wellness Counsellor (*Smt. B. Seetha Polytechnic College*)
+- **🧘 4-7-8 Quick Calm Breathwork Widget**: Embedded breathing pause visualizer right on the landing page for instant anxiety reduction.
+- **📲 Direct APK Download (`/MindBridge-VIT-v1.7.apk`)**: Direct download button and mobile QR code for Android installation on campus.
+
+---
+
+## 🏛️ The Three Unified Portals
+
+1. **🟢 Student Sanctuary**:
+   - **AI Therapy Companion**: Real-time conversational CBT counseling via WebSockets.
+   - **CBT Thought Studio & Breathwork**: Cognitive reframing and Calm Canopy audio.
+   - **Daily Trackers**: Sleep & Mood tracker with multi-factor burnout risk predictions.
+   - **Appointments**: Multi-state confidential booking with campus psychologists.
+   - **Peer Community**: Anonymous discussion forums and hybrid daily flashcards.
+2. **🔵 Clinical Psychologist Suite**:
+   - **Real-Time Risk Radar**: Prioritized clinical triage queue ranking student distress.
+   - **SOAP Clinical Notes**: Standardized clinical documentation system.
+   - **Session Schedule**: Appointment approval and availability calendar.
+   - **Emergency Identity Reveal**: Strict multi-key cryptographic protocol for crises.
+3. **🟣 Institutional Administration**:
+   - **Branch Heatmaps**: Wellbeing analytics by academic branch (CSE, AI&DS, ECE, EEE, MECH, CIVIL).
+   - **Predictive Burnout Engine**: Detects department exam stress spikes early.
+   - **Accreditation Reports**: Exportable CSV & JSON audit summaries.
 
 ---
 
 ## 🛠️ Technology Stack
-- **Mobile UI (Frontend)**: React 19, TypeScript, Tailwind CSS, Vite, Capacitor 8 (Android Native / Mobile PWA), Lucide Icons, Web Speech API.
-- **Institutional API (Backend)**: FastAPI (Python 3.11+), SQLAlchemy ORM, Uvicorn, SlowAPI Rate Limiting, Pydantic v2.
-- **Database Engine**: PostgreSQL 15 (Production via Docker Compose) / SQLite (Local standalone server).
-- **Security & Storage**: BCrypt Password Hashing, JWT RBAC Claims, Local Volume Server Blob Storage (`/uploads`), strict CORS & OWASP headers.
+
+- **Frontend**: React 19, TypeScript, Tailwind CSS, Vite, Lucide Icons, Web Speech API.
+- **Backend**: FastAPI (Python 3.11+), SQLAlchemy, WebSockets, deployed live on Render (`https://mind-bridge-cc9m.onrender.com`).
+- **Cryptographic Security**: AES-256 Offline Vault, BCrypt, JWT RBAC Claims, zero-PII storage.
+- **Deployment Targets**: Vercel (`vercel.json`), Netlify (`_redirects`), Docker (`Dockerfile.frontend`).
 
 ---
 
 ## 🚀 Getting Started Locally
 
-### 1. Ready-To-Use Demo Accounts
-When initialized, the system automatically seeds default institutional credentials for testing across all three levels:
-| Role | Email Login | Password |
-| :--- | :--- | :--- |
-| **Institutional Admin** | `admin@vishnu.edu.in` | `Admin@VIT2024` |
-| **Senior Psychologist** | `ram.sir@vishnu.edu.in` | `Psych@VIT2024` |
-| **Staff Counselor** | `dr.sarah.mehta@vishnu.edu.in` | `Psych@VIT2024` |
-| **Student Level** | Register anytime via mobile UI | Selected at signup |
+### Prerequisites
+- Node.js 18+ (Node 22 recommended)
+- npm or pnpm
 
-### 2. Windows Quick Start (Batch Scripts)
-1. Run **`install.bat`** to generate the Python virtual environment and install all Node and Python dependencies.
-2. Run **`start.bat`** to concurrently launch the FastAPI server (`http://localhost:8000`) and Vite mobile simulator dev server (`http://localhost:5173`).
-
-### 3. Docker Compose Server Deployment
-To run the full stack (PostgreSQL Database + FastAPI Server + Static Nginx Frontend) on the VIT institutional server:
+### 1. Installation
 ```bash
-docker-compose up --build -d
+git clone https://github.com/yochitcheedella/mindbridge-website.git
+cd mindbridge-website
+npm install
 ```
-* **Frontend Access**: `http://localhost` (Port 80)
-* **API Documentation**: `http://localhost:8000/docs`
+
+### 2. Run Development Server
+```bash
+npm run dev
+```
+Open **`http://localhost:5173`** in your browser.
+
+### 3. Production Build
+```bash
+npm run build
+```
+The optimized production bundle will be generated in `dist/`.
 
 ---
 
-## 🧪 Verified Automated Testing
-All core business logic, role-based access control, cryptographic vaults, and immutable database audit trails (SRS Section 16) are completely verified using an isolated in-memory testing engine (`sqlite:///:memory:`):
-```bash
-venv\Scripts\pytest.exe -v test_admin_analytics.py test_burnout_predictor.py test_community.py test_encryption.py test_storage_multi_role.py test_risk_triage_queue.py test_appointments.py test_emergency_sos.py test_auth_password_reset.py test_ai_recovery_plans.py
-```
-* **100% Pass Rate**: All 10 verification test suites execute cleanly without modifying or polluting development server records.
+## 🔑 Demo & Testing Accounts
+
+The web platform is pre-configured to authenticate against the live Render cloud API:
+
+| Role | Email | Password | Access Path |
+| :--- | :--- | :--- | :--- |
+| **Institutional Admin** | `admin@vishnu.edu.in` | `Admin@VIT2024` | `/admin/dashboard` |
+| **Senior Psychologist** | `prudhvi.v@vishnu.edu.in` | `Psych@VIT2024` | `/psychologist/dashboard` |
+| **Visiting Counselor** | `ram.sir@vishnu.edu.in` | `Psych@VIT2024` | `/psychologist/dashboard` |
+| **Student Level** | Register anytime via web UI | Chosen at signup | `/student/home` |
 
 ---
-*Prepared as an Institutional AI Mental Health & Counseling Solution for Vishnu Institute of Technology (VIT).*
+
+## ☁️ Deployment
+
+### 1. Deploy on Vercel (1-Click)
+- Import repository `yochitcheedella/mindbridge-website` on [Vercel](https://vercel.com).
+- Framework Preset: **Vite**.
+- Build Command: `npm run build`.
+- Output Directory: `dist`.
+- `vercel.json` is already pre-configured with SPA route rewrites.
+
+### 2. Deploy on Netlify
+- Drag and drop `dist/` or link repository.
+- `public/_redirects` is already pre-configured for SPA routing.
+
+---
+
+## 📞 Campus Emergency Helplines
+
+- **Tele-MANAS (National Toll-Free 24/7)**: `14416`
+- **VIT Campus Health Centre**: `08816-250815`
+- **SVES Security & Campus Ambulance**: `08816-250800`
+
+---
+*© 2026 Vishnu Institute of Technology (VIT). Powered by SVES Wellness Centre.*

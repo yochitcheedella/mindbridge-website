@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MindBridge AI | Student Portal</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Manrope:wght@520;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-primary-fixed": "#111548",
+                    "on-error-container": "#ffdad6",
+                    "tertiary-fixed": "#ffdbc8",
+                    "interactive-primary": "#5e6bff",
+                    "surface-container-low": "#1b1b1f",
+                    "on-secondary-fixed-variant": "#004f57",
+                    "surface-bright": "#39393d",
+                    "primary-container": "#bec2ff",
+                    "on-tertiary-fixed-variant": "#6c3a17",
+                    "secondary": "#50d8e9",
+                    "surface-variant": "#353438",
+                    "panel-low": "#101112",
+                    "surface-container": "#201f21",
+                    "surface-dim": "#131317",
+                    "tertiary-container": "#ffb689",
+                    "inverse-on-surface": "#303034",
+                    "surface-container-high": "#2a292d",
+                    "secondary-fixed": "#91f1ff",
+                    "panel-high": "#191a1c",
+                    "canvas-primary": "#080809",
+                    "outline": "#91909a",
+                    "secondary-container": "#00b1c1",
+                    "on-tertiary-fixed": "#321300",
+                    "on-surface": "#e4e1e6",
+                    "primary": "#e0e0ff",
+                    "on-primary": "#272b5e",
+                    "on-error": "#690005",
+                    "on-tertiary": "#502403",
+                    "on-secondary": "#00363c",
+                    "inverse-primary": "#555a90",
+                    "tertiary": "#ffdbc7",
+                    "canvas-global": "#070708",
+                    "outline-variant": "#46464f",
+                    "on-background": "#e4e1e6",
+                    "on-surface-variant": "#c7c5d0",
+                    "error": "#ffb4ab",
+                    "tertiary-fixed-dim": "#ffb68a",
+                    "on-primary-container": "#494e83",
+                    "secondary-fixed-dim": "#50d8e9",
+                    "surface": "#131314",
+                    "primary-fixed": "#e0e0ff",
+                    "primary-fixed-dim": "#bec2ff",
+                    "surface-tint": "#bec2ff",
+                    "surface-container-lowest": "#0e0e11",
+                    "on-secondary-container": "#003e44",
+                    "border-internal": "#1b1c1e",
+                    "border-structural": "#232426",
+                    "background": "#131317",
+                    "error-container": "#93000a",
+                    "on-tertiary-container": "#794521",
+                    "inverse-surface": "#e4e1e6",
+                    "on-secondary-fixed": "#001f23",
+                    "surface-container-highest": "#353438",
+                    "on-primary-fixed-variant": "#3e4276"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "margin-safe": "32px",
+                    "md": "16px",
+                    "base": "4px",
+                    "gutter": "20px",
+                    "xl": "40px",
+                    "xs": "4px",
+                    "lg": "24px",
+                    "sm": "8px"
+            },
+            "fontFamily": {
+                    "h2": ["Manrope"],
+                    "h3": ["Manrope"],
+                    "body-lg": ["Inter"],
+                    "h4": ["Manrope"],
+                    "mono-data": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "h1": ["Manrope"],
+                    "body-md": ["Inter"]
+            },
+            "fontSize": {
+                    "h2": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.05em", "fontWeight": "520"}],
+                    "h3": ["24px", {"lineHeight": "1.2", "letterSpacing": "-0.04em", "fontWeight": "520"}],
+                    "body-lg": ["16px", {"lineHeight": "1.6", "letterSpacing": "0em", "fontWeight": "400"}],
+                    "h4": ["18px", {"lineHeight": "1.4", "letterSpacing": "-0.02em", "fontWeight": "520"}],
+                    "mono-data": ["13px", {"lineHeight": "1", "letterSpacing": "-0.01em", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "1", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                    "h1": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.05em", "fontWeight": "520"}],
+                    "body-md": ["14px", {"lineHeight": "1.5", "letterSpacing": "0em", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #080809;
+            color: #e4e1e6;
+            -webkit-font-smoothing: antialiased;
+        }
+        .glass-panel {
+            background: rgba(16, 17, 18, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid #1b1c1e;
+        }
+        .inner-shimmer {
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #080809;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #232426;
+            border-radius: 2px;
+        }
+        .sparkline-path {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: dash 3s linear forwards;
+        }
+        @keyframes dash {
+            to { stroke-dashoffset: 0; }
+        }
+    </style>
+</head>
+<body class="font-body-md text-body-md overflow-hidden">
+<!-- Side Navigation Shell -->
+<aside class="h-screen w-64 fixed left-0 top-0 border-r border-border-structural bg-canvas-primary flex flex-col py-lg z-50">
+<div class="px-lg mb-xl">
+<h1 class="font-h4 text-h4 font-bold text-on-surface">MindBridge AI</h1>
+<p class="font-label-sm text-label-sm text-on-surface-variant opacity-60">Clinical Portal</p>
+</div>
+<nav class="flex-1 space-y-base px-sm">
+<!-- Active: Dashboard (Semantic mapping for portal) -->
+<a class="flex items-center gap-md px-md py-sm text-interactive-primary font-bold border-r-2 border-interactive-primary hover:bg-surface-container transition-colors duration-200 active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-body-md text-body-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors duration-200 active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="warning">warning</span>
+<span class="font-body-md text-body-md">Risk Queue</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors duration-200 active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="timeline">timeline</span>
+<span class="font-body-md text-body-md">Student Timeline</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors duration-200 active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="event">event</span>
+<span class="font-body-md text-body-md">Appointments</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors duration-200 active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="emergency">emergency</span>
+<span class="font-body-md text-body-md">Emergency Hub</span>
+</a>
+</nav>
+<div class="mt-auto px-lg pt-lg border-t border-border-internal">
+<div class="flex items-center gap-md">
+<div class="w-8 h-8 rounded-full bg-surface-container-high overflow-hidden border border-border-structural">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a clinical psychologist with a calm, empathetic expression. The lighting is soft and warm against a dark, minimalist office background, matching the professional dark-themed aesthetic of the portal. Cinematic depth of field and high-resolution details." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUgDetrtTYndSUR26s0ABQB2RxcxNJL4-G1YwHAyC3qwM7-Fz_m9bjSCm51fwCikmbXBPYr2HVwxpd82PNBCqVdw-3zK_wdT4CrVXll1xntQ1aXE2kQg4WJk7TM1wIJcZ3v0rzOUeHtNeYxmXKvWRiGBxSkTN8Jqtzfy9TKBwyuZ5d4nsbn_RmA2-aSvz_kL2_6nSP1aIwDDeYUsClXuPlmL8isbHM5MBU5jDsup1JGvw2uEh1IIelwj4IZEuNPqX3P5QovChp0xc"/>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm font-bold">Dr. Aris</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant text-[10px]">On Duty</span>
+</div>
+</div>
+</div>
+</aside>
+<!-- Top App Bar Shell -->
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] h-16 bg-surface border-b border-border-internal flex items-center justify-between px-lg z-40">
+<div class="flex items-center gap-xl">
+<div class="flex items-center gap-lg">
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-opacity cursor-pointer" href="#">Overview</a>
+<a class="font-label-sm text-label-sm text-on-surface font-bold border-b-2 border-interactive-primary pb-[18px] cursor-pointer" href="#">Reports</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-opacity cursor-pointer" href="#">System Status</a>
+</div>
+</div>
+<div class="flex items-center gap-lg">
+<button class="bg-[#93000a] text-on-error-container px-md py-xs rounded-lg font-label-sm text-label-sm font-bold flex items-center gap-sm hover:brightness-110 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[16px]" data-icon="emergency_share">emergency_share</span>
+                Crisis Mode
+            </button>
+<div class="flex items-center gap-md border-l border-border-internal pl-lg">
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary cursor-pointer transition-all" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary cursor-pointer transition-all" data-icon="account_circle">account_circle</span>
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary cursor-pointer transition-all" data-icon="settings">settings</span>
+</div>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="ml-64 mt-16 p-lg h-[calc(100vh-4rem)] flex gap-lg overflow-hidden relative">
+<!-- Chat Area (Center/Left) -->
+<section class="flex-1 flex flex-col gap-lg h-full">
+<div class="flex-1 glass-panel rounded-xl flex flex-col relative overflow-hidden">
+<div class="p-md border-b border-border-internal flex justify-between items-center bg-panel-high/50 inner-shimmer">
+<div class="flex items-center gap-md">
+<div class="w-2 h-2 rounded-full bg-[#50d8e9] animate-pulse"></div>
+<h2 class="font-h4 text-h4 text-on-surface">Secure Counseling Session</h2>
+</div>
+<div class="flex gap-sm">
+<button class="p-xs hover:bg-surface-container rounded transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="lock">lock</span>
+</button>
+<button class="p-xs hover:bg-surface-container rounded transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Chat History -->
+<div class="flex-1 overflow-y-auto p-lg custom-scrollbar space-y-xl">
+<!-- AI Message -->
+<div class="flex gap-md max-w-2xl">
+<div class="w-8 h-8 rounded-full bg-interactive-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-on-primary text-[18px]" data-icon="bolt">bolt</span>
+</div>
+<div class="space-y-sm">
+<div class="bg-surface-container p-md rounded-xl rounded-tl-none border border-border-internal text-on-surface">
+                                Hello. I've been reviewing your recent activity logs. You seem to be carrying a bit more stress than usual this week. How are you feeling today?
+                            </div>
+<span class="text-[10px] text-on-surface-variant opacity-40 px-xs">MindBridge AI • 10:42 AM</span>
+</div>
+</div>
+<!-- User Message -->
+<div class="flex gap-md max-w-2xl ml-auto flex-row-reverse">
+<div class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center shrink-0 border border-border-structural">
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]" data-icon="person">person</span>
+</div>
+<div class="space-y-sm text-right">
+<div class="bg-interactive-primary text-white p-md rounded-xl rounded-tr-none border border-primary/20 shadow-lg shadow-interactive-primary/10">
+                                I'm feeling a bit overwhelmed with exams and some personal issues. It's hard to focus.
+                            </div>
+<span class="text-[10px] text-on-surface-variant opacity-40 px-xs">Student • 10:43 AM</span>
+</div>
+</div>
+<!-- AI Message -->
+<div class="flex gap-md max-w-2xl">
+<div class="w-8 h-8 rounded-full bg-interactive-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-on-primary text-[18px]" data-icon="psychology">psychology</span>
+</div>
+<div class="space-y-sm">
+<div class="bg-surface-container p-md rounded-xl rounded-tl-none border border-border-internal text-on-surface">
+                                I hear you. The combination of academic pressure and personal transitions can definitely impact cognitive focus. Based on your heart rate variability (HRV) from your wearable, your body is in a 'High Alert' state. Would you like to try a 3-minute grounding exercise?
+                            </div>
+<div class="flex gap-sm">
+<button class="px-md py-xs bg-panel-high border border-border-structural rounded-full font-label-sm text-label-sm text-on-surface hover:bg-surface-container transition-all">Yes, let's try it</button>
+<button class="px-md py-xs bg-panel-high border border-border-structural rounded-full font-label-sm text-label-sm text-on-surface hover:bg-surface-container transition-all">Maybe later</button>
+</div>
+<span class="text-[10px] text-on-surface-variant opacity-40 px-xs">MindBridge AI • 10:44 AM</span>
+</div>
+</div>
+</div>
+<!-- Input Area -->
+<div class="p-lg border-t border-border-internal bg-panel-low">
+<div class="relative">
+<textarea class="w-full bg-canvas-global border border-border-internal rounded-xl p-md pr-16 focus:outline-none focus:border-interactive-primary transition-all resize-none text-on-surface placeholder:text-on-surface-variant/30 custom-scrollbar h-24" placeholder="Share your thoughts..."></textarea>
+<div class="absolute bottom-4 right-4 flex gap-md">
+<button class="p-xs text-on-surface-variant hover:text-interactive-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="mic">mic</span>
+</button>
+<button class="w-8 h-8 bg-interactive-primary rounded-lg flex items-center justify-center hover:brightness-110 transition-all">
+<span class="material-symbols-outlined text-on-primary text-[18px]" data-icon="send">send</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Sidebar (Right) -->
+<aside class="w-80 flex flex-col gap-lg">
+<!-- Emotion Analysis Panel -->
+<div class="glass-panel rounded-xl p-lg space-y-lg flex flex-col relative overflow-hidden inner-shimmer">
+<div class="flex justify-between items-center">
+<h3 class="font-h4 text-h4 text-on-surface">Mood Analysis</h3>
+<span class="material-symbols-outlined text-interactive-primary" data-icon="insights">insights</span>
+</div>
+<div class="space-y-md">
+<!-- Current State -->
+<div class="bg-panel-high/50 p-md border border-border-internal rounded-lg">
+<div class="flex justify-between items-end mb-sm">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest opacity-60">Dominant Emotion</span>
+<span class="text-[#ffb4ab] font-bold">Elevated Anxiety</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-[#ffb4ab] w-[82%]"></div>
+</div>
+</div>
+<!-- Trends (Sparklines) -->
+<div class="space-y-sm">
+<div class="flex items-center justify-between p-sm hover:bg-surface-container rounded transition-colors group">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface">Stress Resilience</span>
+<span class="mono-data text-[10px] text-on-surface-variant opacity-50">-12% vs last week</span>
+</div>
+<svg class="w-20 h-8" viewbox="0 0 100 30">
+<path class="sparkline-path" d="M0,25 Q15,5 30,20 T60,10 T100,25" fill="none" stroke="#5e6bff" stroke-width="2"></path>
+</svg>
+</div>
+<div class="flex items-center justify-between p-sm hover:bg-surface-container rounded transition-colors group border-t border-border-internal/30">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface">Sleep Quality</span>
+<span class="mono-data text-[10px] text-on-surface-variant opacity-50">+4% vs last week</span>
+</div>
+<svg class="w-20 h-8" viewbox="0 0 100 30">
+<path class="sparkline-path" d="M0,15 Q25,25 50,15 T100,10" fill="none" stroke="#50d8e9" stroke-width="2"></path>
+</svg>
+</div>
+</div>
+</div>
+<!-- Bento Grid Detail -->
+<div class="grid grid-cols-2 gap-sm">
+<div class="bg-panel-high/30 border border-border-internal p-sm rounded flex flex-col justify-between h-20">
+<span class="font-label-sm text-label-sm text-on-surface-variant opacity-60">Focus Time</span>
+<span class="font-h3 text-h3 text-on-surface">2.4h</span>
+</div>
+<div class="bg-panel-high/30 border border-border-internal p-sm rounded flex flex-col justify-between h-20">
+<span class="font-label-sm text-label-sm text-on-surface-variant opacity-60">Self-Care</span>
+<span class="font-h3 text-h3 text-[#50d8e9]">6/10</span>
+</div>
+</div>
+</div>
+<!-- Crisis Contact Card -->
+<div class="bg-[#201f21] border border-border-internal rounded-xl p-lg relative overflow-hidden group">
+<!-- Background decoration -->
+<div class="absolute -right-4 -bottom-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-[120px]" data-icon="support_agent">support_agent</span>
+</div>
+<h4 class="font-h4 text-h4 text-on-surface mb-sm">Immediate Support</h4>
+<p class="font-body-md text-body-md text-on-surface-variant opacity-80 mb-lg">If you're in immediate distress, our dedicated crisis team is available 24/7.</p>
+<div class="space-y-sm relative z-10">
+<button class="w-full bg-interactive-primary text-on-primary font-bold py-md rounded-lg flex items-center justify-center gap-md hover:brightness-110 active:scale-[0.98] transition-all">
+<span class="material-symbols-outlined" data-icon="call">call</span>
+                        Call Crisis Line
+                    </button>
+<button class="w-full bg-transparent border border-border-structural text-on-surface font-bold py-md rounded-lg flex items-center justify-center gap-md hover:bg-surface-container active:scale-[0.98] transition-all">
+<span class="material-symbols-outlined" data-icon="chat_bubble">chat_bubble</span>
+                        Quick SMS Help
+                    </button>
+</div>
+</div>
+<!-- Health Summary Visualization -->
+<div class="flex-1 bg-panel-low rounded-xl border border-border-internal p-lg flex flex-col justify-center items-center text-center">
+<div class="w-32 h-32 relative mb-lg">
+<!-- Circular Progress/Visualizer -->
+<svg class="w-full h-full transform -rotate-90">
+<circle cx="64" cy="64" fill="transparent" r="58" stroke="#1b1c1e" stroke-width="8"></circle>
+<circle cx="64" cy="64" fill="transparent" r="58" stroke="#5e6bff" stroke-dasharray="364.4" stroke-dashoffset="100" stroke-linecap="round" stroke-width="8"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="font-h3 text-h3 text-on-surface">72</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant opacity-60">Stability</span>
+</div>
+</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Optimal baseline reached at 6:12 AM</p>
+</div>
+</aside>
+</main>
+<!-- Micro-interaction Scripts -->
+<script>
+        // Tab switching simulation (visual only)
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.querySelectorAll('nav a').forEach(l => {
+                    l.classList.remove('text-interactive-primary', 'font-bold', 'border-r-2', 'border-interactive-primary');
+                    l.classList.add('text-on-surface-variant');
+                });
+                link.classList.remove('text-on-surface-variant');
+                link.classList.add('text-interactive-primary', 'font-bold', 'border-r-2', 'border-interactive-primary');
+            });
+        });
+
+        // Chat scroll to bottom
+        const chatHistory = document.querySelector('.overflow-y-auto');
+        chatHistory.scrollTop = chatHistory.scrollHeight;
+
+        // Message input enter key listener
+        const textarea = document.querySelector('textarea');
+        textarea.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                // Simulation logic would go here
+                textarea.value = '';
+            }
+        });
+    </script>
+</body></html>

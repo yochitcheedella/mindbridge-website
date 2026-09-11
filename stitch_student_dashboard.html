@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>MindBridge AI - Student Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&amp;family=Manrope:wght@520;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary": "#50d8e9",
+                        "primary-container": "#bec2ff",
+                        "error": "#ffb4ab",
+                        "primary": "#e0e0ff",
+                        "primary-fixed-dim": "#bec2ff",
+                        "on-tertiary": "#502403",
+                        "on-primary": "#272b5e",
+                        "canvas-global": "#070708",
+                        "border-structural": "#232426",
+                        "on-primary-container": "#494e83",
+                        "tertiary": "#ffdbc7",
+                        "on-tertiary-fixed": "#321300",
+                        "on-primary-fixed-variant": "#3e4276",
+                        "secondary-fixed-dim": "#50d8e9",
+                        "surface-container": "#201f21",
+                        "tertiary-container": "#ffb689",
+                        "tertiary-fixed": "#ffdbc8",
+                        "on-primary-fixed": "#111548",
+                        "error-container": "#93000a",
+                        "panel-high": "#191a1c",
+                        "surface-variant": "#353438",
+                        "interactive-primary": "#5e6bff",
+                        "inverse-on-surface": "#303034",
+                        "surface-dim": "#131317",
+                        "inverse-surface": "#e4e1e6",
+                        "surface-container-highest": "#353438",
+                        "tertiary-fixed-dim": "#ffb68a",
+                        "on-secondary-fixed": "#001f23",
+                        "surface": "#131314",
+                        "surface-container-high": "#2a292d",
+                        "secondary-container": "#00b1c1",
+                        "inverse-primary": "#555a90",
+                        "outline-variant": "#46464f",
+                        "on-secondary-fixed-variant": "#004f57",
+                        "on-surface": "#e4e1e6",
+                        "surface-container-low": "#1b1b1f",
+                        "border-internal": "#1b1c1e",
+                        "panel-low": "#101112",
+                        "on-secondary-container": "#003e44",
+                        "canvas-primary": "#080809",
+                        "secondary-fixed": "#91f1ff",
+                        "on-error-container": "#ffdad6",
+                        "background": "#131317",
+                        "on-secondary": "#00363c",
+                        "outline": "#91909a",
+                        "on-error": "#690005",
+                        "surface-bright": "#39393d",
+                        "surface-tint": "#bec2ff",
+                        "on-tertiary-fixed-variant": "#6c3a17",
+                        "on-tertiary-container": "#794521",
+                        "surface-container-lowest": "#0e0e11",
+                        "on-surface-variant": "#c7c5d0",
+                        "primary-fixed": "#e0e0ff",
+                        "on-background": "#e4e1e6"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "xl": "40px",
+                        "sm": "8px",
+                        "gutter": "20px",
+                        "xs": "4px",
+                        "lg": "24px",
+                        "base": "4px",
+                        "md": "16px",
+                        "margin-safe": "32px"
+                    },
+                    "fontFamily": {
+                        "h1": ["Manrope"],
+                        "body-md": ["Inter"],
+                        "mono-data": ["Inter"],
+                        "h4": ["Manrope"],
+                        "h3": ["Manrope"],
+                        "label-sm": ["Inter"],
+                        "h2": ["Manrope"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "h1": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.05em", "fontWeight": "520" }],
+                        "body-md": ["14px", { "lineHeight": "1.5", "letterSpacing": "0em", "fontWeight": "400" }],
+                        "mono-data": ["13px", { "lineHeight": "1", "letterSpacing": "-0.01em", "fontWeight": "400" }],
+                        "h4": ["18px", { "lineHeight": "1.4", "letterSpacing": "-0.02em", "fontWeight": "520" }],
+                        "h3": ["24px", { "lineHeight": "1.2", "letterSpacing": "-0.04em", "fontWeight": "520" }],
+                        "label-sm": ["12px", { "lineHeight": "1", "letterSpacing": "0.02em", "fontWeight": "500" }],
+                        "h2": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.05em", "fontWeight": "520" }],
+                        "body-lg": ["16px", { "lineHeight": "1.6", "letterSpacing": "0em", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: #070708; /* canvas-global */
+            color: #e4e1e6; /* on-surface */
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        /* Custom scrollbar for deep-space aesthetic */
+        ::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #070708;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #232426;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #353438;
+        }
+
+        /* Glassmorphism utility */
+        .glass-panel {
+            background: rgba(16, 17, 18, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        
+        /* Inner glow for high-priority cards */
+        .inner-glow-top {
+            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Focus state outer glow */
+        .focus-glow:focus-within {
+            box-shadow: 0 0 0 2px rgba(94, 107, 255, 0.2);
+        }
+
+        /* Progress Ring Animation */
+        .progress-ring__circle {
+            transition: stroke-dashoffset 0.8s ease-in-out;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-canvas-global min-h-screen pb-24 relative overflow-x-hidden">
+<!-- Top Navigation (Hidden on Mobile, Desktop Only) -->
+<header class="hidden md:flex justify-between items-center px-gutter h-16 w-full max-w-screen-2xl mx-auto bg-surface dark:bg-surface w-full top-0 sticky border-b border-border-structural dark:border-border-structural z-50">
+<div class="flex items-center gap-sm">
+<img class="w-8 h-8 rounded-full object-cover border border-border-structural inner-glow-top" data-alt="A small, minimalist circular avatar of a student in a dimly lit, high-tech environment. The lighting is cinematic, casting subtle blue and purple hues. The style is hyper-realistic and modern." src="https://lh3.googleusercontent.com/aida-public/AB6AXuASMMETBHCU0V0ke6STgtntBNbpM5QplvUAA4AbzzW7__B8fp8dvWmh_SQaUD6dm5tvrDzVNNpoTgxhenUUClIZN-_5j5CcNDTq1y-006H8zNJRV6TW_q6kpdblpKZ6Hb_zoTsG1BHzcJe0D8c7JgnW8Jq0tNQ9NxhGYW1AAqBDpOW3vxDSUwB-H6qkXPHQa-bc5NPACd-xHqaRqeyS6b7VWY_9dUrXimxPv7fniBSppUCGC9L4dYsAh_f0J4wZYlNPtZgiCx2D7Bk"/>
+<span class="font-h3 text-h3 font-bold tracking-tighter text-primary dark:text-primary">CORE</span>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-DEFAULT text-on-surface-variant dark:text-on-surface-variant hover:bg-panel-high dark:hover:bg-panel-high transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">notifications</span>
+</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="max-w-[480px] mx-auto px-gutter pt-xl md:pt-lg flex flex-col gap-lg">
+<!-- Section 1: Header & Wellness Score -->
+<section class="flex flex-col gap-sm">
+<div class="flex justify-between items-start">
+<div>
+<h1 class="font-h2 text-h2 text-primary mb-xs">Welcome back, Elias</h1>
+<div class="flex items-center gap-xs">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary-fixed"></span>
+<span class="font-mono-data text-mono-data text-on-surface-variant uppercase tracking-widest">Status: Stable</span>
+</div>
+</div>
+<!-- Wellness Score Ring -->
+<div class="relative w-16 h-16 flex items-center justify-center">
+<svg class="w-16 h-16 absolute top-0 left-0" viewbox="0 0 64 64">
+<circle class="text-surface-container-high stroke-current" cx="32" cy="32" fill="transparent" r="28" stroke-width="4"></circle>
+<circle class="text-interactive-primary stroke-current progress-ring__circle" cx="32" cy="32" fill="transparent" r="28" stroke-dasharray="175.93" stroke-dashoffset="49.26" stroke-linecap="round" stroke-width="4"></circle> <!-- 72% of circumference -->
+</svg>
+<div class="flex flex-col items-center justify-center z-10">
+<span class="font-h4 text-h4 text-primary leading-none">72</span>
+<span class="font-mono-data text-[8px] text-outline">/100</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 2: Daily Mood Check-in -->
+<section class="flex flex-col gap-sm">
+<h2 class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">Daily Alignment</h2>
+<!-- Segmented Controller (Sunken Track) -->
+<div class="bg-[#070708] p-xs rounded-lg border border-border-internal flex justify-between gap-xs overflow-x-auto hide-scrollbar">
+<button class="flex-1 min-w-[64px] flex flex-col items-center gap-xs py-sm px-xs rounded bg-panel-high border border-border-structural inner-glow-top shadow-[0_2px_8px_rgba(0,0,0,0.5)] transition-all">
+<span class="material-symbols-outlined text-secondary-fixed" style="font-variation-settings: 'FILL' 1;">sentiment_very_satisfied</span>
+<span class="font-mono-data text-[10px] text-primary">Excellent</span>
+</button>
+<button class="flex-1 min-w-[64px] flex flex-col items-center gap-xs py-sm px-xs rounded hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined text-outline" style="font-variation-settings: 'FILL' 0;">sentiment_satisfied</span>
+<span class="font-mono-data text-[10px] text-outline">Good</span>
+</button>
+<button class="flex-1 min-w-[64px] flex flex-col items-center gap-xs py-sm px-xs rounded hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined text-outline" style="font-variation-settings: 'FILL' 0;">sentiment_neutral</span>
+<span class="font-mono-data text-[10px] text-outline">Neutral</span>
+</button>
+<button class="flex-1 min-w-[64px] flex flex-col items-center gap-xs py-sm px-xs rounded hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined text-outline" style="font-variation-settings: 'FILL' 0;">sentiment_dissatisfied</span>
+<span class="font-mono-data text-[10px] text-outline">Low</span>
+</button>
+<button class="flex-1 min-w-[64px] flex flex-col items-center gap-xs py-sm px-xs rounded hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined text-outline" style="font-variation-settings: 'FILL' 0;">sentiment_very_dissatisfied</span>
+<span class="font-mono-data text-[10px] text-outline">Very Low</span>
+</button>
+</div>
+</section>
+<!-- Section 3: Quick Actions Grid -->
+<section class="grid grid-cols-2 gap-sm">
+<!-- Journal Shortcut -->
+<button class="bg-panel-low rounded-lg border border-border-internal p-md flex flex-col items-start gap-md hover:bg-[#151617] transition-colors relative overflow-hidden group">
+<div class="absolute inset-0 bg-gradient-to-br from-interactive-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="w-8 h-8 rounded bg-surface-container flex items-center justify-center border border-border-structural">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 0;">edit_note</span>
+</div>
+<div class="flex flex-col items-start text-left">
+<span class="font-h4 text-h4 text-primary">Journal</span>
+<span class="font-mono-data text-mono-data text-outline mt-xs">Last: 12h ago</span>
+</div>
+</button>
+<!-- AI Chat Assistant -->
+<button class="bg-panel-low rounded-lg border border-border-internal p-md flex flex-col items-start gap-md hover:bg-[#151617] transition-colors relative overflow-hidden group">
+<div class="absolute inset-0 bg-gradient-to-br from-secondary-fixed/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="w-8 h-8 rounded bg-surface-container flex items-center justify-center border border-border-structural">
+<span class="material-symbols-outlined text-secondary-fixed" style="font-variation-settings: 'FILL' 0;">smart_toy</span>
+</div>
+<div class="flex flex-col items-start text-left">
+<span class="font-h4 text-h4 text-primary">AI Guide</span>
+<span class="font-mono-data text-mono-data text-outline mt-xs">Need to talk?</span>
+</div>
+</button>
+</section>
+<!-- Section 4: Emergency SOS -->
+<section>
+<button class="w-full bg-[#1A0A0A] border border-[#3A1010] rounded-lg p-md flex items-center justify-between group hover:bg-[#200D0D] transition-colors inner-glow-top" style="box-shadow: inset 0 1px 0 0 rgba(255, 180, 171, 0.1);">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded bg-[#3A1010] flex items-center justify-center">
+<span class="material-symbols-outlined text-error" style="font-variation-settings: 'FILL' 1;">emergency</span>
+</div>
+<div class="flex flex-col items-start text-left">
+<span class="font-h4 text-h4 text-error">Immediate Support</span>
+<span class="font-body-md text-body-md text-on-error-container/70">Connect with a counselor</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-error opacity-50 group-hover:opacity-100 group-hover:translate-x-1 transition-all">arrow_forward</span>
+</button>
+</section>
+<!-- Section 5: Wellness & Meditation -->
+<section class="flex flex-col gap-sm">
+<div class="flex justify-between items-end border-b border-border-internal pb-xs">
+<h2 class="font-h4 text-h4 text-primary">Breathe &amp; Reset</h2>
+<button class="font-mono-data text-mono-data text-interactive-primary hover:text-primary transition-colors">View All</button>
+</div>
+<div class="flex flex-col gap-xs">
+<!-- Meditation Card 1 -->
+<button class="bg-[#101112] rounded border border-border-internal p-sm flex items-center gap-sm hover:bg-[#151617] transition-colors group">
+<div class="w-12 h-12 rounded bg-surface-container overflow-hidden relative">
+<div class="bg-cover bg-center w-full h-full opacity-60 group-hover:opacity-100 transition-opacity" data-alt="A highly detailed abstract geometric pattern in deep indigo and subtle cyan, resembling flowing water or sound waves in a dark, minimalist environment. Cinematic lighting." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA9fm8Zo6B0JY_8twHZHrezTRjt9WUUqaKFkSskDybCn8yIZbbWijMDM__TYFOjwIyqYKrCP47lnXCbcIC5nSuSr_aA7I8uuPAiQrKB6d33DUPBCDni-U1FOcluM-_1ztA42KPNwr7zJTlpo354CPYeH2wEDuYKHUY6AlbR48i8ZmpDPYLiUCc8IZau2gPoI3wo_VVfQOZupkKNDHKe5xg3Ylv-4Vrwd22F8_rJCn4OKvOI9FJSbgNizTKHh3ouS5W-8-iJDSuuRdM')"></div>
+</div>
+<div class="flex flex-col items-start text-left flex-1">
+<span class="font-body-md text-body-md text-primary font-medium">5-min Grounding</span>
+<span class="font-mono-data text-[10px] text-outline mt-0.5">Focus • Breathwork</span>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors pr-sm">play_circle</span>
+</button>
+<!-- Meditation Card 2 -->
+<button class="bg-[#101112] rounded border border-border-internal p-sm flex items-center gap-sm hover:bg-[#151617] transition-colors group">
+<div class="w-12 h-12 rounded bg-surface-container overflow-hidden relative">
+<div class="bg-cover bg-center w-full h-full opacity-60 group-hover:opacity-100 transition-opacity" data-alt="A highly detailed abstract representation of a night sky or deep space nebulae, using dark purples and minimal starlight. Very dark, minimalist, cinematic lighting." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAXX1Z9aPfFkJLhNXEX99oqeZm97yUrw7Vb9LZPU-P2ravD6cDBSPJ7nMXpTdsQNckhzi1BvAxKUFGCQ0wmDhkyDvQXwhFZWSzR0ViFLZZx8_0SnEqFjMyPA5Xs8cIrwi4KKjKb3Iead0NwLWZLohNrEoyv3PnpY-EAcEe5_RddJAKyTSxRkSIlQAxp2eF38XaludwrXDsZdGM4JGNAOrzMMmE4o5NQOyBvnk9uhHUVLvIC6gELxifMI_cQ7oQSlMfrMWPzcv6tLDI')"></div>
+</div>
+<div class="flex flex-col items-start text-left flex-1">
+<span class="font-body-md text-body-md text-primary font-medium">Deep Sleep Prep</span>
+<span class="font-mono-data text-[10px] text-outline mt-0.5">Rest • 15 min</span>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors pr-sm">play_circle</span>
+</button>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-20 px-4 pb-safe bg-panel-low/80 dark:bg-panel-low/80 backdrop-blur-xl border-t border-border-structural dark:border-border-structural">
+<!-- Active: Home -->
+<a class="flex flex-col items-center justify-center text-interactive-primary dark:text-interactive-primary font-medium active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-label-sm text-label-sm">Home</span>
+</a>
+<!-- Inactive: Journal -->
+<a class="flex flex-col items-center justify-center text-outline dark:text-outline hover:text-primary dark:hover:text-primary active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 0;">edit_note</span>
+<span class="font-label-sm text-label-sm">Journal</span>
+</a>
+<!-- Inactive: AI Chat -->
+<a class="flex flex-col items-center justify-center text-outline dark:text-outline hover:text-primary dark:hover:text-primary active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 0;">smart_toy</span>
+<span class="font-label-sm text-label-sm">AI Chat</span>
+</a>
+<!-- Inactive: Help -->
+<a class="flex flex-col items-center justify-center text-outline dark:text-outline hover:text-primary dark:hover:text-primary active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 0;">emergency</span>
+<span class="font-label-sm text-label-sm">Help</span>
+</a>
+</nav>
+</body></html>

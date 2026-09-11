@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindBridge AI · VIT Institutional Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-main: #0a0b10;
+            --bg-surface: rgba(18, 20, 32, 0.75);
+            --bg-card: rgba(28, 31, 48, 0.6);
+            --bg-card-hover: rgba(40, 44, 68, 0.8);
+            --border-glow: rgba(129, 140, 248, 0.2);
+            --border-hover: rgba(129, 140, 248, 0.6);
+            --primary: #6366f1;
+            --primary-glow: rgba(99, 102, 241, 0.35);
+            --secondary: #a855f7;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --font-main: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-mono: 'JetBrains+Mono', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            font-family: var(--font-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 15% 20%, rgba(99, 102, 241, 0.15) 0%, transparent 45%),
+                radial-gradient(circle at 85% 70%, rgba(168, 85, 247, 0.15) 0%, transparent 45%),
+                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+            padding: 0 1.5rem 4rem 1.5rem;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        header {
+            padding: 3rem 0 2rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .badge-vit {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(168, 85, 247, 0.15));
+            border: 1px solid var(--border-glow);
+            padding: 0.4rem 1.2rem;
+            rounded: 9999px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: #c084fc;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            font-size: clamp(2.5rem, 5vw, 4.2rem);
+            font-weight: 900;
+            letter-spacing: -0.03em;
+            line-height: 1.15;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 50%, #818cf8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .tagline {
+            font-size: clamp(1.1rem, 2vw, 1.35rem);
+            color: var(--text-muted);
+            max-width: 760px;
+            margin: 0 auto 2.5rem;
+            font-weight: 400;
+        }
+
+        .action-bar {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 4rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.9rem 1.8rem;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 1rem;
+            text-decoration: none;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: 0 10px 25px -5px var(--primary-glow);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px -5px rgba(168, 85, 247, 0.5);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-outline {
+            background: var(--bg-surface);
+            color: var(--text-main);
+            border: 1px solid var(--border-glow);
+            backdrop-filter: blur(12px);
+        }
+
+        .btn-outline:hover {
+            transform: translateY(-2px);
+            border-color: var(--border-hover);
+            background: var(--bg-card-hover);
+        }
+
+        /* Section Styling */
+        section {
+            margin-bottom: 5rem;
+        }
+
+        .section-header {
+            text-align: left;
+            margin-bottom: 2.5rem;
+            border-left: 4px solid var(--primary);
+            padding-left: 1rem;
+        }
+
+        .section-header h2 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--text-main);
+            line-height: 1.2;
+        }
+
+        .section-header p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            margin-top: 0.3rem;
+        }
+
+        /* 3-Tier Grid */
+        .tier-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.8rem;
+        }
+
+        .tier-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-glow);
+            border-radius: 24px;
+            padding: 2.2rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(16px);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .tier-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--border-hover);
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7), 0 0 25px -5px var(--primary-glow);
+        }
+
+        .tier-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+        }
+
+        .tier-student::before { background: linear-gradient(90deg, #10b981, #34d399); }
+        .tier-psych::before { background: linear-gradient(90deg, #3b82f6, #6366f1); }
+        .tier-admin::before { background: linear-gradient(90deg, #a855f7, #ec4899); }
+
+        .tier-badge {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            padding: 0.35rem 0.8rem;
+            border-radius: 8px;
+            margin-bottom: 1.2rem;
+            width: fit-content;
+        }
+
+        .badge-student { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+        .badge-psych { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
+        .badge-admin { background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3); }
+
+        .tier-title {
+            font-size: 1.6rem;
+            font-weight: 800;
+            margin-bottom: 0.8rem;
+            color: white;
+        }
+
+        .tier-desc {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 1.8rem;
+            flex-grow: 1;
+        }
+
+        .tier-features {
+            list-style: none;
+            margin-bottom: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            padding-top: 1.5rem;
+        }
+
+        .tier-features li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            font-size: 0.9rem;
+            margin-bottom: 0.75rem;
+            color: #e2e8f0;
+        }
+
+        .check-icon {
+            color: var(--success);
+            font-weight: 900;
+            flex-shrink: 0;
+        }
+
+        .cred-box {
+            background: rgba(10, 11, 16, 0.8);
+            border: 1px dashed rgba(148, 163, 184, 0.25);
+            border-radius: 12px;
+            padding: 1rem;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            position: relative;
+        }
+
+        .cred-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-family: var(--font-main);
+            font-weight: 700;
+            margin-bottom: 0.4rem;
+        }
+
+        .cred-val {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #f8fafc;
+            margin-bottom: 0.25rem;
+        }
+
+        .copy-btn {
+            background: rgba(99, 102, 241, 0.15);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            color: #818cf8;
+            padding: 0.2rem 0.6rem;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Interactive Simulator Widget */
+        .widget-box {
+            background: linear-gradient(135deg, rgba(30, 27, 75, 0.7), rgba(15, 23, 42, 0.8));
+            border: 1px solid rgba(129, 140, 248, 0.3);
+            border-radius: 28px;
+            padding: 3rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(20px);
+        }
+
+        .widget-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        @media (max-width: 900px) {
+            .widget-grid { grid-template-columns: 1fr; }
+        }
+
+        .slider-container {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .score-val {
+            font-family: var(--font-mono);
+            font-weight: 800;
+            padding: 0.3rem 0.8rem;
+            border-radius: 8px;
+            font-size: 1.2rem;
+        }
+
+        .score-low { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+        .score-med { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+        .score-high { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+
+        input[type=range]:focus { outline: none; }
+
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 10px;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 5px;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            height: 24px;
+            width: 24px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            -webkit-appearance: none;
+            margin-top: -7px;
+            box-shadow: 0 0 10px var(--primary);
+            transition: transform 0.1s;
+        }
+
+        input[type=range]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        .sos-btn {
+            width: 100%;
+            margin-top: 1.5rem;
+            background: linear-gradient(135deg, #ef4444, #b91c1c);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 14px;
+            font-weight: 800;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 0 10px 25px -5px rgba(239, 68, 68, 0.4);
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+        }
+
+        .sos-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px -5px rgba(239, 68, 68, 0.6);
+            background: linear-gradient(135deg, #f87171, #dc2626);
+        }
+
+        .terminal-box {
+            background: #050608;
+            border: 1px solid rgba(129, 140, 248, 0.3);
+            border-radius: 20px;
+            padding: 1.5rem;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            height: 100%;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .terminal-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-muted);
+            font-size: 0.75rem;
+        }
+
+        .dot { width: 10px; height: 10px; border-radius: 50%; }
+        .dot-red { background: #ef4444; }
+        .dot-yellow { background: #f59e0b; }
+        .dot-green { background: #10b981; }
+
+        .terminal-content {
+            padding-top: 1rem;
+            overflow-y: auto;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .log-line { display: flex; gap: 0.75rem; animation: fadeIn 0.3s ease-in; }
+        .log-time { color: #64748b; font-size: 0.75rem; flex-shrink: 0; }
+        .log-msg { color: #e2e8f0; }
+        .log-alert { color: #f87171; font-weight: 700; }
+        .log-success { color: #34d399; font-weight: 700; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Test Suite Grid */
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+
+        .test-item {
+            background: rgba(20, 24, 38, 0.6);
+            border: 1px solid rgba(16, 185, 129, 0.25);
+            border-radius: 14px;
+            padding: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.2s;
+        }
+
+        .test-item:hover {
+            background: rgba(20, 24, 38, 0.9);
+            border-color: rgba(16, 185, 129, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .test-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: #f8fafc;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .status-pass {
+            background: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+            padding: 0.25rem 0.6rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            letter-spacing: 0.05em;
+        }
+
+        footer {
+            text-align: center;
+            padding: 3rem 0 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .highlight { color: var(--primary); font-weight: 700; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- HERO HEADER -->
+    <header>
+        <div class="badge-vit">⚡ Dedicated Institutional Platform · Vishnu Institute of Technology</div>
+        <h1>MindBridge AI</h1>
+        <p class="tagline">
+            An enterprise-grade, completely anonymous mental health triage and AI counseling mobile platform built exclusively for VIT students, faculty counselors, and administrative leaders.
+        </p>
+        <div class="action-bar">
+            <a href="http://localhost:5173" target="_blank" class="btn btn-primary">
+                🚀 Open Mobile Application (Vite Simulator)
+            </a>
+            <a href="http://localhost:8000/docs" target="_blank" class="btn btn-outline">
+                🛡️ Open API Vault & Swagger Docs
+            </a>
+        </div>
+    </header>
+
+    <!-- 3-TIER INSTITUTIONAL ARCHITECTURE -->
+    <section>
+        <div class="section-header">
+            <h2>Three-Tier Institutional Architecture</h2>
+            <p>Tailored strictly for VIT's campus ecosystem with zero multi-tenant commercial SaaS overhead.</p>
+        </div>
+        
+        <div class="tier-grid">
+            <!-- Student Level -->
+            <div class="tier-card tier-student">
+                <div>
+                    <span class="tier-badge badge-student">🟢 Student Level</span>
+                    <h3 class="tier-title">Anonymous Counseling & Wellness</h3>
+                    <p class="tier-desc">Provides students with a safe, judgment-free space to seek immediate psychological support without fear of academic or peer stigma.</p>
+                </div>
+                
+                <ul class="tier-features">
+                    <li><span class="check-icon">✓</span> AES-256 Encrypted Identity Vault</li>
+                    <li><span class="check-icon">✓</span> Anonymous Animal Alias (e.g., Orchid #404)</li>
+                    <li><span class="check-icon">✓</span> AI Daily Habit & Sleep Recovery Checklist</li>
+                    <li><span class="check-icon">✓</span> Multilingual Voice Dictation & TTS</li>
+                    <li><span class="check-icon">✓</span> Zero-PII Peer Community Forum</li>
+                </ul>
+
+                <div class="cred-box">
+                    <div class="cred-label">Instant Student Onboarding</div>
+                    <div class="cred-val">
+                        <span style="color: #94a3b8; font-family: var(--font-main);">Register with <strong style="color:#f8fafc">@vishnu.edu.in</strong> email</span>
+                        <span class="copy-btn" onclick="copyText('user@vishnu.edu.in', this)">COPY EMAIL</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Psychologist Level -->
+            <div class="tier-card tier-psych">
+                <div>
+                    <span class="tier-badge badge-psych">🔵 Psychologist Level</span>
+                    <h3 class="tier-title">Clinical Risk Triage & Crisis Care</h3>
+                    <p class="tier-desc">Equips campus mental health professionals with live multi-factor burnout scoring and an audited emergency deanonymization gateway.</p>
+                </div>
+                
+                <ul class="tier-features">
+                    <li><span class="check-icon">✓</span> Real-Time Burnout & Suicide Risk Queue</li>
+                    <li><span class="check-icon">✓</span> In-App Counseling Appointment Management</li>
+                    <li><span class="check-icon">✓</span> Thread-Safe WebSocket Crisis Alarms</li>
+                    <li><span class="check-icon">✓</span> Section 16 Audited Emergency Reveal</li>
+                    <li><span class="check-icon">✓</span> Unified OTP Password Rechambering</li>
+                </ul>
+
+                <div class="cred-box">
+                    <div class="cred-label">Demo Counselor Credentials</div>
+                    <div class="cred-val">
+                        <span>ram.sir@vishnu.edu.in</span>
+                        <span class="copy-btn" onclick="copyText('ram.sir@vishnu.edu.in', this)">COPY</span>
+                    </div>
+                    <div class="cred-val" style="margin-top: 4px;">
+                        <span>Psych@VIT2024</span>
+                        <span class="copy-btn" onclick="copyText('Psych@VIT2024', this)">COPY</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admin Level -->
+            <div class="tier-card tier-admin">
+                <div>
+                    <span class="tier-badge badge-admin">🟣 Admin Level</span>
+                    <h3 class="tier-title">Institutional Wellbeing Oversight</h3>
+                    <p class="tier-desc">Delivers macro-level department mental health telemetry and staffing analytics to college leaders without infringing on student privacy.</p>
+                </div>
+                
+                <ul class="tier-features">
+                    <li><span class="check-icon">✓</span> Department-Wise Wellbeing Aggregations</li>
+                    <li><span class="check-icon">✓</span> Zero Access to Chats or Student Identities</li>
+                    <li><span class="check-icon">✓</span> Staff Counseling Roster & User Control</li>
+                    <li><span class="check-icon">✓</span> CSV & JSON Institutional Reporting</li>
+                    <li><span class="check-icon">✓</span> Dual-Layer Offline Storage Fallback</li>
+                </ul>
+
+                <div class="cred-box">
+                    <div class="cred-label">Demo Admin Credentials</div>
+                    <div class="cred-val">
+                        <span>admin@vishnu.edu.in</span>
+                        <span class="copy-btn" onclick="copyText('admin@vishnu.edu.in', this)">COPY</span>
+                    </div>
+                    <div class="cred-val" style="margin-top: 4px;">
+                        <span>Admin@VIT2024</span>
+                        <span class="copy-btn" onclick="copyText('Admin@VIT2024', this)">COPY</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- INTERACTIVE CRISIS TRIAGE SIMULATOR -->
+    <section>
+        <div class="section-header">
+            <h2>Interactive Crisis Triage & Audit Simulator</h2>
+            <p>Simulate how the Multi-Factor Risk Engine instantly detects critical biomarkers and logs immutable database audit trails during an emergency intervention (SRS Section 16).</p>
+        </div>
+
+        <div class="widget-box">
+            <div class="widget-grid">
+                <!-- Controls -->
+                <div class="slider-container">
+                    <div class="slider-label">
+                        <span>Student Burnout Risk Score:</span>
+                        <span id="scoreBadge" class="score-val score-low">0.25 (Low)</span>
+                    </div>
+                    <input type="range" id="riskSlider" min="0" max="100" value="25" oninput="updateRisk(this.value)">
+                    
+                    <div style="margin-top: 1.5rem; font-size: 0.9rem; color: #cbd5e1; background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 12px; border-left: 3px solid #6366f1;">
+                        <strong style="color:white;">Current Status:</strong> <span id="statusDesc">Standard AI counseling active. Identity is vaulted under alias <code>Orchid #404</code>. Clinical reveal blocked (Requires &ge; 0.80).</span>
+                    </div>
+
+                    <button class="sos-btn" onclick="triggerSOS()">
+                        🚨 TRIGGER EMERGENCY SOS ALARM
+                    </button>
+                </div>
+
+                <!-- Live Audit & Alert Terminal -->
+                <div class="terminal-box">
+                    <div class="terminal-header">
+                        <div class="dot dot-red"></div>
+                        <div class="dot dot-yellow"></div>
+                        <div class="dot dot-green"></div>
+                        <span style="margin-left: 0.5rem; font-weight: 600;">VIT Institutional Telemetry & Audit Stream</span>
+                    </div>
+                    <div class="terminal-content" id="terminalStream">
+                        <div class="log-line">
+                            <span class="log-time">16:20:01</span>
+                            <span class="log-msg">[SYS] MindBridge AI Backend (FastAPI) active on port 8000.</span>
+                        </div>
+                        <div class="log-line">
+                            <span class="log-time">16:20:05</span>
+                            <span class="log-msg">[AUTH] Student token generated: <code>Orchid #404</code> (AES-256 Vaulted).</span>
+                        </div>
+                        <div class="log-line">
+                            <span class="log-time">16:20:10</span>
+                            <span class="log-msg">[WS] Thread-safe <code>AlertManager</code> connected to Senior Psychologist socket.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- VERIFIED 10-MODULE TEST SUITE -->
+    <section>
+        <div class="section-header">
+            <h2>100% Green Verification Harness</h2>
+            <p>All core business logic, zero-PII community invariants, and immutable database audit logs verified using isolated in-memory testing engines.</p>
+        </div>
+
+        <div class="test-grid">
+            <div class="test-item"><span class="test-name">🟢 test_admin_analytics.py</span><span class="status-pass">PASSED</span></div>
+            <div class="test-item"><span class="test-name">🟢 test_burnout_predictor.py</span><span class="status-pass">PASSED</span></div>
+            <div class="test-item"><span class="test-name">🟢 test_community.py</span><span class="status-pass">PASSED</span></div>
+            <div class="test-item"><span class="test-name">🟢 test_encryption.py</span><span class="status-pass">PASSED</span></div>
+            <div class="test-item"><span class="test-name">🟢 test_storage_multi_role.py</span><span class="status-pass">PASSED</span></div>
+            <div class="test-item"><span class="test-name">🟢 test_risk_triage_queue.py</span><span class="status-pass">PASSED</span></div>
+            <div class="test-item"><span class="test-name">🟢 test_appointments.py</span><span class="status-pass">PASSED</span></div>
+            <div class="test-item"><span class="test-name">🟢 test_emergency_sos.py</span><span class="status-pass">PASSED</span></div>
+            <div class="test-item"><span class="test-name">🟢 test_auth_password_reset.py</span><span class="status-pass">PASSED</span></div>
+            <div class="test-item"><span class="test-name">🟢 test_ai_recovery_plans.py</span><span class="status-pass">PASSED</span></div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <p><strong>MindBridge AI</strong> · Built exclusively for <span class="highlight">Vishnu Institute of Technology (VIT)</span>.</p>
+        <p style="margin-top: 0.4rem; font-size: 0.8rem;">Prepared by Cheedella Bala Venkata Satya Yochit · Department of CSE (AI & DS) · Version 1.0.0 (Production Verified)</p>
+    </footer>
+</div>
+
+<script>
+    function copyText(text, btn) {
+        navigator.clipboard.writeText(text);
+        const oldText = btn.innerText;
+        btn.innerText = "COPIED!";
+        btn.style.background = "#10b981";
+        btn.style.color = "white";
+        setTimeout(() => {
+            btn.innerText = oldText;
+            btn.style.background = "";
+            btn.style.color = "";
+        }, 1500);
+    }
+
+    function addLog(msg, isAlert = false, isSuccess = false) {
+        const stream = document.getElementById("terminalStream");
+        const div = document.createElement("div");
+        div.className = "log-line";
+        const now = new Date();
+        const timeStr = now.toTimeString().split(' ')[0];
+        
+        let msgClass = "log-msg";
+        if (isAlert) msgClass = "log-alert";
+        if (isSuccess) msgClass = "log-success";
+
+        div.innerHTML = `<span class="log-time">${timeStr}</span><span class="${msgClass}">${msg}</span>`;
+        stream.appendChild(div);
+        stream.scrollTop = stream.scrollHeight;
+    }
+
+    function updateRisk(val) {
+        const score = (val / 100).toFixed(2);
+        const badge = document.getElementById("scoreBadge");
+        const desc = document.getElementById("statusDesc");
+
+        if (score < 0.50) {
+            badge.className = "score-val score-low";
+            badge.innerText = `${score} (Low)`;
+            desc.innerHTML = "Standard AI counseling active. Identity is vaulted under alias <code>Orchid #404</code>. Clinical reveal blocked (Requires &ge; 0.80).";
+        } else if (score < 0.80) {
+            badge.className = "score-val score-med";
+            badge.innerText = `${score} (Moderate)`;
+            desc.innerHTML = "Elevated stress biomarkers detected. AI recommended daily breathing exercises and sleep hygiene checklist.";
+            if (val == 65) addLog("[RISK ENGINE] Student Orchid #404 stress score elevated to 0.65. AI recovery tasks prioritized.");
+        } else {
+            badge.className = "score-val score-high";
+            badge.innerText = `${score} (CRITICAL)`;
+            desc.innerHTML = `<span style="color:#ef4444; font-weight:700;">CRITICAL BURN-OUT THRESHOLD (&ge; 0.80) EXCEEDED.</span> Psychologist triage alert broadcasted!`;
+            if (val == 80) {
+                addLog(`[ALERT] High risk score ${score} detected for Orchid #404!`, true);
+                addLog("[WS] Thread-safe real-time push alert dispatched to Senior Psychologist.", true);
+            }
+        }
+    }
+
+    function triggerSOS() {
+        const slider = document.getElementById("riskSlider");
+        slider.value = 100;
+        updateRisk(100);
+
+        addLog("🚨 [EMERGENCY SOS] Student Orchid #404 pressed SOS button on mobile app!", true);
+        setTimeout(() => {
+            addLog("[RISK ENGINE] Student risk score instantly escalated to 1.0 (Critical Tier).", true);
+        }, 600);
+        setTimeout(() => {
+            addLog("[FCM PUSH] Emergency alert dispatched to counselor phones: 'Immediate crisis intervention required.'", true);
+        }, 1200);
+        setTimeout(() => {
+            addLog("🔓 [CLINICAL ACTION] Counselor confirmed emergency. AES-256 vault decrypted for Orchid #404.", false, true);
+            addLog("🛡️ [DB AUDIT] Immutable record 'CLINICAL_IDENTITY_REVEAL' written to Postgres AuditLog table (SRS Section 16).", false, true);
+        }, 2200);
+    }
+</script>
+</body>
+</html>

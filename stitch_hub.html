@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MindBridge AI - Clinical Portal</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&amp;family=Manrope:wght@520;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-fixed-dim": "#ffb68a",
+                        "on-surface-variant": "#c7c5d0",
+                        "background": "#131317",
+                        "on-surface": "#e4e1e6",
+                        "error-container": "#93000a",
+                        "on-tertiary-container": "#794521",
+                        "canvas-global": "#070708",
+                        "on-error-container": "#ffdad6",
+                        "on-background": "#e4e1e6",
+                        "secondary": "#50d8e9",
+                        "border-structural": "#232426",
+                        "on-error": "#690005",
+                        "on-primary-container": "#494e83",
+                        "on-tertiary-fixed": "#321300",
+                        "on-secondary": "#00363c",
+                        "secondary-fixed-dim": "#50d8e9",
+                        "surface": "#131314",
+                        "surface-container-high": "#2a292d",
+                        "primary-fixed-dim": "#bec2ff",
+                        "error": "#ffb4ab",
+                        "surface-container": "#201f21",
+                        "primary-fixed": "#e0e0ff",
+                        "secondary-fixed": "#91f1ff",
+                        "inverse-on-surface": "#303034",
+                        "secondary-container": "#00b1c1",
+                        "primary": "#e0e0ff",
+                        "on-secondary-container": "#003e44",
+                        "on-tertiary": "#502403",
+                        "border-internal": "#1b1c1e",
+                        "on-tertiary-fixed-variant": "#6c3a17",
+                        "interactive-primary": "#5e6bff",
+                        "on-primary-fixed-variant": "#3e4276",
+                        "on-secondary-fixed": "#001f23",
+                        "tertiary-container": "#ffb689",
+                        "surface-container-low": "#1b1b1f",
+                        "panel-high": "#191a1c",
+                        "surface-tint": "#bec2ff",
+                        "canvas-primary": "#080809",
+                        "surface-container-lowest": "#0e0e11",
+                        "primary-container": "#bec2ff",
+                        "on-primary": "#272b5e",
+                        "on-secondary-fixed-variant": "#004f57",
+                        "outline": "#91909a",
+                        "tertiary-fixed": "#ffdbc8",
+                        "panel-low": "#101112",
+                        "tertiary": "#ffdbc7",
+                        "outline-variant": "#46464f",
+                        "surface-bright": "#39393d",
+                        "inverse-surface": "#e4e1e6",
+                        "surface-variant": "#353438",
+                        "surface-container-highest": "#353438",
+                        "inverse-primary": "#555a90",
+                        "surface-dim": "#131317",
+                        "on-primary-fixed": "#111548"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "xl": "40px",
+                        "margin-safe": "32px",
+                        "md": "16px",
+                        "lg": "24px",
+                        "sm": "8px",
+                        "gutter": "20px",
+                        "xs": "4px",
+                        "base": "4px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Inter"],
+                        "h2": ["Manrope"],
+                        "mono-data": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "h3": ["Manrope"],
+                        "h4": ["Manrope"],
+                        "h1": ["Manrope"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["12px", { "lineHeight": "1", "letterSpacing": "0.02em", "fontWeight": "500" }],
+                        "h2": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.05em", "fontWeight": "520" }],
+                        "mono-data": ["13px", { "lineHeight": "1", "letterSpacing": "-0.01em", "fontWeight": "400" }],
+                        "body-md": ["14px", { "lineHeight": "1.5", "letterSpacing": "0em", "fontWeight": "400" }],
+                        "body-lg": ["16px", { "lineHeight": "1.6", "letterSpacing": "0em", "fontWeight": "400" }],
+                        "h3": ["24px", { "lineHeight": "1.2", "letterSpacing": "-0.04em", "fontWeight": "520" }],
+                        "h4": ["18px", { "lineHeight": "1.4", "letterSpacing": "-0.02em", "fontWeight": "520" }],
+                        "h1": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.05em", "fontWeight": "520" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(21, 22, 23, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-internal, #1b1c1e);
+            box-shadow: inset 0 1px 0 0 rgba(255,255,255,0.05);
+        }
+        .critical-pulse {
+            animation: pulse-border 2s infinite;
+        }
+        @keyframes pulse-border {
+            0% { border-color: rgba(255, 180, 171, 0.2); }
+            50% { border-color: rgba(255, 180, 171, 0.8); box-shadow: 0 0 8px rgba(255, 180, 171, 0.2); }
+            100% { border-color: rgba(255, 180, 171, 0.2); }
+        }
+        .shimmer-edge {
+            position: relative;
+        }
+        .shimmer-edge::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            z-index: 10;
+        }
+    </style>
+</head>
+<body class="bg-canvas-global text-on-surface font-body-md antialiased min-h-screen flex selection:bg-interactive-primary selection:text-white">
+<!-- SideNavBar -->
+<nav class="h-screen w-64 fixed left-0 top-0 bg-panel-low dark:bg-panel-low border-r border-border-structural dark:border-border-structural flex flex-col h-full py-lg px-md z-40">
+<div class="mb-xl flex items-center gap-sm px-sm">
+<div class="w-8 h-8 rounded-full bg-interactive-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-white text-[18px]">psychology</span>
+</div>
+<div>
+<h1 class="font-h4 text-h4 font-bold text-primary dark:text-primary leading-tight">MindBridge AI</h1>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Clinical Portal</p>
+</div>
+</div>
+<div class="flex-1 space-y-2">
+<a class="flex items-center gap-sm bg-surface-container-high dark:bg-surface-container-high text-primary dark:text-primary rounded-lg px-md py-sm transition-colors active:scale-95 duration-150 group" href="#">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="font-body-md text-body-md font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-sm text-on-surface-variant dark:text-on-surface-variant px-md py-sm hover:bg-surface-container dark:hover:bg-surface-container rounded-lg transition-colors active:scale-95 duration-150 group" href="#">
+<span class="material-symbols-outlined text-[20px]">warning</span>
+<span class="font-body-md text-body-md">Risk Queue</span>
+</a>
+<a class="flex items-center gap-sm text-on-surface-variant dark:text-on-surface-variant px-md py-sm hover:bg-surface-container dark:hover:bg-surface-container rounded-lg transition-colors active:scale-95 duration-150 group" href="#">
+<span class="material-symbols-outlined text-[20px]">timeline</span>
+<span class="font-body-md text-body-md">Student Timeline</span>
+</a>
+<a class="flex items-center gap-sm text-on-surface-variant dark:text-on-surface-variant px-md py-sm hover:bg-surface-container dark:hover:bg-surface-container rounded-lg transition-colors active:scale-95 duration-150 group" href="#">
+<span class="material-symbols-outlined text-[20px]">event</span>
+<span class="font-body-md text-body-md">Appointments</span>
+</a>
+</div>
+<div class="mt-auto pt-lg border-t border-border-internal space-y-2">
+<button class="w-full bg-error-container/20 text-error border border-error/30 rounded-lg px-md py-sm flex items-center justify-center gap-sm hover:bg-error-container/40 transition-colors">
+<span class="material-symbols-outlined text-[18px]">emergency</span>
+<span class="font-body-md font-medium">Emergency Hub</span>
+</button>
+<div class="flex gap-2 mt-4">
+<a class="flex-1 flex justify-center items-center gap-sm text-on-surface-variant px-md py-sm hover:bg-surface-container rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+</a>
+<a class="flex-1 flex justify-center items-center gap-sm text-on-surface-variant px-md py-sm hover:bg-surface-container rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">help</span>
+</a>
+</div>
+</div>
+</nav>
+<!-- Main Content Wrapper -->
+<div class="ml-64 flex-1 flex flex-col min-h-screen">
+<!-- TopAppBar -->
+<header class="docked full-width top-0 sticky z-50 bg-background/80 dark:bg-background/80 backdrop-blur-xl border-b border-border-internal dark:border-border-internal flex justify-between items-center h-16 px-xl">
+<div class="flex items-center gap-lg">
+<h2 class="font-h4 text-h4 font-medium text-on-surface tracking-tight">Clinical Dashboard</h2>
+<div class="h-4 w-px bg-border-structural"></div>
+<nav class="hidden md:flex items-center gap-md">
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface transition-colors" href="#">Direct Chat</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface transition-colors" href="#">Analytics</a>
+</nav>
+</div>
+<div class="flex items-center gap-lg">
+<div class="flex items-center gap-sm bg-surface-container px-3 py-1.5 rounded-full border border-border-internal">
+<div class="w-2 h-2 rounded-full bg-error animate-pulse"></div>
+<span class="font-label-sm text-label-sm text-error uppercase tracking-wider">Crisis Mode</span>
+<button class="ml-2 w-8 h-4 bg-surface rounded-full relative border border-border-internal">
+<div class="absolute right-1 top-0.5 w-3 h-3 bg-error rounded-full"></div>
+</button>
+</div>
+<div class="flex items-center gap-sm text-on-surface-variant">
+<button class="p-2 hover:bg-surface-container rounded-full transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="p-2 hover:bg-surface-container rounded-full transition-colors">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Canvas -->
+<main class="flex-1 p-xl overflow-y-auto space-y-lg">
+<!-- Top Section: Clinical Pulse Metrics -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<div class="glass-panel rounded-xl p-lg shimmer-edge flex flex-col justify-between">
+<div class="flex justify-between items-start mb-md">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Active Students</span>
+<span class="material-symbols-outlined text-interactive-primary text-[20px]">groups</span>
+</div>
+<div>
+<div class="font-h2 text-h2 text-on-surface">1,248</div>
+<div class="flex items-center gap-xs mt-1 text-secondary">
+<span class="material-symbols-outlined text-[14px]">arrow_upward</span>
+<span class="font-mono-data text-mono-data">2.4% vs last week</span>
+</div>
+</div>
+</div>
+<div class="glass-panel rounded-xl p-lg shimmer-edge flex flex-col justify-between border-error/20 bg-error-container/5 relative overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-b from-error/5 to-transparent pointer-events-none"></div>
+<div class="flex justify-between items-start mb-md relative z-10">
+<span class="font-label-sm text-label-sm text-error uppercase tracking-wider">High-Risk Alerts</span>
+<div class="flex items-center justify-center w-6 h-6 rounded-full bg-error/20">
+<span class="material-symbols-outlined text-error text-[16px]">warning</span>
+</div>
+</div>
+<div class="relative z-10">
+<div class="font-h2 text-h2 text-error">14</div>
+<div class="flex items-center gap-xs mt-1 text-on-surface-variant">
+<span class="font-mono-data text-mono-data text-error">+3 unassigned</span>
+</div>
+</div>
+</div>
+<div class="glass-panel rounded-xl p-lg shimmer-edge flex flex-col justify-between">
+<div class="flex justify-between items-start mb-md">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Avg. Resolution Time</span>
+<span class="material-symbols-outlined text-on-surface-variant text-[20px]">timer</span>
+</div>
+<div>
+<div class="font-h2 text-h2 text-on-surface">42<span class="text-h4 text-on-surface-variant ml-1">m</span></div>
+<div class="flex items-center gap-xs mt-1 text-secondary">
+<span class="material-symbols-outlined text-[14px]">arrow_downward</span>
+<span class="font-mono-data text-mono-data">5.1% improvement</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Middle Section: Queue & Sessions -->
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-gutter items-start">
+<!-- High-Priority Risk Queue (2/3) -->
+<div class="lg:col-span-2 glass-panel rounded-xl flex flex-col h-[400px]">
+<div class="p-md border-b border-border-internal flex justify-between items-center bg-panel-high/50 rounded-t-xl">
+<h3 class="font-h4 text-h4 font-medium flex items-center gap-sm">
+<span class="w-2 h-2 rounded-full bg-error"></span>
+                            Urgent Risk Queue
+                        </h3>
+<button class="font-label-sm text-label-sm text-interactive-primary hover:text-primary-fixed transition-colors">View All (42)</button>
+</div>
+<div class="flex-1 overflow-y-auto p-0">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-border-internal bg-surface-container-low/50">
+<th class="py-3 px-md font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">ID</th>
+<th class="py-3 px-md font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Indicator</th>
+<th class="py-3 px-md font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider w-1/3">Risk Score</th>
+<th class="py-3 px-md font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider text-right">Action</th>
+</tr>
+</thead>
+<tbody class="font-body-md text-body-md text-on-surface divide-y divide-border-internal/50">
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-3 px-md font-mono-data text-on-surface">STU-8842</td>
+<td class="py-3 px-md">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-error/10 text-error border border-error/20 font-label-sm">
+                                            Ideation NLP Flag
+                                        </span>
+</td>
+<td class="py-3 px-md">
+<div class="flex items-center gap-sm">
+<span class="font-mono-data text-error w-8">0.94</span>
+<div class="flex-1 h-1.5 bg-surface-bright rounded-full overflow-hidden">
+<div class="h-full bg-error rounded-full w-[94%]"></div>
+</div>
+</div>
+</td>
+<td class="py-3 px-md text-right">
+<button class="bg-surface-container border border-border-structural text-on-surface hover:bg-surface-container-high px-3 py-1.5 rounded transition-colors text-sm font-medium flex items-center gap-1 ml-auto">
+<span class="material-symbols-outlined text-[16px]">chat</span>
+                                            View Chat
+                                        </button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-3 px-md font-mono-data text-on-surface">STU-9104</td>
+<td class="py-3 px-md">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-tertiary-fixed-dim/20 text-tertiary-fixed-dim border border-tertiary-fixed-dim/30 font-label-sm">
+                                            Depressive Marker
+                                        </span>
+</td>
+<td class="py-3 px-md">
+<div class="flex items-center gap-sm">
+<span class="font-mono-data text-tertiary-fixed-dim w-8">0.82</span>
+<div class="flex-1 h-1.5 bg-surface-bright rounded-full overflow-hidden">
+<div class="h-full bg-tertiary-fixed-dim rounded-full w-[82%]"></div>
+</div>
+</div>
+</td>
+<td class="py-3 px-md text-right">
+<button class="bg-surface-container border border-border-structural text-on-surface hover:bg-surface-container-high px-3 py-1.5 rounded transition-colors text-sm font-medium flex items-center gap-1 ml-auto">
+<span class="material-symbols-outlined text-[16px]">chat</span>
+                                            View Chat
+                                        </button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-3 px-md font-mono-data text-on-surface">STU-3321</td>
+<td class="py-3 px-md">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-tertiary-fixed-dim/20 text-tertiary-fixed-dim border border-tertiary-fixed-dim/30 font-label-sm">
+                                            Severe Anxiety
+                                        </span>
+</td>
+<td class="py-3 px-md">
+<div class="flex items-center gap-sm">
+<span class="font-mono-data text-tertiary-fixed-dim w-8">0.78</span>
+<div class="flex-1 h-1.5 bg-surface-bright rounded-full overflow-hidden">
+<div class="h-full bg-tertiary-fixed-dim rounded-full w-[78%]"></div>
+</div>
+</div>
+</td>
+<td class="py-3 px-md text-right">
+<button class="bg-surface-container border border-border-structural text-on-surface hover:bg-surface-container-high px-3 py-1.5 rounded transition-colors text-sm font-medium flex items-center gap-1 ml-auto">
+<span class="material-symbols-outlined text-[16px]">chat</span>
+                                            View Chat
+                                        </button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Active Sessions Widget (1/3) -->
+<div class="glass-panel rounded-xl flex flex-col h-[400px]">
+<div class="p-md border-b border-border-internal flex justify-between items-center bg-panel-high/50 rounded-t-xl">
+<h3 class="font-h4 text-h4 font-medium flex items-center gap-sm">
+<span class="material-symbols-outlined text-secondary text-[20px]">videocam</span>
+                            Upcoming Sessions
+                        </h3>
+</div>
+<div class="flex-1 p-md space-y-md overflow-y-auto">
+<div class="bg-panel-low border border-border-internal rounded-lg p-md relative overflow-hidden group hover:border-interactive-primary/50 transition-colors">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-interactive-primary rounded-l-lg"></div>
+<div class="flex justify-between items-start mb-2 pl-2">
+<div>
+<div class="font-mono-data text-label-sm text-on-surface-variant mb-1">STU-1029</div>
+<div class="font-body-md font-medium text-on-surface">Weekly Check-in</div>
+</div>
+<div class="bg-surface-container px-2 py-1 rounded text-xs font-mono-data text-interactive-primary border border-border-structural flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-interactive-primary animate-pulse"></span>
+                                    In 05:00
+                                </div>
+</div>
+<div class="mt-4 pl-2">
+<button class="w-full bg-interactive-primary hover:bg-primary-fixed-dim text-white py-1.5 rounded text-sm font-medium transition-colors">
+                                    Join Telehealth
+                                </button>
+</div>
+</div>
+<div class="bg-panel-low border border-border-internal rounded-lg p-md relative overflow-hidden group hover:border-border-structural transition-colors opacity-80">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-outline-variant rounded-l-lg"></div>
+<div class="flex justify-between items-start mb-2 pl-2">
+<div>
+<div class="font-mono-data text-label-sm text-on-surface-variant mb-1">STU-5591</div>
+<div class="font-body-md font-medium text-on-surface">Intake Evaluation</div>
+</div>
+<div class="text-xs font-mono-data text-on-surface-variant">
+                                    In 45:00
+                                </div>
+</div>
+<div class="mt-4 pl-2">
+<button class="w-full bg-transparent border border-border-structural text-on-surface-variant hover:text-on-surface hover:border-outline-variant py-1.5 rounded text-sm font-medium transition-colors cursor-not-allowed">
+                                    Waiting
+                                </button>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+</div>
+</body></html>

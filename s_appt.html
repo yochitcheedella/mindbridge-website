@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MindBridge AI | Student Appointments</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Manrope:wght@520;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-fixed": "#ffdbc8",
+                    "on-background": "#e4e1e6",
+                    "tertiary-fixed-dim": "#ffb68a",
+                    "inverse-surface": "#e4e1e6",
+                    "error-container": "#93000a",
+                    "surface-container": "#201f21",
+                    "panel-low": "#101112",
+                    "tertiary": "#ffdbc7",
+                    "on-secondary-fixed-variant": "#004f57",
+                    "on-secondary-fixed": "#001f23",
+                    "on-error-container": "#ffdad6",
+                    "canvas-primary": "#080809",
+                    "secondary": "#50d8e9",
+                    "inverse-on-surface": "#303034",
+                    "background": "#131317",
+                    "on-primary": "#272b5e",
+                    "secondary-container": "#00b1c1",
+                    "interactive-primary": "#5e6bff",
+                    "on-secondary": "#00363c",
+                    "canvas-global": "#070708",
+                    "outline-variant": "#46464f",
+                    "on-error": "#690005",
+                    "secondary-fixed": "#91f1ff",
+                    "border-internal": "#1b1c1e",
+                    "on-surface-variant": "#c7c5d0",
+                    "surface-container-high": "#2a292d",
+                    "surface-tint": "#bec2ff",
+                    "surface-container-highest": "#353438",
+                    "on-secondary-container": "#003e44",
+                    "on-primary-fixed-variant": "#3e4276",
+                    "on-tertiary-container": "#794521",
+                    "on-surface": "#e4e1e6",
+                    "surface-dim": "#131317",
+                    "on-primary-fixed": "#111548",
+                    "tertiary-container": "#ffb689",
+                    "on-tertiary": "#502403",
+                    "secondary-fixed-dim": "#50d8e9",
+                    "border-structural": "#232426",
+                    "primary-fixed-dim": "#bec2ff",
+                    "on-primary-container": "#494e83",
+                    "primary-fixed": "#e0e0ff",
+                    "surface-container-low": "#1b1b1f",
+                    "on-tertiary-fixed-variant": "#6c3a17",
+                    "inverse-primary": "#555a90",
+                    "error": "#ffb4ab",
+                    "surface-container-lowest": "#0e0e11",
+                    "surface-variant": "#353438",
+                    "panel-high": "#191a1c",
+                    "outline": "#91909a",
+                    "primary": "#e0e0ff",
+                    "primary-container": "#bec2ff",
+                    "surface": "#131314",
+                    "on-tertiary-fixed": "#321300",
+                    "surface-bright": "#39393d"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "md": "16px",
+                    "base": "4px",
+                    "sm": "8px",
+                    "margin-safe": "32px",
+                    "xs": "4px",
+                    "gutter": "20px",
+                    "xl": "40px",
+                    "lg": "24px"
+            },
+            "fontFamily": {
+                    "h2": ["Manrope"],
+                    "h1": ["Manrope"],
+                    "body-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "h4": ["Manrope"],
+                    "label-sm": ["Inter"],
+                    "mono-data": ["Inter"],
+                    "h3": ["Manrope"]
+            },
+            "fontSize": {
+                    "h2": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.05em", "fontWeight": "520"}],
+                    "h1": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.05em", "fontWeight": "520"}],
+                    "body-md": ["14px", {"lineHeight": "1.5", "letterSpacing": "0em", "fontWeight": "400"}],
+                    "body-lg": ["16px", {"lineHeight": "1.6", "letterSpacing": "0em", "fontWeight": "400"}],
+                    "h4": ["18px", {"lineHeight": "1.4", "letterSpacing": "-0.02em", "fontWeight": "520"}],
+                    "label-sm": ["12px", {"lineHeight": "1", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                    "mono-data": ["13px", {"lineHeight": "1", "letterSpacing": "-0.01em", "fontWeight": "400"}],
+                    "h3": ["24px", {"lineHeight": "1.2", "letterSpacing": "-0.04em", "fontWeight": "520"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #070708;
+            color: #e4e1e6;
+            -webkit-font-smoothing: antialiased;
+        }
+        .glass-panel {
+            background: rgba(16, 17, 18, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid #1b1c1e;
+        }
+        .inner-shimmer {
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #070708;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #232426;
+            border-radius: 2px;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="font-body-md text-body-md overflow-hidden">
+<!-- Side Navigation Shell -->
+<aside class="bg-panel-low dark:bg-panel-low h-screen w-64 fixed left-0 top-0 border-r border-border-structural dark:border-border-structural z-50">
+<div class="flex flex-col h-full py-lg px-md">
+<div class="mb-xl px-sm">
+<h1 class="font-h4 text-h4 font-bold text-primary dark:text-primary leading-tight">MindBridge AI</h1>
+<p class="text-on-surface-variant font-label-sm text-label-sm opacity-60">Clinical Portal</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-sm text-on-surface-variant dark:text-on-surface-variant px-md py-sm hover:bg-surface-container dark:hover:bg-surface-container transition-colors active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-sm text-on-surface-variant dark:text-on-surface-variant px-md py-sm hover:bg-surface-container dark:hover:bg-surface-container transition-colors active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined">warning</span>
+<span class="font-body-md">Risk Queue</span>
+</a>
+<a class="flex items-center gap-sm text-on-surface-variant dark:text-on-surface-variant px-md py-sm hover:bg-surface-container dark:hover:bg-surface-container transition-colors active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined">timeline</span>
+<span class="font-body-md">Student Timeline</span>
+</a>
+<!-- Active State: Appointments -->
+<a class="flex items-center gap-sm bg-surface-container-high dark:bg-surface-container-high text-primary dark:text-primary rounded-lg px-md py-sm active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined">event</span>
+<span class="font-body-md font-bold">Appointments</span>
+</a>
+<a class="flex items-center gap-sm text-on-surface-variant dark:text-on-surface-variant px-md py-sm hover:bg-surface-container dark:hover:bg-surface-container transition-colors active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined">emergency</span>
+<span class="font-body-md">Emergency Hub</span>
+</a>
+</nav>
+<div class="mt-auto pt-lg border-t border-border-internal space-y-1">
+<a class="flex items-center gap-sm text-on-surface-variant dark:text-on-surface-variant px-md py-sm hover:bg-surface-container dark:hover:bg-surface-container transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-body-md">Settings</span>
+</a>
+<a class="flex items-center gap-sm text-on-surface-variant dark:text-on-surface-variant px-md py-sm hover:bg-surface-container dark:hover:bg-surface-container transition-colors" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-body-md">Support</span>
+</a>
+</div>
+</div>
+</aside>
+<!-- Top AppBar Shell -->
+<header class="flex justify-between items-center h-16 px-xl ml-64 bg-background/80 dark:bg-background/80 backdrop-blur-xl docked full-width top-0 sticky z-50 border-b border-border-internal dark:border-border-internal">
+<div class="flex items-center gap-xl">
+<div class="relative">
+<span class="absolute inset-y-0 left-0 pl-3 flex items-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">search</span>
+</span>
+<input class="bg-panel-low border border-border-internal rounded-lg pl-10 pr-4 py-1.5 text-body-md focus:outline-none focus:border-interactive-primary transition-all w-64" placeholder="Search sessions..." type="text"/>
+</div>
+<nav class="hidden md:flex items-center gap-lg">
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface transition-all" href="#">Direct Chat</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface transition-all" href="#">Analytics</a>
+</nav>
+</div>
+<div class="flex items-center gap-md">
+<button class="bg-error-container text-on-error-container px-md py-1.5 rounded-lg font-label-sm text-label-sm font-bold flex items-center gap-2 hover:brightness-110 transition-all">
+<span class="material-symbols-outlined text-[16px]">priority_high</span>
+                Crisis Mode
+            </button>
+<div class="flex items-center gap-sm text-on-surface-variant">
+<button class="p-2 hover:bg-surface-container-high rounded-full transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-secondary rounded-full"></span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-border-internal">
+<img class="w-full h-full object-cover" data-alt="A professional studio portrait of a psychologist with a friendly, empathetic expression, wearing a minimalist neutral-toned blazer. The lighting is soft and cinematic against a dark, textured grey background, emphasizing a calm and authoritative clinical presence. The aesthetic is clean, modern, and high-fidelity, matching a premium medical interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKz5_1e74fwtVuWjr6ZD48BN06QH1BY4ZjEk3Bwbch6l6CyaW6zkC1fb4WACa_lztcvgeapj1SiwvAGlXSli7LCaSToPzN-UXVU27uUDmlrbqbqhs8zWuWYttUIABBp-w0tOv-VgF38EB1j8mF6rU43Xbqg_HurQGPSFzILpxCb5zmjRcLbdrf2FX3qx80fsKwf1SZqxTfNFw1JPY6T364Hk_ocEU1OBalg8xlmQlsklrlqGjKtdrUqXX_zgEWa8TRV6jl086y5x0"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 p-xl h-[calc(100vh-64px)] overflow-y-auto custom-scrollbar">
+<div class="max-w-7xl mx-auto space-y-xl">
+<!-- Page Header -->
+<div class="flex justify-between items-end">
+<div>
+<h2 class="font-h2 text-h2 text-primary">Session Management</h2>
+<p class="text-on-surface-variant mt-2 opacity-80">Book, manage, and customize your clinical session preferences.</p>
+</div>
+<div class="flex gap-md">
+<div class="flex items-center gap-2 px-md py-2 bg-surface-container-low rounded-lg border border-border-internal">
+<div class="w-2 h-2 bg-secondary rounded-full animate-pulse"></div>
+<span class="text-label-sm font-label-sm">Psychologist Online</span>
+</div>
+</div>
+</div>
+<!-- Bento Layout -->
+<div class="grid grid-cols-12 gap-gutter items-start">
+<!-- Left Column: Calendar & Booking -->
+<div class="col-span-12 lg:col-span-8 space-y-gutter">
+<!-- Available Slots Calendar -->
+<div class="glass-panel inner-shimmer rounded-xl overflow-hidden">
+<div class="px-lg py-md border-b border-border-internal flex justify-between items-center">
+<h3 class="font-h4 text-h4">Available Slots</h3>
+<div class="flex items-center gap-base">
+<button class="p-1 hover:bg-surface-container-high rounded transition-colors"><span class="material-symbols-outlined">chevron_left</span></button>
+<span class="font-label-sm text-label-sm px-sm font-bold">October 2023</span>
+<button class="p-1 hover:bg-surface-container-high rounded transition-colors"><span class="material-symbols-outlined">chevron_right</span></button>
+</div>
+</div>
+<div class="p-lg">
+<div class="grid grid-cols-7 gap-base mb-base">
+<!-- Calendar Headers -->
+<div class="text-center py-2 text-on-surface-variant font-label-sm opacity-50 uppercase tracking-widest text-[10px]">Mon</div>
+<div class="text-center py-2 text-on-surface-variant font-label-sm opacity-50 uppercase tracking-widest text-[10px]">Tue</div>
+<div class="text-center py-2 text-on-surface-variant font-label-sm opacity-50 uppercase tracking-widest text-[10px]">Wed</div>
+<div class="text-center py-2 text-on-surface-variant font-label-sm opacity-50 uppercase tracking-widest text-[10px]">Thu</div>
+<div class="text-center py-2 text-on-surface-variant font-label-sm opacity-50 uppercase tracking-widest text-[10px]">Fri</div>
+<div class="text-center py-2 text-on-surface-variant font-label-sm opacity-50 uppercase tracking-widest text-[10px]">Sat</div>
+<div class="text-center py-2 text-on-surface-variant font-label-sm opacity-50 uppercase tracking-widest text-[10px]">Sun</div>
+</div>
+<div class="grid grid-cols-7 gap-base">
+<!-- Calendar Days (Simulated) -->
+<div class="h-24 bg-surface-container-lowest/50 rounded p-sm border border-border-internal/30 opacity-30">25</div>
+<div class="h-24 bg-surface-container-lowest/50 rounded p-sm border border-border-internal/30 opacity-30">26</div>
+<div class="h-24 bg-surface-container-lowest/50 rounded p-sm border border-border-internal/30 opacity-30">27</div>
+<div class="h-24 bg-surface-container-lowest/50 rounded p-sm border border-border-internal/30 opacity-30">28</div>
+<div class="h-24 bg-surface-container-lowest/50 rounded p-sm border border-border-internal/30 opacity-30">29</div>
+<div class="h-24 bg-surface-container-lowest/50 rounded p-sm border border-border-internal/30 opacity-30">30</div>
+<div class="h-24 bg-surface-container-lowest rounded p-sm border border-border-internal">1</div>
+<div class="h-24 bg-surface-container-lowest rounded p-sm border border-border-internal">2</div>
+<div class="h-24 bg-surface-container-lowest rounded p-sm border border-border-internal relative">
+<span>3</span>
+<div class="mt-2 space-y-1">
+<div class="bg-secondary/10 text-secondary text-[10px] py-1 px-1.5 rounded flex items-center gap-1 cursor-pointer hover:bg-secondary/20 transition-all">
+<span class="w-1 h-1 bg-secondary rounded-full"></span> 09:00
+                                        </div>
+<div class="bg-secondary/10 text-secondary text-[10px] py-1 px-1.5 rounded flex items-center gap-1 cursor-pointer hover:bg-secondary/20 transition-all">
+<span class="w-1 h-1 bg-secondary rounded-full"></span> 11:30
+                                        </div>
+</div>
+</div>
+<div class="h-24 bg-surface-container-high/20 rounded p-sm border border-interactive-primary/40">
+<span class="text-interactive-primary font-bold">4</span>
+<div class="mt-2">
+<div class="bg-interactive-primary text-on-primary text-[10px] py-1 px-1.5 rounded font-bold">Selected</div>
+</div>
+</div>
+<div class="h-24 bg-surface-container-lowest rounded p-sm border border-border-internal">5</div>
+<div class="h-24 bg-surface-container-lowest rounded p-sm border border-border-internal">6</div>
+<div class="h-24 bg-surface-container-lowest/50 rounded p-sm border border-border-internal/30 opacity-50">7</div>
+<div class="h-24 bg-surface-container-lowest/50 rounded p-sm border border-border-internal/30 opacity-50">8</div>
+</div>
+</div>
+</div>
+<!-- Session Preferences -->
+<div class="grid grid-cols-2 gap-gutter">
+<div class="glass-panel inner-shimmer rounded-xl p-lg space-y-md">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-secondary">forum</span>
+<h4 class="font-h4 text-h4">Interaction Mode</h4>
+</div>
+<div class="space-y-sm">
+<label class="flex items-center justify-between p-md bg-surface-container-lowest border border-border-internal rounded-lg cursor-pointer hover:border-interactive-primary transition-all">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined">visibility_off</span>
+<span class="font-body-md">Anonymous Chat</span>
+</div>
+<input checked="" class="text-interactive-primary focus:ring-interactive-primary bg-panel-low border-border-internal" name="mode" type="radio"/>
+</label>
+<label class="flex items-center justify-between p-md bg-surface-container-lowest border border-border-internal rounded-lg cursor-pointer hover:border-interactive-primary transition-all">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined">mic</span>
+<span class="font-body-md">Voice Call</span>
+</div>
+<input class="text-interactive-primary focus:ring-interactive-primary bg-panel-low border-border-internal" name="mode" type="radio"/>
+</label>
+</div>
+</div>
+<div class="glass-panel inner-shimmer rounded-xl p-lg flex flex-col justify-between">
+<div class="space-y-sm">
+<h4 class="font-h4 text-h4">Identity Stealth</h4>
+<p class="text-label-sm text-on-surface-variant opacity-70">Hide your profile details from the therapist during the session.</p>
+</div>
+<div class="flex items-center justify-between mt-xl">
+<span class="font-body-md">Ghost Mode</span>
+<button class="w-12 h-6 bg-secondary rounded-full relative transition-all" onclick="this.classList.toggle('bg-secondary'); this.classList.toggle('bg-surface-container-highest')">
+<div class="absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform" style="transform: translateX(24px)"></div>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: My Sessions & Quick Action -->
+<div class="col-span-12 lg:col-span-4 space-y-gutter">
+<!-- Session Summary Card -->
+<div class="bg-interactive-primary rounded-xl p-lg text-on-primary shadow-2xl relative overflow-hidden group">
+<div class="relative z-10">
+<h4 class="font-h4 text-h4 font-bold">Upcoming Session</h4>
+<div class="mt-xl space-y-base">
+<p class="text-label-sm opacity-80">Next session in:</p>
+<div class="font-h2 text-h2 tabular-nums">02d : 14h : 45m</div>
+</div>
+<div class="mt-xl flex gap-sm">
+<button class="flex-1 bg-white/20 backdrop-blur-md py-sm rounded-lg font-label-sm hover:bg-white/30 transition-all border border-white/10">Manage</button>
+<button class="flex-1 bg-on-primary text-primary py-sm rounded-lg font-label-sm font-bold shadow-lg hover:scale-[1.02] transition-all">Join Call</button>
+</div>
+</div>
+<div class="absolute -right-4 -bottom-4 opacity-10 group-hover:scale-110 transition-transform duration-700">
+<span class="material-symbols-outlined text-[160px]">event_repeat</span>
+</div>
+</div>
+<!-- My Sessions List -->
+<div class="glass-panel inner-shimmer rounded-xl overflow-hidden">
+<div class="px-lg py-md border-b border-border-internal">
+<h3 class="font-h4 text-h4">Session History</h3>
+</div>
+<div class="divide-y divide-border-internal max-h-[480px] overflow-y-auto custom-scrollbar">
+<!-- Session Item -->
+<div class="p-lg hover:bg-surface-container/50 transition-colors group cursor-pointer">
+<div class="flex justify-between items-start mb-sm">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high border border-border-internal flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant">psychology</span>
+</div>
+<div>
+<div class="font-body-md font-bold">Dr. Elena Vance</div>
+<div class="text-label-sm text-on-surface-variant">Cognitive Behavioral Therapy</div>
+</div>
+</div>
+<span class="text-mono-data text-on-surface-variant opacity-60">24 Oct</span>
+</div>
+<div class="flex justify-between items-center mt-md">
+<div class="flex items-center gap-base">
+<span class="w-1.5 h-1.5 bg-secondary rounded-full"></span>
+<span class="text-label-sm font-bold text-secondary">COMPLETED</span>
+</div>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">description</span>
+</button>
+</div>
+</div>
+<!-- Session Item -->
+<div class="p-lg hover:bg-surface-container/50 transition-colors group cursor-pointer">
+<div class="flex justify-between items-start mb-sm">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high border border-border-internal flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant">person</span>
+</div>
+<div>
+<div class="font-body-md font-bold">Dr. Marcus Thorne</div>
+<div class="text-label-sm text-on-surface-variant">Anxiety &amp; Focus Session</div>
+</div>
+</div>
+<span class="text-mono-data text-on-surface-variant opacity-60">18 Oct</span>
+</div>
+<div class="flex justify-between items-center mt-md">
+<div class="flex items-center gap-base">
+<span class="w-1.5 h-1.5 bg-secondary rounded-full"></span>
+<span class="text-label-sm font-bold text-secondary">COMPLETED</span>
+</div>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">description</span>
+</button>
+</div>
+</div>
+<!-- Session Item -->
+<div class="p-lg hover:bg-surface-container/50 transition-colors group cursor-pointer">
+<div class="flex justify-between items-start mb-sm">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high border border-border-internal flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant">chat</span>
+</div>
+<div>
+<div class="font-body-md font-bold">Anon. Assistant #4</div>
+<div class="text-label-sm text-on-surface-variant">Intake Assessment</div>
+</div>
+</div>
+<span class="text-mono-data text-on-surface-variant opacity-60">12 Oct</span>
+</div>
+<div class="flex justify-between items-center mt-md">
+<div class="flex items-center gap-base">
+<span class="w-1.5 h-1.5 bg-secondary rounded-full"></span>
+<span class="text-label-sm font-bold text-secondary">COMPLETED</span>
+</div>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">description</span>
+</button>
+</div>
+</div>
+</div>
+<button class="w-full py-md text-label-sm font-bold text-on-surface-variant hover:text-primary hover:bg-surface-container transition-all border-t border-border-internal">
+                            View All History
+                        </button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Background Atmospheric Effect -->
+<div class="fixed inset-0 pointer-events-none -z-10 opacity-30">
+<div class="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-interactive-primary/10 rounded-full blur-[120px]"></div>
+<div class="absolute bottom-1/4 right-1/4 w-[600px] h-[600px] bg-secondary/5 rounded-full blur-[150px]"></div>
+</div>
+<script>
+        // Micro-interaction: Calendar Selection simulation
+        const calendarDays = document.querySelectorAll('.grid-cols-7 > div:not(.opacity-30):not(.opacity-50)');
+        calendarDays.forEach(day => {
+            day.addEventListener('click', function() {
+                calendarDays.forEach(d => d.classList.remove('border-interactive-primary', 'bg-surface-container-high/20'));
+                this.classList.add('border-interactive-primary', 'bg-surface-container-high/20');
+            });
+        });
+
+        // Mode Toggles
+        const radioLabels = document.querySelectorAll('label[name="mode-label"]');
+        // (Internal logic for highlighting radio selection if needed, but standard CSS handles basics)
+    </script>
+</body></html>

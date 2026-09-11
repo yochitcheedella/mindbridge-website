@@ -1,0 +1,218 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-[#FFFFFF] text-[#111111] font-body-md antialiased selection:bg-[#F4C542] selection:text-[#111111];
+    
+    /* Native App Feel Hardening */
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    overscroll-behavior-y: none;
+  }
+  
+  /* Allow typing in inputs */
+  input, textarea, [contenteditable] {
+    user-select: auto;
+    -webkit-user-select: auto;
+  }
+  
+  /* Prevent image dragging */
+  img {
+    -webkit-user-drag: none;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading tracking-tight text-[#111111];
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(17, 17, 17, 0.15); border-radius: 9999px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(17, 17, 17, 0.3); }
+}
+
+@layer components {
+  .glass-panel {
+    background: #FFFFFF;
+    border: 1px solid rgba(17, 17, 17, 0.12);
+    box-shadow: 0 2px 8px -2px rgba(17, 17, 17, 0.05);
+  }
+  
+  .critical-pulse {
+    animation: pulse-border 2s infinite;
+  }
+  @keyframes pulse-border {
+    0% { border-color: rgba(17, 17, 17, 0.2); }
+    50% { border-color: #F4C542; box-shadow: 0 0 10px rgba(244, 197, 66, 0.3); }
+    100% { border-color: rgba(17, 17, 17, 0.2); }
+  }
+  
+  .shimmer-edge {
+    position: relative;
+  }
+  .shimmer-edge::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(17, 17, 17, 0.08), transparent);
+    z-index: 10;
+  }
+
+  /* Animated orb blobs used in auth pages */
+  .orb {
+    @apply absolute rounded-full blur-3xl pointer-events-none opacity-10;
+  }
+
+  /* Minimal Risk level utilities */
+  .risk-green    { color: #111111; }
+  .risk-yellow   { color: #111111; font-weight: 700; }
+  .risk-orange   { color: #111111; font-weight: 700; }
+  .risk-red      { color: #111111; font-weight: 900; }
+  .risk-critical { color: #111111; font-weight: 900; }
+
+  /* Minimal White Sidebar & Navigation */
+  .glass-sidebar {
+    background: #FFFFFF;
+    border-right: 1px solid rgba(17, 17, 17, 0.1);
+  }
+
+  .glass-card-hover {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .glass-card-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px -4px rgba(17, 17, 17, 0.08);
+  }
+
+  .neon-glow-primary {
+    box-shadow: 0 2px 10px rgba(244, 197, 66, 0.35);
+  }
+  
+  .neon-glow-secondary {
+    box-shadow: 0 2px 10px rgba(17, 17, 17, 0.1);
+  }
+
+  .breathing-sphere {
+    animation: breathe-cycle 12s infinite ease-in-out;
+  }
+  @keyframes breathe-cycle {
+    0%, 100% { transform: scale(0.9); opacity: 0.8; box-shadow: 0 0 15px rgba(244, 197, 66, 0.2); }
+    33% { transform: scale(1.2); opacity: 1; box-shadow: 0 0 35px rgba(244, 197, 66, 0.4); }
+    66% { transform: scale(1.2); opacity: 1; box-shadow: 0 0 35px rgba(244, 197, 66, 0.4); }
+  }
+
+  /* ── App Opening Cinematic Logo Animation ── */
+  @keyframes logo-reveal {
+    0% {
+      opacity: 0;
+      transform: scale(0.6) translateY(24px);
+      filter: blur(14px);
+    }
+    55% {
+      opacity: 1;
+      transform: scale(1.06) translateY(-4px);
+      filter: blur(0px);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+      filter: blur(0px);
+    }
+  }
+
+  @keyframes aura-expand {
+    0% {
+      transform: scale(0.7);
+      opacity: 0;
+    }
+    30% {
+      opacity: 0.75;
+    }
+    100% {
+      transform: scale(1.45);
+      opacity: 0;
+    }
+  }
+
+  @keyframes ring-spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes ring-spin-reverse {
+    0% {
+      transform: rotate(360deg);
+    }
+    100% {
+      transform: rotate(0deg);
+    }
+  }
+
+  @keyframes text-emerge {
+    0% {
+      opacity: 0;
+      transform: translateY(16px);
+      letter-spacing: 0.2em;
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+      letter-spacing: 0.05em;
+    }
+  }
+
+  @keyframes progress-load {
+    0% {
+      width: 0%;
+      opacity: 0.4;
+    }
+    60% {
+      width: 75%;
+      opacity: 1;
+    }
+    100% {
+      width: 100%;
+      opacity: 0.9;
+    }
+  }
+
+  .animate-logo-reveal {
+    animation: logo-reveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .animate-aura-1 {
+    animation: aura-expand 2.4s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+  }
+
+  .animate-aura-2 {
+    animation: aura-expand 2.4s cubic-bezier(0.16, 1, 0.3, 1) 0.8s infinite;
+  }
+
+  .animate-ring-spin {
+    animation: ring-spin 14s linear infinite;
+  }
+
+  .animate-ring-spin-reverse {
+    animation: ring-spin-reverse 18s linear infinite;
+  }
+
+  .animate-text-emerge {
+    animation: text-emerge 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+  }
+
+  .animate-progress-load {
+    animation: progress-load 1.9s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  }
+}
+

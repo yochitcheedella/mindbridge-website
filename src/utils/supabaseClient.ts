@@ -1,8 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
 
-// Initial version Supabase credentials for real-time syncing and document storage at VIT
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://hweyomasaofopsgirqvs.supabase.co';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh3ZXlvbWFzYW9mb3BzZ2lycXZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUxNjIzMTUsImV4cCI6MjEwMDczODMxNX0.s4BdO6_-ip2sVGQJzs8eDQFOEAwCSkLjU7YPXfTHVp4';
+// Supabase credentials for mind_bridge_web dedicated web platform
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://sxwhytrwunkrbyldjagn.supabase.co';
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN4d2h5dHJ3dW5rcmJ5bGRqYWduIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkwNzU2NDYsImV4cCI6MjEwNDY1MTY0Nn0.1vKFv7md260qkCiOYKl_83w-c3htKgvJ8OyKE_gHnN4';
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 

@@ -184,33 +184,33 @@ export default function Appointments() {
   const selectedCounselor = psychologists.find(p => p.id.toString() === selectedDoc);
 
   return (
-    <div className="min-h-screen bg-[#FFFFFF] pb-28 text-[#111111]">
+    <div className="min-h-screen bg-[#FFFFFF] pb-28 text-[#111111] w-full max-w-full overflow-x-hidden">
       {/* ── Top Bar with Official Vishnu Wellness Centre Logo ── */}
-      <header className="sticky top-0 z-20 bg-[#FFFFFF]/95 backdrop-blur-md border-b border-[#111111]/10 px-4 sm:px-6 py-3.5 flex items-center justify-between shadow-xs">
-        <div className="flex items-center gap-3">
-          <Link to="/student/home" className="p-1.5 rounded-lg text-[#111111] hover:bg-[#111111]/5 transition-colors border border-[#111111]/15">
+      <header className="sticky top-0 z-20 bg-[#FFFFFF]/95 backdrop-blur-md border-b border-[#111111]/10 px-3 sm:px-6 py-3 flex items-center justify-between shadow-xs">
+        <div className="flex items-center gap-2.5 min-w-0">
+          <Link to="/student/home" className="p-1.5 rounded-lg text-[#111111] hover:bg-[#111111]/5 transition-colors border border-[#111111]/15 shrink-0">
             <span className="material-symbols-outlined text-[20px]">arrow_back</span>
           </Link>
-          <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-full overflow-hidden border border-[#111111]/20 shadow-xs p-0.5 bg-white shrink-0">
+          <div className="flex items-center gap-2 min-w-0">
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full overflow-hidden border border-[#111111]/20 shadow-xs p-0.5 bg-white shrink-0">
               <img 
                 src={VISHNU_WELLNESS_CENTRE.logo_url} 
                 alt="Vishnu Wellness Centre" 
                 className="w-full h-full object-contain rounded-full"
               />
             </div>
-            <div>
-              <h1 className="font-heading font-black text-sm sm:text-base flex items-center gap-1.5 leading-tight text-[#111111]">
+            <div className="min-w-0">
+              <h1 className="font-heading font-black text-xs sm:text-base flex items-center gap-1 leading-tight text-[#111111] truncate">
                 <span>{VISHNU_WELLNESS_CENTRE.name}</span>
                 <span className="text-[11px] font-mono text-[#111111]/60 hidden sm:inline">• Official Care Team</span>
               </h1>
-              <p className="font-mono text-[10px] text-[#111111]/50">{VISHNU_WELLNESS_CENTRE.institution} • Est. {VISHNU_WELLNESS_CENTRE.established}</p>
+              <p className="font-mono text-[9px] sm:text-[10px] text-[#111111]/50 truncate">{VISHNU_WELLNESS_CENTRE.institution} • Est. {VISHNU_WELLNESS_CENTRE.established}</p>
             </div>
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FAFAFA] border border-[#111111]/15 text-[11px] font-mono text-[#111111]">
+        <div className="flex items-center gap-2 shrink-0">
+          <span className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-full bg-[#FAFAFA] border border-[#111111]/15 text-[10px] sm:text-[11px] font-mono text-[#111111]">
             <Shield size={12} className="text-[#111111]" />
             <span className="hidden sm:inline">Alias:</span>
             <span className="font-bold text-[#111111]">{getAlias() || 'Student'}</span>
@@ -218,44 +218,44 @@ export default function Appointments() {
         </div>
       </header>
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 animate-fade-in">
+      <div className="max-w-6xl mx-auto px-3 sm:px-6 py-4 sm:py-6 animate-fade-in w-full max-w-full min-w-0">
         
         {/* ── Status Notification Banner ── */}
         {bookedMsg && (
-          <div className="mb-6 flex items-center gap-3 bg-[#F4C542] border-2 border-[#111111] rounded-2xl px-5 py-3.5 text-sm text-[#111111] animate-slide-up shadow-xs font-bold">
-            <Sparkles size={20} className="shrink-0 text-[#111111]" />
+          <div className="mb-6 flex items-center gap-3 bg-[#F4C542] border-2 border-[#111111] rounded-2xl px-4 sm:px-5 py-3 text-xs sm:text-sm text-[#111111] animate-slide-up shadow-xs font-bold">
+            <Sparkles size={18} className="shrink-0 text-[#111111]" />
             <span>{bookedMsg}</span>
           </div>
         )}
 
         {/* ── Official Institutional Showcase Banner ── */}
-        <div className="p-6 sm:p-7 rounded-3xl border-2 border-[#111111] mb-8 shadow-xs bg-[#FFFFFF]">
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-            <div className="space-y-2.5 max-w-2xl">
+        <div className="p-4 sm:p-7 rounded-3xl border-2 border-[#111111] mb-6 sm:mb-8 shadow-xs bg-[#FFFFFF] w-full max-w-full min-w-0">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 sm:gap-6">
+            <div className="space-y-2 max-w-2xl min-w-0">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F4C542] border border-[#111111] text-xs text-[#111111] font-black uppercase">
                 <Building2 size={13} />
                 <span>{VISHNU_WELLNESS_CENTRE.institution}</span>
               </div>
-              <h2 className="text-xl sm:text-2xl font-heading font-black text-[#111111] tracking-tight">
+              <h2 className="text-lg sm:text-2xl font-heading font-black text-[#111111] tracking-tight">
                 Our Team of 7 Dedicated Wellness Counsellors
               </h2>
-              <p className="text-sm text-[#111111]/70 leading-relaxed font-medium">
+              <p className="text-xs sm:text-sm text-[#111111]/70 leading-relaxed font-medium">
                 Working around the clock to support the mental health, resilience, and personal growth of students across all Vishnu campuses. Safe, ethical, and 100% confidential.
               </p>
               
-              <div className="flex flex-wrap items-center gap-2 pt-1 text-[11px] font-mono text-[#111111] font-bold">
+              <div className="flex flex-wrap items-center gap-1.5 pt-1 text-[10px] sm:text-[11px] font-mono text-[#111111] font-bold">
                 {VISHNU_WELLNESS_CENTRE.pillars.map(pillar => (
-                  <span key={pillar} className="px-2.5 py-0.5 rounded-lg bg-[#FAFAFA] border border-[#111111]/15">
+                  <span key={pillar} className="px-2 py-0.5 rounded-lg bg-[#FAFAFA] border border-[#111111]/15">
                     {pillar}
                   </span>
                 ))}
               </div>
             </div>
 
-            <div className="flex flex-row md:flex-col gap-2.5 w-full md:w-auto shrink-0">
+            <div className="grid grid-cols-2 md:flex md:flex-col gap-2 w-full md:w-auto shrink-0">
               <button 
                 onClick={() => setActiveTab('team')}
-                className={`px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all text-center flex-1 md:flex-initial cursor-pointer ${
+                className={`px-3 sm:px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all text-center cursor-pointer ${
                   activeTab === 'team'
                     ? 'bg-[#F4C542] text-[#111111] font-black border-2 border-[#111111] shadow-xs'
                     : 'bg-[#FFFFFF] text-[#111111] border border-[#111111] hover:bg-[#FAFAFA]'
@@ -265,53 +265,53 @@ export default function Appointments() {
               </button>
               <button 
                 onClick={() => setActiveTab('book')}
-                className={`px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all text-center flex-1 md:flex-initial cursor-pointer ${
+                className={`px-3 sm:px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all text-center cursor-pointer ${
                   activeTab === 'book'
                     ? 'bg-[#F4C542] text-[#111111] font-black border-2 border-[#111111] shadow-xs'
                     : 'bg-[#FFFFFF] text-[#111111] border border-[#111111] hover:bg-[#FAFAFA]'
                 }`}
               >
-                Book a Session
+                Book Appointment
               </button>
             </div>
           </div>
         </div>
 
         {/* ── Main Navigation Tabs ── */}
-        <div className="flex bg-[#FAFAFA] rounded-2xl p-1.5 mb-8 border border-[#111111]/15 shadow-xs overflow-x-auto hide-scrollbar gap-1">
+        <div className="flex bg-[#FAFAFA] rounded-2xl p-1 mb-6 sm:mb-8 border border-[#111111]/15 shadow-xs overflow-x-auto scrollbar-none gap-1 w-full max-w-full">
           <button 
             onClick={() => setActiveTab('team')}
-            className={`flex-1 min-w-[140px] py-3 rounded-xl text-xs sm:text-sm font-black transition-all flex items-center justify-center gap-2 cursor-pointer ${
+            className={`flex-1 min-w-[120px] sm:min-w-[140px] py-2.5 sm:py-3 px-2 rounded-xl text-xs sm:text-sm font-black transition-all flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap ${
               activeTab === 'team'
                 ? 'bg-[#F4C542] text-[#111111] border border-[#111111] shadow-xs'
                 : 'text-[#111111]/70 hover:text-[#111111] hover:bg-[#111111]/5'
             }`}
           >
-            <span className="material-symbols-outlined text-[18px]">psychology</span>
+            <span className="material-symbols-outlined text-[16px] sm:text-[18px]">psychology</span>
             <span>Meet Counselors ({psychologists.length})</span>
           </button>
 
           <button 
             onClick={() => setActiveTab('book')}
-            className={`flex-1 min-w-[140px] py-3 rounded-xl text-xs sm:text-sm font-black transition-all flex items-center justify-center gap-2 cursor-pointer ${
+            className={`flex-1 min-w-[120px] sm:min-w-[140px] py-2.5 sm:py-3 px-2 rounded-xl text-xs sm:text-sm font-black transition-all flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap ${
               activeTab === 'book'
                 ? 'bg-[#F4C542] text-[#111111] border border-[#111111] shadow-xs'
                 : 'text-[#111111]/70 hover:text-[#111111] hover:bg-[#111111]/5'
             }`}
           >
-            <span className="material-symbols-outlined text-[18px]">edit_calendar</span>
+            <span className="material-symbols-outlined text-[16px] sm:text-[18px]">edit_calendar</span>
             <span>Book Appointment</span>
           </button>
 
           <button 
             onClick={() => setActiveTab('mine')}
-            className={`flex-1 min-w-[140px] py-3 rounded-xl text-xs sm:text-sm font-black transition-all flex items-center justify-center gap-2 cursor-pointer ${
+            className={`flex-1 min-w-[120px] sm:min-w-[140px] py-2.5 sm:py-3 px-2 rounded-xl text-xs sm:text-sm font-black transition-all flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap ${
               activeTab === 'mine'
                 ? 'bg-[#F4C542] text-[#111111] border border-[#111111] shadow-xs'
                 : 'text-[#111111]/70 hover:text-[#111111] hover:bg-[#111111]/5'
             }`}
           >
-            <span className="material-symbols-outlined text-[18px]">event_available</span>
+            <span className="material-symbols-outlined text-[16px] sm:text-[18px]">event_available</span>
             <span>My Sessions ({myAppts.filter(a => a.status !== 'cancelled').length})</span>
           </button>
         </div>
@@ -456,21 +456,21 @@ export default function Appointments() {
             TAB 2: BOOKMYSHOW-STYLE COUNSELLOR BOOKING
         ══════════════════════════════════════════════════════════════════════ */}
         {activeTab === 'book' && (
-          <div className="max-w-3xl mx-auto space-y-6 animate-fade-in">
-            <div className="p-6 sm:p-8 rounded-3xl bg-[#FFFFFF] border-2 border-[#111111]/10 shadow-sm space-y-6">
+          <div className="max-w-3xl mx-auto space-y-6 animate-fade-in w-full max-w-full min-w-0">
+            <div className="p-4 sm:p-8 rounded-3xl bg-[#FFFFFF] border-2 border-[#111111]/10 shadow-sm space-y-5 sm:space-y-6 w-full max-w-full overflow-hidden">
               
               {/* Header */}
-              <div className="border-b border-[#111111]/10 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div className="border-b border-[#111111]/10 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
                 <div>
-                  <h3 className="font-heading text-xl font-bold text-[#111111] flex items-center gap-2">
-                    <Calendar size={20} className="text-[#111111]" />
+                  <h3 className="font-heading text-lg sm:text-xl font-bold text-[#111111] flex items-center gap-2">
+                    <Calendar size={18} className="text-[#111111] shrink-0" />
                     <span>BookMyShow-Style Counsellor Booking</span>
                   </h3>
-                  <p className="text-xs text-[#111111]/60 mt-1">
+                  <p className="text-xs text-[#111111]/60 mt-0.5">
                     Select counsellor, browse available time slots, and choose your preferred session mode.
                   </p>
                 </div>
-                <div className="px-3 py-1 rounded-full bg-[#F4C542]/20 border border-[#F4C542] text-[#111111] text-xs font-mono font-bold self-start sm:self-auto">
+                <div className="px-3 py-1 rounded-full bg-[#F4C542]/20 border border-[#F4C542] text-[#111111] text-xs font-mono font-bold self-start sm:self-auto shrink-0">
                   👤 Booking as <span className="font-black text-[#111111]">{getAlias()}</span>
                 </div>
               </div>
@@ -478,40 +478,40 @@ export default function Appointments() {
               {/* Step 1: Choose Counsellor */}
               <div className="space-y-3">
                 <label className="text-xs font-bold text-[#111111] uppercase tracking-widest flex items-center gap-1.5">
-                  <span className="w-5 h-5 rounded-full bg-[#F4C542] text-[#111111] border border-[#111111] flex items-center justify-center text-[11px] font-black">1</span>
+                  <span className="w-5 h-5 rounded-full bg-[#F4C542] text-[#111111] border border-[#111111] flex items-center justify-center text-[11px] font-black shrink-0">1</span>
                   <span>Choose Counsellor</span>
                 </label>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-72 overflow-y-auto pr-1">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3 max-h-72 overflow-y-auto pr-1">
                   {psychologists.map((doc) => {
                     const isSelected = selectedDoc === doc.id.toString();
                     return (
                       <div 
                         key={doc.name}
                         onClick={() => setSelectedDoc(doc.id.toString())}
-                        className={`p-3.5 rounded-2xl border cursor-pointer transition-all flex items-center gap-3 ${
+                        className={`p-3 rounded-2xl border cursor-pointer transition-all flex items-center gap-3 min-w-0 ${
                           isSelected
-                            ? 'bg-[#F4C542]/15 border-2 border-[#111111] ring-2 ring-[#F4C542]'
+                            ? 'bg-[#F4C542]/15 border-2 border-[#111111] ring-1 ring-[#F4C542]'
                             : 'bg-[#FFFFFF] hover:bg-[#111111]/5 border border-[#111111]/15'
                         }`}
                       >
                         <img 
                           src={doc.avatar_url} 
                           alt={doc.name} 
-                          className="w-12 h-12 rounded-xl object-cover border border-[#111111]/20 shrink-0 bg-[#FFFFFF]" 
+                          className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl object-cover border border-[#111111]/20 shrink-0 bg-[#FFFFFF]" 
                           onError={(e) => { (e.target as HTMLImageElement).src = '/vishnu_app_icon.png'; }}
                         />
-                        <div className="overflow-hidden flex-1">
-                          <div className="flex items-center justify-between">
-                            <h4 className="font-heading font-bold text-sm text-[#111111] truncate">{doc.name}</h4>
-                            <span className="text-[11px] font-black text-[#111111] shrink-0">⭐ 4.8</span>
+                        <div className="overflow-hidden flex-1 min-w-0">
+                          <div className="flex items-center justify-between gap-1">
+                            <h4 className="font-heading font-bold text-xs sm:text-sm text-[#111111] truncate">{doc.name}</h4>
+                            <span className="text-[10px] sm:text-[11px] font-black text-[#111111] shrink-0">⭐ 4.8</span>
                           </div>
-                          <p className="text-[11px] text-[#111111]/70 truncate">{doc.specialization}</p>
-                          <span className="text-[10px] font-mono text-[#111111]/50">{doc.institution}</span>
+                          <p className="text-[10px] sm:text-[11px] text-[#111111]/70 truncate">{doc.specialization}</p>
+                          <span className="text-[9px] sm:text-[10px] font-mono text-[#111111]/50 truncate block">{doc.institution}</span>
                         </div>
                         {isSelected && (
                           <div className="w-5 h-5 rounded-full bg-[#F4C542] flex items-center justify-center text-[#111111] border border-[#111111] shrink-0 font-bold">
-                            <Check size={13} />
+                            <Check size={12} />
                           </div>
                         )}
                       </div>
@@ -523,10 +523,10 @@ export default function Appointments() {
               {/* Step 2: Select Date (Horizontal Pill Carousel) */}
               <div className="space-y-3">
                 <label className="text-xs font-bold text-[#111111] uppercase tracking-widest flex items-center gap-1.5">
-                  <span className="w-5 h-5 rounded-full bg-[#F4C542] text-[#111111] border border-[#111111] flex items-center justify-center text-[11px] font-black">2</span>
+                  <span className="w-5 h-5 rounded-full bg-[#F4C542] text-[#111111] border border-[#111111] flex items-center justify-center text-[11px] font-black shrink-0">2</span>
                   <span>Select Date</span>
                 </label>
-                <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+                <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none w-full max-w-full">
                   {[0, 1, 2, 3, 4, 5].map((offset) => {
                     const d = new Date();
                     d.setDate(d.getDate() + offset);
@@ -540,14 +540,14 @@ export default function Appointments() {
                         key={offset}
                         type="button"
                         onClick={() => setReqDate(dateStr)}
-                        className={`p-3 rounded-2xl border text-center transition-all shrink-0 min-w-[85px] cursor-pointer ${
+                        className={`p-2.5 sm:p-3 rounded-2xl border text-center transition-all shrink-0 min-w-[76px] sm:min-w-[85px] cursor-pointer ${
                           isSelected
-                            ? 'bg-[#F4C542] text-[#111111] border-2 border-[#111111] font-black shadow-sm scale-105'
+                            ? 'bg-[#F4C542] text-[#111111] border-2 border-[#111111] font-black shadow-xs'
                             : 'bg-[#FFFFFF] border border-[#111111]/15 text-[#111111]/75 hover:bg-[#111111]/5'
                         }`}
                       >
-                        <p className="text-[10px] uppercase font-bold tracking-wider opacity-80">{dayName}</p>
-                        <p className="text-sm font-black mt-0.5">{monthDay}</p>
+                        <p className="text-[9px] sm:text-[10px] uppercase font-bold tracking-wider opacity-80">{dayName}</p>
+                        <p className="text-xs sm:text-sm font-black mt-0.5">{monthDay}</p>
                       </button>
                     );
                   })}
@@ -558,16 +558,16 @@ export default function Appointments() {
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <label className="text-xs font-bold text-[#111111] uppercase tracking-widest flex items-center gap-1.5">
-                    <span className="w-5 h-5 rounded-full bg-[#F4C542] text-[#111111] border border-[#111111] flex items-center justify-center text-[11px] font-black">3</span>
+                    <span className="w-5 h-5 rounded-full bg-[#F4C542] text-[#111111] border border-[#111111] flex items-center justify-center text-[11px] font-black shrink-0">3</span>
                     <span>Available Slots</span>
                   </label>
-                  <div className="flex items-center gap-3 text-[10px] font-bold text-[#111111]/60">
-                    <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-[#F4C542] border border-[#111111]" /> Available</span>
-                    <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-[#111111]/20" /> Booked</span>
+                  <div className="flex items-center gap-2.5 text-[10px] font-bold text-[#111111]/60">
+                    <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-[#F4C542] border border-[#111111]" /> Available</span>
+                    <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-[#111111]/20" /> Booked</span>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-2.5">
                   {[
                     { time: '10:00 AM', raw: '10:00', status: 'available' },
                     { time: '11:30 AM', raw: '11:30', status: 'available' },
@@ -585,21 +585,21 @@ export default function Appointments() {
                         type="button"
                         disabled={isBooked}
                         onClick={() => setReqTime(slot.raw)}
-                        className={`py-3 px-4 rounded-xl border font-mono text-xs font-bold transition-all flex items-center justify-between cursor-pointer ${
+                        className={`py-2 px-2 sm:px-3 rounded-xl border font-mono text-[11px] sm:text-xs font-bold transition-all flex items-center justify-between gap-1 cursor-pointer min-w-0 ${
                           isBooked
                             ? 'bg-[#111111]/5 border-dashed border-[#111111]/20 text-[#111111]/30 cursor-not-allowed line-through'
                             : isSelected
-                            ? 'bg-[#F4C542] text-[#111111] border-2 border-[#111111] shadow-sm font-black scale-[1.02]'
+                            ? 'bg-[#F4C542] text-[#111111] border-2 border-[#111111] shadow-xs font-black'
                             : 'bg-[#FFFFFF] border border-[#111111]/20 text-[#111111] hover:bg-[#111111]/5'
                         }`}
                       >
-                        <span>{slot.time}</span>
+                        <span className="truncate">{slot.time}</span>
                         {isBooked ? (
-                          <span className="text-[10px] font-sans no-underline text-[#111111]/30">Booked</span>
+                          <span className="text-[9px] sm:text-[10px] font-sans no-underline text-[#111111]/30 shrink-0">Booked</span>
                         ) : isSelected ? (
-                          <Check size={14} className="stroke-[3]" />
+                          <Check size={13} className="stroke-[3] shrink-0" />
                         ) : (
-                          <span className="text-[10px] font-sans font-bold text-[#111111]/60">Available</span>
+                          <span className="text-[9px] sm:text-[10px] font-sans font-bold text-[#111111]/60 shrink-0">Avail</span>
                         )}
                       </button>
                     );
@@ -610,11 +610,11 @@ export default function Appointments() {
               {/* Step 4: Appointment Mode Selection */}
               <div className="space-y-3">
                 <label className="text-xs font-bold text-[#111111] uppercase tracking-widest flex items-center gap-1.5">
-                  <span className="w-5 h-5 rounded-full bg-[#F4C542] text-[#111111] border border-[#111111] flex items-center justify-center text-[11px] font-black">4</span>
+                  <span className="w-5 h-5 rounded-full bg-[#F4C542] text-[#111111] border border-[#111111] flex items-center justify-center text-[11px] font-black shrink-0">4</span>
                   <span>Select Appointment Mode</span>
                 </label>
 
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-2.5">
                   {[
                     { mode: 'Chat' as const, icon: '💬', desc: 'Text Session' },
                     { mode: 'Audio Call' as const, icon: '📞', desc: 'Private Voice' },
@@ -624,28 +624,28 @@ export default function Appointments() {
                     <div
                       key={item.mode}
                       onClick={() => setSelectedMode(item.mode)}
-                      className={`p-3.5 rounded-2xl border-2 transition-all text-center cursor-pointer group flex flex-col items-center justify-center ${
+                      className={`p-2.5 sm:p-3.5 rounded-2xl border-2 transition-all text-center cursor-pointer group flex flex-col items-center justify-center min-w-0 ${
                         selectedMode === item.mode
                           ? 'bg-[#F4C542] border-[#111111] shadow-xs'
                           : 'bg-[#FFFFFF] border-[#111111]/15 hover:border-[#111111]'
                       }`}
                     >
-                      <span className="text-xl block mb-1">{item.icon}</span>
-                      <p className="text-xs font-black text-[#111111]">{item.mode}</p>
-                      <p className="text-[10px] text-[#111111]/70 mt-0.5 font-medium">{item.desc}</p>
+                      <span className="text-lg sm:text-xl block mb-1">{item.icon}</span>
+                      <p className="text-xs font-black text-[#111111] truncate w-full">{item.mode}</p>
+                      <p className="text-[9px] sm:text-[10px] text-[#111111]/70 mt-0.5 font-medium truncate w-full">{item.desc}</p>
                     </div>
                   ))}
                 </div>
               </div>
 
               {/* Anonymous Confirmation Notice */}
-              <div className="p-4 rounded-2xl bg-[#F4C542]/10 border border-[#F4C542]/40 flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-[#F4C542] text-[#111111] border border-[#111111] flex items-center justify-center shrink-0">
-                  <Shield size={20} />
+              <div className="p-3.5 sm:p-4 rounded-2xl bg-[#F4C542]/10 border border-[#F4C542]/40 flex items-start sm:items-center gap-3">
+                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#F4C542] text-[#111111] border border-[#111111] flex items-center justify-center shrink-0">
+                  <Shield size={18} />
                 </div>
-                <div className="text-xs">
+                <div className="text-xs min-w-0">
                   <p className="font-bold text-[#111111]">Identity Privacy Guarantee</p>
-                  <p className="text-[#111111]/75 mt-0.5">
+                  <p className="text-[#111111]/75 mt-0.5 text-[11px] sm:text-xs">
                     The counsellor initially sees only your anonymous alias: <strong className="text-[#111111]">"{getAlias()}"</strong>. Real institutional details remain zero-knowledge encrypted.
                   </p>
                 </div>
@@ -655,7 +655,7 @@ export default function Appointments() {
               <button 
                 onClick={handleRequestBooking} 
                 disabled={!reqTime || isBooking}
-                className="w-full py-4 rounded-2xl bg-[#F4C542] hover:bg-[#e0b435] text-[#111111] font-black text-sm sm:text-base border-2 border-[#111111] transition-all disabled:opacity-40 disabled:cursor-not-allowed shadow-md flex items-center justify-center gap-2 cursor-pointer active:scale-98"
+                className="w-full py-3.5 sm:py-4 rounded-2xl bg-[#F4C542] hover:bg-[#e0b435] text-[#111111] font-black text-sm sm:text-base border-2 border-[#111111] transition-all disabled:opacity-40 disabled:cursor-not-allowed shadow-md flex items-center justify-center gap-2 cursor-pointer active:scale-98"
               >
                 {isBooking ? (
                   <>

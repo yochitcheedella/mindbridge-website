@@ -48,7 +48,7 @@ export function Navbar() {
   if (navItems.length === 0) return null;
 
   return (
-    <nav className="md:hidden fixed bottom-[calc(0.75rem+env(safe-area-inset-bottom,0px))] left-4 right-4 z-50 rounded-2xl flex justify-around items-center min-h-[3.75rem] py-1 px-1 bg-[#FFFFFF] border-2 border-[#111111] shadow-lg font-sans">
+    <nav className="md:hidden fixed bottom-[calc(0.75rem+env(safe-area-inset-bottom,0px))] left-4 right-4 z-40 rounded-2xl flex justify-around items-center min-h-[3.75rem] py-1 px-1 bg-[#FFFFFF] border-2 border-[#111111] shadow-lg font-sans">
       {navItems.map(({ path, icon, label, isAlert }: any) => {
         const isActive = location.pathname === path;
         return (

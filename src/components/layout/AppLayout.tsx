@@ -86,14 +86,14 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
     <div className="min-h-screen bg-[#FFFFFF] flex text-[#111111] overflow-x-hidden selection:bg-[#F4C542] selection:text-[#111111]">
       {/* ── Mobile Responsive Navigation Drawer (Slide-Over) ── */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 z-50 md:hidden flex animate-fade-in">
+        <div className="fixed inset-0 z-[100] md:hidden flex animate-fade-in">
           <div 
-            className="fixed inset-0 bg-[#111111]/60 backdrop-blur-xs transition-opacity" 
+            className="fixed inset-0 bg-[#111111]/70 backdrop-blur-xs transition-opacity" 
             onClick={() => setMobileMenuOpen(false)} 
           />
-          <div className="relative w-80 max-w-[85vw] h-full bg-[#FFFFFF] border-r border-[#111111]/10 flex flex-col shadow-2xl z-10 animate-slide-right">
+          <div className="relative w-80 max-w-[85vw] h-full bg-[#FFFFFF] border-r-2 border-[#111111] flex flex-col shadow-2xl z-10 animate-slide-right">
             {/* Drawer Header */}
-            <div className="h-20 flex items-center justify-between px-6 border-b border-[#111111]/10">
+            <div className="h-20 flex items-center justify-between px-6 border-b border-[#111111]/10 shrink-0">
               <div className="flex items-center gap-3">
                 <img 
                   src="/logo.png" 
@@ -107,7 +107,7 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
               </div>
               <button 
                 onClick={() => setMobileMenuOpen(false)} 
-                className="text-[#111111]/70 hover:text-[#111111] p-1.5 rounded-xl hover:bg-[#111111]/5 transition-colors"
+                className="text-[#111111]/70 hover:text-[#111111] p-1.5 rounded-xl hover:bg-[#111111]/5 transition-colors cursor-pointer"
                 aria-label="Close menu"
               >
                 <X size={20} />
@@ -115,7 +115,7 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
             </div>
 
             {/* Profile Info */}
-            <div className="p-4 m-4 rounded-2xl bg-[#FAFAFA] border border-[#111111]/10 flex items-center gap-3">
+            <div className="p-4 m-4 rounded-2xl bg-[#FAFAFA] border-2 border-[#111111]/15 flex items-center gap-3 shrink-0">
               <div className="w-10 h-10 rounded-full bg-[#F4C542] border-2 border-[#111111] flex items-center justify-center text-[#111111] font-black text-sm">
                 {displayName.charAt(0).toUpperCase()}
               </div>
@@ -123,12 +123,12 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
                 <div className="font-heading font-black text-sm text-[#111111] truncate">{displayName}</div>
                 <div className="flex items-center gap-1.5 mt-0.5">
                   <span className="w-2 h-2 rounded-full bg-[#F4C542] border border-[#111111]"></span>
-                  <span className="text-[11px] font-mono capitalize text-[#111111]/60 font-semibold">{role} Account</span>
+                  <span className="text-[11px] font-mono capitalize text-[#111111]/60 font-bold">{role} Account</span>
                 </div>
               </div>
             </div>
 
-            {/* Nav Items */}
+            {/* Nav Items (Scrollable) */}
             <nav className="flex-1 overflow-y-auto py-2 px-3 space-y-1.5 hide-scrollbar">
               {navItems.map((item) => {
                 const isActive = location.pathname === item.path;
@@ -151,7 +151,7 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
                     >
                       {item.icon}
                     </span>
-                    <span className="text-sm tracking-tight flex-1">{item.label}</span>
+                    <span className="text-sm tracking-tight flex-1 font-bold">{item.label}</span>
                     {item.badge && (
                       <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-black tracking-wider uppercase ${
                         isActive ? 'bg-[#111111] text-[#FFFFFF]' : 'bg-[#F4C542] text-[#111111] border border-[#111111]'
@@ -164,17 +164,17 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
               })}
             </nav>
 
-            {/* Footer / Logout */}
-            <div className="p-4 border-t border-[#111111]/10">
+            {/* Sticky Footer / Logout (Always visible while navigating & scrolling) */}
+            <div className="shrink-0 p-4 border-t-2 border-[#111111]/10 bg-[#FFFFFF] pb-[calc(1rem+env(safe-area-inset-bottom,0px))]">
               <button
                 onClick={() => {
                   setMobileMenuOpen(false);
                   handleLogout();
                 }}
-                className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-2xl border border-[#111111] text-[#111111] hover:bg-[#111111] hover:text-[#FFFFFF] transition-colors duration-150 font-bold text-sm"
+                className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-[#FFFFFF] hover:bg-rose-50 border-2 border-[#111111] text-rose-600 hover:text-rose-700 transition-colors font-black text-sm shadow-xs active:scale-98 cursor-pointer"
               >
                 <LogOut size={18} />
-                <span>Logout</span>
+                <span>Log Out</span>
               </button>
             </div>
           </div>
@@ -352,6 +352,17 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
                 <span className="text-xs font-black text-[#111111] max-w-[120px] truncate">{displayName}</span>
               </div>
             </Link>
+
+            {/* Quick Sticky Logout Button */}
+            <button
+              onClick={handleLogout}
+              className="p-2 sm:px-3 sm:py-2 rounded-xl bg-[#FFFFFF] hover:bg-rose-50 border-2 border-[#111111] text-[#111111] hover:text-rose-600 transition-colors flex items-center gap-1.5 shrink-0 shadow-xs active:scale-95 cursor-pointer font-black text-xs"
+              title="Logout"
+              aria-label="Logout"
+            >
+              <LogOut size={16} />
+              <span className="hidden sm:inline">Logout</span>
+            </button>
           </div>
         </header>
 

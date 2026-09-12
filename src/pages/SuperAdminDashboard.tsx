@@ -56,7 +56,14 @@ const INITIAL_COLLEGES: CollegeDeployment[] = [
 
 export default function SuperAdminDashboard() {
   const auth = getAuth();
-  const [colleges, setColleges] = useState<CollegeDeployment[]>(INITIAL_COLLEGES);
+  const [colleges, setColleges] = useState<CollegeDeployment[]>(() => {
+    try {
+      const stored = localStorage.getItem('mindbridge_society_colleges');
+      return stored ? JSON.parse(stored) : INITIAL_COLLEGES;
+    } catch {
+      return INITIAL_COLLEGES;
+    }
+  });
   const [activeTab, setActiveTab] = useState<'colleges' | 'ai_config' | 'security' | 'audit'>('colleges');
   const [searchTerm, setSearchTerm] = useState('');
   
@@ -87,7 +94,9 @@ export default function SuperAdminDashboard() {
       status: 'active',
       joinedDate: 'Today',
     };
-    setColleges([item, ...colleges]);
+    const updated = [item, ...colleges];
+    setColleges(updated);
+    localStorage.setItem('mindbridge_society_colleges', JSON.stringify(updated));
     setShowAddCollege(false);
     setNewColName('');
     setNewColCode('');

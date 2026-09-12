@@ -15,33 +15,6 @@ interface SOAPNote {
   plan: string;
 }
 
-const DEMO_NOTES: SOAPNote[] = [
-  {
-    id: 'soap-1',
-    studentAlias: 'Blue Sparrow',
-    department: 'AI&DS',
-    year: 3,
-    date: '2026-08-04',
-    riskLevel: 'Moderate',
-    subjective: 'Patient expressed acute anxiety surrounding upcoming placement coding rounds. Reports sleeping only 4 hours a night due to racing mind.',
-    objective: 'Affect slightly anxious; hyper-focused on perfectionism. Rapid speech patterns during discussion of academic expectations.',
-    assessment: 'Moderate anxiety linked to academic burnout (MBI-S score: 14). No acute crisis or self-harm ideation present.',
-    plan: 'Assigned Box Breathing protocol via app canopy. Instructed to complete 3 CBT thought records when imposter syndrome occurs. Recheck in 5 days.'
-  },
-  {
-    id: 'soap-2',
-    studentAlias: 'Calm Falcon',
-    department: 'CSE',
-    year: 2,
-    date: '2026-08-02',
-    riskLevel: 'Minimal',
-    subjective: 'Reports significant improvement in mood after regular journaling and participating in campus circles.',
-    objective: 'Relaxed posture, bright vocal affect, consistent eye contact during telehealth check-in.',
-    assessment: 'Symptom remediation positive. PHQ-9 dropped from 12 to 5 over the last three weeks.',
-    plan: 'Maintain daily mood check-ins. Discontinue weekly therapy to monthly maintenance check.'
-  }
-];
-
 const STUDENT_ROSTER = [
   { alias: 'Blue Sparrow', department: 'AI&DS', year: 3, risk: 'Moderate' },
   { alias: 'Calm Falcon', department: 'CSE', year: 2, risk: 'Minimal' },
@@ -50,7 +23,7 @@ const STUDENT_ROSTER = [
 ];
 
 export default function ClinicalSOAPNotes() {
-  const [notes, setNotes] = useState<SOAPNote[]>(DEMO_NOTES);
+  const [notes, setNotes] = useState<SOAPNote[]>([]);
   const [selectedStudent, setSelectedStudent] = useState(STUDENT_ROSTER[0]);
   const [isCreating, setIsCreating] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -67,10 +40,22 @@ export default function ClinicalSOAPNotes() {
 
   useEffect(() => {
     // Attempt to load from backend or local storage
-    try {
-      const stored = localStorage.getItem('mindbridge_soap_notes');
-      if (stored) setNotes(JSON.parse(stored));
-    } catch {}
+    apiFetch('/api/clinical/soap-notes')
+      .then(r => r.json())
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          setNotes(data);
+        } else {
+          const stored = localStorage.getItem('mindbridge_soap_notes');
+          if (stored) setNotes(JSON.parse(stored));
+        }
+      })
+      .catch(() => {
+        try {
+          const stored = localStorage.getItem('mindbridge_soap_notes');
+          if (stored) setNotes(JSON.parse(stored));
+        } catch {}
+      });
   }, []);
 
   const handleSaveNote = async (e: React.FormEvent) => {
@@ -310,84 +295,94 @@ export default function ClinicalSOAPNotes() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-6">
-          {filteredNotes.map((note) => (
-            <div key={note.id} className="bg-white p-6 sm:p-8 rounded-3xl border-2 border-[#111111] shadow-[4px_4px_0px_#111111] transition-all space-y-6">
-              {/* Card Header */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#111111]/15">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-2xl bg-[#F4C542] border-2 border-[#111111] flex items-center justify-center text-[#111111] font-bold text-lg">
-                    {note.studentAlias.charAt(0)}
-                  </div>
-                  <div>
-                    <h3 className="font-heading font-bold text-[#111111] text-lg flex items-center gap-2">
-                      <span>{note.studentAlias}</span>
-                      <span className="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-semibold bg-[#FAFAFA] text-[#111111] border border-[#111111]/20">
-                        {note.department} • Year {note.year}
+        {filteredNotes.length === 0 ? (
+          <div className="bg-white p-12 rounded-3xl border-2 border-[#111111] text-center space-y-3 shadow-[4px_4px_0px_#111111]">
+            <FileText className="text-[#111111]/40 mx-auto" size={40} />
+            <h3 className="text-lg font-heading font-bold text-[#111111]">No Clinical Notes Yet</h3>
+            <p className="text-sm text-[#111111]/70 max-w-md mx-auto">
+              Create your first confidential case formulation by clicking <span className="font-bold text-[#111111]">"+ New Clinical Note"</span> above.
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 gap-6">
+            {filteredNotes.map((note) => (
+              <div key={note.id} className="bg-white p-6 sm:p-8 rounded-3xl border-2 border-[#111111] shadow-[4px_4px_0px_#111111] transition-all space-y-6">
+                {/* Card Header */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#111111]/15">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-2xl bg-[#F4C542] border-2 border-[#111111] flex items-center justify-center text-[#111111] font-bold text-lg">
+                      {note.studentAlias.charAt(0)}
+                    </div>
+                    <div>
+                      <h3 className="font-heading font-bold text-[#111111] text-lg flex items-center gap-2">
+                        <span>{note.studentAlias}</span>
+                        <span className="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-semibold bg-[#FAFAFA] text-[#111111] border border-[#111111]/20">
+                          {note.department} • Year {note.year}
+                        </span>
+                      </h3>
+                      <span className="text-xs font-mono text-[#111111]/70 flex items-center gap-1 mt-0.5">
+                        <Calendar size={13} />
+                        <span>Recorded on {new Date(note.date).toLocaleDateString(undefined, { dateStyle: 'medium' })}</span>
                       </span>
-                    </h3>
-                    <span className="text-xs font-mono text-[#111111]/70 flex items-center gap-1 mt-0.5">
-                      <Calendar size={13} />
-                      <span>Recorded on {new Date(note.date).toLocaleDateString(undefined, { dateStyle: 'medium' })}</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    <span className={`px-3 py-1 rounded-full text-xs font-mono font-extrabold uppercase tracking-wider border ${getRiskBadgeStyle(note.riskLevel)}`}>
+                      Risk: {note.riskLevel}
                     </span>
+                    <button 
+                      onClick={() => {
+                        const upd = notes.filter(n => n.id !== note.id);
+                        setNotes(upd);
+                        localStorage.setItem('mindbridge_soap_notes', JSON.stringify(upd));
+                      }}
+                      className="p-2 text-on-surface-variant/50 hover:text-rose-400 rounded-lg hover:bg-rose-500/10 transition-colors"
+                      title="Archive note"
+                    >
+                      <Trash2 size={16} />
+                    </button>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3">
-                  <span className={`px-3 py-1 rounded-full text-xs font-mono font-extrabold uppercase tracking-wider border ${getRiskBadgeStyle(note.riskLevel)}`}>
-                    Risk: {note.riskLevel}
-                  </span>
-                  <button 
-                    onClick={() => {
-                      const upd = notes.filter(n => n.id !== note.id);
-                      setNotes(upd);
-                      localStorage.setItem('mindbridge_soap_notes', JSON.stringify(upd));
-                    }}
-                    className="p-2 text-on-surface-variant/50 hover:text-rose-400 rounded-lg hover:bg-rose-500/10 transition-colors"
-                    title="Archive note"
-                  >
-                    <Trash2 size={16} />
-                  </button>
+                {/* SOAP Body */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
+                  <div className="p-4 rounded-2xl bg-[#FAFAFA] border border-[#111111]/20 space-y-1.5">
+                    <div className="text-xs font-mono font-bold uppercase tracking-wider text-blue-700 flex items-center gap-2">
+                      <span className="w-5 h-5 rounded bg-blue-100 text-blue-800 flex items-center justify-center text-[10px] font-bold">S</span>
+                      <span>Subjective Presentation</span>
+                    </div>
+                    <p className="text-[#111111]/80 leading-relaxed">{note.subjective}</p>
+                  </div>
+
+                  <div className="p-4 rounded-2xl bg-[#FAFAFA] border border-[#111111]/20 space-y-1.5">
+                    <div className="text-xs font-mono font-bold uppercase tracking-wider text-indigo-700 flex items-center gap-2">
+                      <span className="w-5 h-5 rounded bg-indigo-100 text-indigo-800 flex items-center justify-center text-[10px] font-bold">O</span>
+                      <span>Objective Observations</span>
+                    </div>
+                    <p className="text-[#111111]/80 leading-relaxed">{note.objective}</p>
+                  </div>
+
+                  <div className="p-4 rounded-2xl bg-[#FAFAFA] border border-[#111111]/20 space-y-1.5">
+                    <div className="text-xs font-mono font-bold uppercase tracking-wider text-purple-700 flex items-center gap-2">
+                      <span className="w-5 h-5 rounded bg-purple-100 text-purple-800 flex items-center justify-center text-[10px] font-bold">A</span>
+                      <span>Diagnostic Formulation</span>
+                    </div>
+                    <p className="text-[#111111]/80 leading-relaxed">{note.assessment}</p>
+                  </div>
+
+                  <div className="p-4 rounded-2xl bg-[#FAFAFA] border-2 border-emerald-500/40 space-y-1.5">
+                    <div className="text-xs font-mono font-bold uppercase tracking-wider text-emerald-700 flex items-center gap-2">
+                      <span className="w-5 h-5 rounded bg-emerald-100 text-emerald-800 flex items-center justify-center text-[10px] font-bold">P</span>
+                      <span>Clinical Treatment Plan</span>
+                    </div>
+                    <p className="text-[#111111]/80 leading-relaxed">{note.plan}</p>
+                  </div>
                 </div>
               </div>
-
-              {/* SOAP Body */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
-                <div className="p-4 rounded-2xl bg-[#FAFAFA] border border-[#111111]/20 space-y-1.5">
-                  <div className="text-xs font-mono font-bold uppercase tracking-wider text-blue-700 flex items-center gap-2">
-                    <span className="w-5 h-5 rounded bg-blue-100 text-blue-800 flex items-center justify-center text-[10px] font-bold">S</span>
-                    <span>Subjective Presentation</span>
-                  </div>
-                  <p className="text-[#111111]/80 leading-relaxed">{note.subjective}</p>
-                </div>
-
-                <div className="p-4 rounded-2xl bg-[#FAFAFA] border border-[#111111]/20 space-y-1.5">
-                  <div className="text-xs font-mono font-bold uppercase tracking-wider text-indigo-700 flex items-center gap-2">
-                    <span className="w-5 h-5 rounded bg-indigo-100 text-indigo-800 flex items-center justify-center text-[10px] font-bold">O</span>
-                    <span>Objective Observations</span>
-                  </div>
-                  <p className="text-[#111111]/80 leading-relaxed">{note.objective}</p>
-                </div>
-
-                <div className="p-4 rounded-2xl bg-[#FAFAFA] border border-[#111111]/20 space-y-1.5">
-                  <div className="text-xs font-mono font-bold uppercase tracking-wider text-purple-700 flex items-center gap-2">
-                    <span className="w-5 h-5 rounded bg-purple-100 text-purple-800 flex items-center justify-center text-[10px] font-bold">A</span>
-                    <span>Diagnostic Formulation</span>
-                  </div>
-                  <p className="text-[#111111]/80 leading-relaxed">{note.assessment}</p>
-                </div>
-
-                <div className="p-4 rounded-2xl bg-[#FAFAFA] border-2 border-emerald-500/40 space-y-1.5">
-                  <div className="text-xs font-mono font-bold uppercase tracking-wider text-emerald-700 flex items-center gap-2">
-                    <span className="w-5 h-5 rounded bg-emerald-100 text-emerald-800 flex items-center justify-center text-[10px] font-bold">P</span>
-                    <span>Clinical Treatment Plan</span>
-                  </div>
-                  <p className="text-[#111111]/80 leading-relaxed">{note.plan}</p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

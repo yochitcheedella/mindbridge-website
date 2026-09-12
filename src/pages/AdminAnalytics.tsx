@@ -138,12 +138,13 @@ export default function AdminAnalytics() {
         setPsychologists(prev => [...prev, created]);
         setNewPsychName('');
         setNewPsychSpec('');
+      } else {
+        const err = await res.json().catch(() => ({}));
+        alert(err.detail || 'Failed to add psychologist to server');
       }
-    } catch {
-      const mock: Psychologist = { id: Date.now(), name: newPsychName.trim(), specialization: newPsychSpec.trim(), is_active: true };
-      setPsychologists(prev => [...prev, mock]);
-      setNewPsychName('');
-      setNewPsychSpec('');
+    } catch (err: any) {
+      console.error('Add psychologist error', err);
+      alert('Unable to connect to server to add psychologist.');
     } finally {
       setAddingPsych(false);
     }

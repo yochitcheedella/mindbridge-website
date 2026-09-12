@@ -81,35 +81,7 @@ export default function PsychologistDashboard() {
   // Appointments, SOS, Offline Sessions, To-Dos & Flashcards view state
   const [view, setView] = useState<'queue' | 'appointments' | 'offline_sessions' | 'todos' | 'flashcards' | 'sos'>('queue');
   const [activeAlerts, setActiveAlerts] = useState<ActiveAlert[]>([]);
-  const [appointments, setAppointments] = useState<any[]>([
-    {
-      id: 101,
-      anonymous_id: 'Anonymous_27',
-      student_alias: 'Anonymous_27',
-      slot_time: '2026-09-12T16:30:00.000Z',
-      status: 'pending',
-      type: 'Audio Call',
-      notes: 'Experiencing severe academic pressure and insomnia before mid-terms.'
-    },
-    {
-      id: 102,
-      anonymous_id: 'Student_B91',
-      student_alias: 'Student_B91',
-      slot_time: '2026-09-13T11:00:00.000Z',
-      status: 'pending',
-      type: 'Audio Call',
-      notes: 'Follow-up regarding digital detox protocol.'
-    },
-    {
-      id: 103,
-      anonymous_id: 'BlueSky27',
-      student_alias: 'BlueSky27',
-      slot_time: '2026-09-09T14:00:00.000Z',
-      status: 'confirmed',
-      type: 'Audio Call',
-      notes: 'Routine mood monitoring and exam confidence check-in.'
-    }
-  ]);
+  const [appointments, setAppointments] = useState<any[]>([]);
   const [rescheduleId, setRescheduleId] = useState<number | null>(null);
   const [rescheduleDate, setRescheduleDate] = useState('');
 
@@ -121,51 +93,34 @@ export default function PsychologistDashboard() {
   const [flashcardFilter, setFlashcardFilter] = useState<'ALL' | 'PUBLISHED' | 'PENDING_REVIEW' | 'DRAFT'>('ALL');
 
   // ── MANUAL OFFLINE SESSION ENTRY STATE ──
-  const [offlineSessions, setOfflineSessions] = useState<any[]>([
-    {
-      id: 'off-1',
-      studentAlias: 'BlueSky27',
-      date: '08/09/2026',
-      sessionType: 'Individual',
-      duration: '45 min',
-      concern: 'Academic Stress & Exam Anxiety',
-      riskLevel: 'Low',
-      notes: 'In-person session at Vishnu Wellness Centre room 204. Practiced breath pacing and grounding.',
-      followUpRequired: true,
-      nextSessionDate: '15/09/2026',
-      recordedAt: 'Today, 11:30 AM'
-    },
-    {
-      id: 'off-2',
-      studentAlias: 'Student_482',
-      date: '07/09/2026',
-      sessionType: 'Individual',
-      duration: '50 min',
-      concern: 'Placement & Career Guidance',
-      riskLevel: 'Low',
-      notes: 'Reviewed cognitive reframing for interview pressure. Recommended 20-min digital detox daily.',
-      followUpRequired: false,
-      recordedAt: 'Yesterday, 3:30 PM'
+  const [offlineSessions, setOfflineSessions] = useState<any[]>(() => {
+    try {
+      const stored = localStorage.getItem('mindbridge_offline_sessions');
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
     }
-  ]);
+  });
   const [showOfflineModal, setShowOfflineModal] = useState(false);
-  const [offAlias, setOffAlias] = useState('BlueSky27');
-  const [offDate, setOffDate] = useState('2026-09-08');
+  const [offAlias, setOffAlias] = useState('');
+  const [offDate, setOffDate] = useState(new Date().toISOString().split('T')[0]);
   const [offType, setOffType] = useState<'Individual' | 'Group' | 'Emergency'>('Individual');
   const [offDuration, setOffDuration] = useState('45 min');
   const [offConcern, setOffConcern] = useState('Academic Stress');
   const [offRisk, setOffRisk] = useState<'Low' | 'Moderate' | 'High' | 'Severe'>('Low');
   const [offNotes, setOffNotes] = useState('');
   const [offFollowUp, setOffFollowUp] = useState(true);
-  const [offNextDate, setOffNextDate] = useState('2026-09-15');
+  const [offNextDate, setOffNextDate] = useState('');
 
   // ── DEDICATED COUNSELLOR TO-DO LIST STATE ──
-  const [tasks, setTasks] = useState<any[]>([
-    { id: 't-1', title: 'Follow up with BlueSky27 regarding sleep hygiene', priority: 'Urgent', dueDate: 'Today, 5:00 PM', studentAlias: 'BlueSky27', completed: false },
-    { id: 't-2', title: 'Review emergency case alert #104', priority: 'Urgent', dueDate: 'Today, 2:00 PM', studentAlias: 'Crisis SOS', completed: false },
-    { id: 't-3', title: 'Prepare tomorrow morning session agendas', priority: 'Important', dueDate: 'Tomorrow, 9:00 AM', completed: false },
-    { id: 't-4', title: 'Update offline session notes for physical chamber visits', priority: 'Normal', dueDate: '09/09/2026', completed: true },
-  ]);
+  const [tasks, setTasks] = useState<any[]>(() => {
+    try {
+      const stored = localStorage.getItem('mindbridge_counselor_tasks');
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  });
   const [showTaskModal, setShowTaskModal] = useState(false);
   const [newTaskTitle, setNewTaskTitle] = useState('');
   const [newTaskPriority, setNewTaskPriority] = useState<'Urgent' | 'Important' | 'Normal'>('Important');
@@ -192,13 +147,8 @@ export default function PsychologistDashboard() {
     apiFetch('/api/appointments/all')
       .then(r => r.json())
       .then(data => {
-        if (Array.isArray(data) && data.length > 0) {
-          setAppointments(prev => {
-            const map = new Map();
-            prev.forEach(p => map.set(p.id, p));
-            data.forEach((d: any) => map.set(d.id, d));
-            return Array.from(map.values());
-          });
+        if (Array.isArray(data)) {
+          setAppointments(data);
         }
       })
       .catch(() => {});

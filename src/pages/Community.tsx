@@ -29,52 +29,26 @@ export default function Community() {
   const [expandedPostId, setExpandedPostId] = useState<number | null>(null);
   const [replyContent, setReplyContent] = useState('');
 
-  useEffect(() => {
-    fetchPosts();
-  }, []);
-
-  const DEMO_COMMUNITY_POSTS: Post[] = [
-    {
-      id: 1,
-      title: "Coping with 3rd-year placement coding stress",
-      content: "Anyone else feeling overwhelmed by continuous back-to-back algorithmic rounds? The anxiety was keeping me up, but box breathing and CBT thought journaling in this app actually brought me back to focus today.",
-      upvotes: 24,
-      reply_count: 3,
-      created_at: new Date(Date.now() - 3600000 * 5).toISOString(),
-      replies: [
-        { id: 101, content: "Same here. Remember to take 10-minute walk breaks outside the library.", created_at: new Date(Date.now() - 3600000 * 3).toISOString() },
-        { id: 102, content: "You've got this! We're all rooting for each other.", created_at: new Date(Date.now() - 3600000 * 1).toISOString() }
-      ]
-    },
-    {
-      id: 2,
-      title: "Shoutout to the campus wellness center counselors",
-      content: "Booked an anonymous audio session yesterday. It was the first time I felt genuinely heard about academic burnout without being judged.",
-      upvotes: 38,
-      reply_count: 2,
-      created_at: new Date(Date.now() - 3600000 * 20).toISOString(),
-      replies: [
-        { id: 103, content: "The counselors here are truly empathetic. Glad you reached out!", created_at: new Date(Date.now() - 3600000 * 12).toISOString() }
-      ]
-    }
-  ];
-
   const fetchPosts = async () => {
     try {
       const res = await apiFetch('/api/community/posts');
       if (res.ok) {
         const data = await res.json();
-        if (Array.isArray(data) && data.length > 0) {
+        if (Array.isArray(data)) {
           setPosts(data);
           return;
         }
       }
-      setPosts(DEMO_COMMUNITY_POSTS);
+      setPosts([]);
     } catch (e) {
-      console.warn('Backend unavailable, using default community posts');
-      setPosts(DEMO_COMMUNITY_POSTS);
+      console.error('Failed to fetch real-time posts', e);
+      setPosts([]);
     }
   };
+
+  useEffect(() => {
+    fetchPosts();
+  }, []);
 
   const handleCreatePost = async () => {
     if (!newTitle.trim() || !newContent.trim()) return;

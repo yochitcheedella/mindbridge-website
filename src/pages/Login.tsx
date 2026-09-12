@@ -79,52 +79,6 @@ export default function Login() {
       });
 
       if (!res.ok) {
-        // Resilient fallback for demo accounts if backend is offline/unreachable
-        if (cleanEmail === 'superadmin@vishnu.edu.in') {
-          setAuth({
-            access_token: 'mock_jwt_superadmin_token_2026',
-            role: 'super_admin',
-            name: 'Platform Super Admin',
-            institution: 'Sri Vishnu Educational Society',
-          }, cleanEmail);
-          navigate('/superadmin/dashboard');
-          return;
-        }
-        if (cleanEmail === 'admin@vishnu.edu.in') {
-          setAuth({
-            access_token: 'mock_jwt_admin_token_2026',
-            role: 'admin',
-            admin_id: 1,
-            name: 'VIT College Admin',
-            institution: 'Vishnu Institute of Technology',
-          }, cleanEmail);
-          navigate('/admin/dashboard');
-          return;
-        }
-        if (cleanEmail === 'ram.sir@vishnu.edu.in' || cleanEmail === 'prudhvi.v@vishnu.edu.in' || cleanEmail === 'psychologist@vishnu.edu.in') {
-          setAuth({
-            access_token: 'mock_jwt_psych_token_2026',
-            role: 'psychologist',
-            psychologist_id: 1,
-            name: 'Ram Prudhvi Teja (Senior Counsellor)',
-            specialization: 'Senior Wellness Counsellor • Mind-Body Therapist',
-            institution: 'Vishnu Institute of Technology',
-          }, cleanEmail);
-          navigate('/psychologist/dashboard');
-          return;
-        }
-        if (cleanEmail === 'student@vishnu.edu.in') {
-          setAuth({
-            access_token: 'mock_jwt_student_token_2026',
-            role: 'student',
-            student_id: 101,
-            anonymous_alias: 'BlueSky27',
-            institution: 'Vishnu Institute of Technology',
-          }, cleanEmail);
-          navigate('/student/home');
-          return;
-        }
-
         const err = await res.json().catch(() => ({}));
         throw new Error(err.detail || 'Authentication failed. Please check your credentials.');
       }
@@ -146,30 +100,7 @@ export default function Login() {
 
       navigate(getHomeRoute(data.role));
     } catch (err: any) {
-      // Offline fallback handling if network error occurs on demo users
-      const cleanEmail = email.trim();
-      if (cleanEmail === 'superadmin@vishnu.edu.in') {
-        setAuth({ access_token: 'mock_jwt_superadmin_token_2026', role: 'super_admin', name: 'Platform Super Admin', institution: 'Sri Vishnu Educational Society' }, cleanEmail);
-        navigate('/superadmin/dashboard');
-        return;
-      }
-      if (cleanEmail === 'admin@vishnu.edu.in') {
-        setAuth({ access_token: 'mock_jwt_admin_token_2026', role: 'admin', admin_id: 1, name: 'VIT College Admin', institution: 'Vishnu Institute of Technology' }, cleanEmail);
-        navigate('/admin/dashboard');
-        return;
-      }
-      if (cleanEmail === 'ram.sir@vishnu.edu.in' || cleanEmail === 'prudhvi.v@vishnu.edu.in' || cleanEmail === 'psychologist@vishnu.edu.in') {
-        setAuth({ access_token: 'mock_jwt_psych_token_2026', role: 'psychologist', psychologist_id: 1, name: 'Ram Prudhvi Teja (Senior Counsellor)', specialization: 'Senior Wellness Counsellor • Mind-Body Therapist', institution: 'Vishnu Institute of Technology' }, cleanEmail);
-        navigate('/psychologist/dashboard');
-        return;
-      }
-      if (cleanEmail === 'student@vishnu.edu.in') {
-        setAuth({ access_token: 'mock_jwt_student_token_2026', role: 'student', student_id: 101, anonymous_alias: 'BlueSky27', institution: 'Vishnu Institute of Technology' }, cleanEmail);
-        navigate('/student/home');
-        return;
-      }
-
-      setError(err.message || 'Authentication failed');
+      setError(err.message || 'Authentication failed. Please verify your email and password.');
     } finally {
       setLoading(false);
     }

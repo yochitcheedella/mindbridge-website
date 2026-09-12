@@ -163,25 +163,25 @@ export default function InteractiveBreathwork() {
   };
 
   return (
-    <div className="space-y-8 max-w-5xl mx-auto animate-fade-in">
+    <div className="space-y-8 max-w-5xl mx-auto animate-fade-in text-[#111111]">
       {/* Header Banner */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-6 rounded-3xl bg-surface-container border border-border-structural">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-6 rounded-3xl bg-[#FFFFFF] border-2 border-[#111111] shadow-xs">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary/20 text-secondary-fixed text-xs font-mono font-bold uppercase tracking-wider mb-2">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F4C542] text-[#111111] border border-[#111111] text-xs font-mono font-bold uppercase tracking-wider mb-2">
             <Wind size={14} />
             <span>Neuro-Somatic Calm Canopy</span>
           </div>
-          <h1 className="text-3xl font-heading font-extrabold text-white">Guided Breathwork Studio</h1>
-          <p className="text-sm text-on-surface-variant max-w-2xl mt-1">
+          <h1 className="text-3xl font-heading font-black text-[#111111]">Guided Breathwork Studio</h1>
+          <p className="text-sm text-[#111111]/70 max-w-2xl mt-1 font-medium">
             Immersive physiological respiration rhythms engineered to lower clinical anxiety and restore focus instantly.
           </p>
         </div>
 
-        <div className="flex items-center gap-3 bg-surface-container-low px-4 py-3 rounded-2xl border border-border-structural">
-          <Heart className="text-rose-400 animate-pulse" size={24} />
+        <div className="flex items-center gap-3 bg-[#FAFAFA] px-4 py-3 rounded-2xl border border-[#111111]/15">
+          <Heart className="text-rose-500 animate-pulse" size={24} />
           <div>
-            <div className="text-[11px] font-mono text-on-surface-variant uppercase">Sessions Complete</div>
-            <div className="text-lg font-heading font-bold text-white">{cyclesCompleted} Breath Cycles</div>
+            <div className="text-[11px] font-mono text-[#111111]/60 uppercase font-bold">Sessions Complete</div>
+            <div className="text-lg font-heading font-black text-[#111111]">{cyclesCompleted} Breath Cycles</div>
           </div>
         </div>
       </div>
@@ -195,24 +195,26 @@ export default function InteractiveBreathwork() {
               key={r.id}
               onClick={() => { setSelectedRegimen(r); setIsActive(false); setPhase('Ready'); }}
               disabled={isActive}
-              className={`text-left p-6 rounded-3xl border transition-all relative overflow-hidden flex flex-col justify-between ${
+              className={`text-left p-6 rounded-3xl border-2 transition-all relative overflow-hidden flex flex-col justify-between cursor-pointer ${
                 isSelected 
-                  ? 'bg-panel-high border-secondary shadow-lg shadow-secondary/20 scale-[1.02]' 
-                  : 'bg-surface-container-low border-border-structural hover:bg-surface-container opacity-80'
+                  ? 'bg-[#F4C542] border-[#111111] shadow-xs scale-[1.02]' 
+                  : 'bg-[#FFFFFF] border-[#111111]/15 hover:border-[#111111] hover:bg-[#FAFAFA]'
               } ${isActive ? 'cursor-not-allowed opacity-50' : ''}`}
             >
               <div>
                 <div className="flex items-center justify-between mb-3">
-                  <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${r.color} flex items-center justify-center text-white font-bold shadow-sm`}>
+                  <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${r.color} flex items-center justify-center text-white font-bold shadow-sm border border-[#111111]`}>
                     <span className="material-symbols-outlined text-xl">{r.icon}</span>
                   </div>
-                  <span className="text-xs font-mono px-2.5 py-1 rounded-full bg-surface-container-highest text-white font-bold">
+                  <span className={`text-xs font-mono px-2.5 py-1 rounded-full font-bold border ${
+                    isSelected ? 'bg-[#FFFFFF] text-[#111111] border-[#111111]' : 'bg-[#FAFAFA] text-[#111111] border-[#111111]/20'
+                  }`}>
                     {r.inhale}s - {r.holdIn}s - {r.exhale}s
                   </span>
                 </div>
-                <h3 className="font-heading font-bold text-lg text-white mb-1">{r.title}</h3>
-                <h4 className="text-xs font-semibold text-secondary-fixed/90 mb-2">{r.subtitle}</h4>
-                <p className="text-xs text-on-surface-variant leading-relaxed">{r.description}</p>
+                <h3 className="font-heading font-black text-lg text-[#111111] mb-1">{r.title}</h3>
+                <h4 className="text-xs font-bold text-[#111111]/70 mb-2">{r.subtitle}</h4>
+                <p className="text-xs text-[#111111]/70 leading-relaxed font-medium">{r.description}</p>
               </div>
             </button>
           );
@@ -220,26 +222,26 @@ export default function InteractiveBreathwork() {
       </div>
 
       {/* Main Breathing Canopy UI */}
-      <div className="glass-panel p-8 sm:p-14 rounded-[40px] border border-border-structural relative overflow-hidden flex flex-col items-center justify-center min-h-[480px] shadow-2xl bg-gradient-to-b from-surface-container-lowest to-canvas-global">
+      <div className="p-8 sm:p-14 rounded-[40px] border-2 border-[#111111] relative overflow-hidden flex flex-col items-center justify-center min-h-[480px] shadow-xs bg-[#FFFFFF]">
         {/* Ambient Glow Background */}
-        <div className="absolute inset-0 bg-radial-gradient from-interactive-primary/5 via-transparent to-transparent pointer-events-none"></div>
+        <div className="absolute inset-0 bg-radial-gradient from-[#F4C542]/10 via-transparent to-transparent pointer-events-none"></div>
 
         {/* Top Floating Controls */}
         <div className="absolute top-6 right-6 z-20 flex items-center gap-2">
           <button
             onClick={() => setSoundEnabled(!soundEnabled)}
-            className="w-11 h-11 rounded-full bg-surface-container hover:bg-surface-container-high flex items-center justify-center text-on-surface-variant hover:text-white transition-colors border border-border-structural"
+            className="w-11 h-11 rounded-2xl bg-[#FAFAFA] hover:bg-[#111111]/5 flex items-center justify-center text-[#111111] transition-colors border border-[#111111]/20"
             title="Toggle Ambient Audio Tones"
           >
-            {soundEnabled ? <Volume2 size={20} className="text-secondary-fixed" /> : <VolumeX size={20} />}
+            {soundEnabled ? <Volume2 size={20} className="text-[#111111]" /> : <VolumeX size={20} />}
           </button>
         </div>
 
         {/* Breathing Animated Sphere */}
         <div className="relative w-64 h-64 sm:w-80 sm:h-80 flex items-center justify-center my-6">
           {/* Outer Ring */}
-          <div className={`absolute inset-0 rounded-full border-2 border-dashed border-secondary/30 transition-transform duration-[4000ms] ${
-            isActive && (phase === 'Inhale' || phase === 'Hold') ? 'scale-125 rotate-45 border-secondary-fixed' : 'scale-90 -rotate-45'
+          <div className={`absolute inset-0 rounded-full border-2 border-dashed border-[#111111]/30 transition-transform duration-[4000ms] ${
+            isActive && (phase === 'Inhale' || phase === 'Hold') ? 'scale-125 rotate-45 border-[#111111]' : 'scale-90 -rotate-45'
           }`}></div>
 
           {/* Inner Glowing Core Sphere */}
@@ -259,7 +261,7 @@ export default function InteractiveBreathwork() {
 
         {/* Phase Guidance Explanation */}
         <div className="text-center max-w-md my-4 z-10">
-          <p className="text-sm font-semibold text-white tracking-wide">
+          <p className="text-sm font-bold text-[#111111] tracking-wide">
             {phase === 'Ready' && 'Press start below and prepare to synchronize your respiration with the canopy sphere.'}
             {phase === 'Inhale' && 'Breathe in slowly and quietly through your nose, expanding your diaphragm...'}
             {phase === 'Hold' && 'Gently pause and maintain stillness at the peak of your inhalation...'}
@@ -272,10 +274,10 @@ export default function InteractiveBreathwork() {
         <div className="flex items-center gap-4 mt-6 z-10">
           <button
             onClick={toggleStart}
-            className={`px-10 py-4 rounded-full font-heading font-extrabold text-base flex items-center gap-3 transition-all duration-300 shadow-2xl ${
+            className={`px-10 py-4 rounded-2xl font-heading font-black text-base flex items-center gap-3 transition-all duration-200 cursor-pointer shadow-xs active:scale-95 ${
               isActive
-                ? 'bg-rose-600 hover:bg-rose-500 text-white shadow-rose-600/30'
-                : 'bg-gradient-to-r from-interactive-primary to-secondary hover:brightness-110 text-on-primary shadow-interactive-primary/40 scale-105'
+                ? 'bg-[#111111] hover:bg-[#333333] text-white border-2 border-[#111111]'
+                : 'bg-[#F4C542] hover:bg-[#e0b435] text-[#111111] border-2 border-[#111111]'
             }`}
           >
             {isActive ? (
@@ -294,7 +296,7 @@ export default function InteractiveBreathwork() {
           {isActive && (
             <button
               onClick={() => { setIsActive(false); setPhase('Ready'); setCyclesCompleted(0); }}
-              className="w-14 h-14 rounded-full bg-surface-container hover:bg-surface-container-high flex items-center justify-center text-on-surface-variant hover:text-white transition-colors border border-border-structural"
+              className="w-14 h-14 rounded-2xl bg-[#FAFAFA] hover:bg-[#111111]/5 flex items-center justify-center text-[#111111] transition-colors border border-[#111111]/20 cursor-pointer"
               title="Reset Session"
             >
               <RotateCcw size={20} />

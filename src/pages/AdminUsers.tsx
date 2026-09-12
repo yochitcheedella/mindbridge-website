@@ -113,24 +113,24 @@ export default function AdminUsers() {
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="font-bold text-2xl text-white flex items-center gap-2">
-              <Users className="text-purple-400" size={24} />
+            <h1 className="font-bold text-2xl text-[#111111] flex items-center gap-2">
+              <Users className="text-[#111111]" size={24} />
               User Management
             </h1>
-            <p className="text-text-muted text-sm mt-0.5">
+            <p className="text-[#111111]/70 text-sm mt-0.5">
               Manage VIT psychologist accounts · {active.length} active
             </p>
           </div>
           <div className="flex items-center gap-2">
             <button
               onClick={fetchPsychologists}
-              className="p-2 bg-surface border border-border rounded-xl text-text-muted hover:text-white transition-colors"
+              className="p-2 bg-white border-2 border-[#111111] rounded-xl text-[#111111] hover:bg-[#FAFAFA] transition-colors"
             >
               <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
             </button>
             <button
               onClick={() => setShowAddForm(v => !v)}
-              className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-xl text-sm font-semibold transition-colors shadow-lg shadow-purple-500/20"
+              className="flex items-center gap-2 px-4 py-2 bg-[#F4C542] hover:bg-[#E5B532] text-[#111111] border-2 border-[#111111] shadow-[2px_2px_0px_#111111] rounded-xl text-sm font-bold transition-all"
             >
               <Plus size={16} /> Add Psychologist
             </button>
@@ -139,57 +139,57 @@ export default function AdminUsers() {
 
         {/* Success / Error banners */}
         {success && (
-          <div className="mb-4 flex items-center gap-2 px-4 py-3 bg-green-500/10 border border-green-500/20 rounded-xl text-green-400 text-sm">
+          <div className="mb-4 flex items-center gap-2 px-4 py-3 bg-emerald-100 border-2 border-emerald-600 rounded-xl text-emerald-800 text-sm font-semibold">
             <CheckCircle2 size={16} /> {success}
           </div>
         )}
 
         {/* Add Psychologist Form */}
         {showAddForm && (
-          <Card className="p-5 mb-5 border-purple-500/30">
-            <h2 className="font-semibold text-white mb-4 flex items-center gap-2">
-              <Plus size={16} className="text-purple-400" /> Add New Psychologist
+          <Card className="p-5 mb-5 border-2 border-[#111111] shadow-[4px_4px_0px_#111111]">
+            <h2 className="font-semibold text-[#111111] mb-4 flex items-center gap-2">
+              <Plus size={16} className="text-[#111111]" /> Add New Psychologist
             </h2>
             <form onSubmit={handleAdd} className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs text-text-muted mb-1.5 font-medium">Full Name *</label>
+                <label className="block text-xs text-[#111111] mb-1.5 font-bold">Full Name *</label>
                 <input
                   required value={form.name}
                   onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
                   placeholder="Dr. Priya Sharma"
-                  className="w-full bg-background border border-border rounded-xl px-4 py-2.5 text-sm text-text placeholder-text-muted focus:outline-none focus:border-purple-500/50 transition-all"
+                  className="w-full bg-[#FAFAFA] border-2 border-[#111111] rounded-xl px-4 py-2.5 text-sm text-[#111111] placeholder-[#111111]/40 focus:outline-none focus:border-[#F4C542] transition-all"
                 />
               </div>
               <div>
-                <label className="block text-xs text-text-muted mb-1.5 font-medium">Specialization</label>
+                <label className="block text-xs text-[#111111] mb-1.5 font-bold">Specialization</label>
                 <input
                   value={form.specialization}
                   onChange={e => setForm(f => ({ ...f, specialization: e.target.value }))}
                   placeholder="Anxiety & Depression"
-                  className="w-full bg-background border border-border rounded-xl px-4 py-2.5 text-sm text-text placeholder-text-muted focus:outline-none focus:border-purple-500/50 transition-all"
+                  className="w-full bg-[#FAFAFA] border-2 border-[#111111] rounded-xl px-4 py-2.5 text-sm text-[#111111] placeholder-[#111111]/40 focus:outline-none focus:border-[#F4C542] transition-all"
                 />
               </div>
               <div>
-                <label className="block text-xs text-text-muted mb-1.5 font-medium">Email Address *</label>
+                <label className="block text-xs text-[#111111] mb-1.5 font-bold">Email Address *</label>
                 <input
                   required type="email" value={form.email}
                   onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
                   placeholder="psychologist@vishnu.edu.in"
-                  className="w-full bg-background border border-border rounded-xl px-4 py-2.5 text-sm text-text placeholder-text-muted focus:outline-none focus:border-purple-500/50 transition-all"
+                  className="w-full bg-[#FAFAFA] border-2 border-[#111111] rounded-xl px-4 py-2.5 text-sm text-[#111111] placeholder-[#111111]/40 focus:outline-none focus:border-[#F4C542] transition-all"
                 />
               </div>
               <div>
-                <label className="block text-xs text-text-muted mb-1.5 font-medium">Initial Password *</label>
+                <label className="block text-xs text-[#111111] mb-1.5 font-bold">Initial Password *</label>
                 <input
                   required type="password" value={form.password}
                   onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
                   placeholder="Secure password"
-                  className="w-full bg-background border border-border rounded-xl px-4 py-2.5 text-sm text-text placeholder-text-muted focus:outline-none focus:border-purple-500/50 transition-all"
+                  className="w-full bg-[#FAFAFA] border-2 border-[#111111] rounded-xl px-4 py-2.5 text-sm text-[#111111] placeholder-[#111111]/40 focus:outline-none focus:border-[#F4C542] transition-all"
                 />
               </div>
 
               {error && (
-                <div className="md:col-span-2 text-red-400 text-xs bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2">
+                <div className="md:col-span-2 text-red-600 text-xs bg-red-100 border border-red-400 rounded-lg px-3 py-2 font-semibold">
                   {error}
                 </div>
               )}
@@ -197,13 +197,13 @@ export default function AdminUsers() {
               <div className="md:col-span-2 flex items-center gap-3">
                 <button
                   type="submit" disabled={submitting}
-                  className="px-6 py-2.5 bg-purple-600 hover:bg-purple-700 text-white rounded-xl text-sm font-semibold transition-colors disabled:opacity-50"
+                  className="px-6 py-2.5 bg-[#F4C542] hover:bg-[#E5B532] text-[#111111] border-2 border-[#111111] shadow-[2px_2px_0px_#111111] rounded-xl text-sm font-bold transition-all disabled:opacity-50"
                 >
                   {submitting ? 'Adding...' : 'Add Psychologist'}
                 </button>
                 <button
                   type="button" onClick={() => { setShowAddForm(false); setError(''); }}
-                  className="px-6 py-2.5 bg-surface border border-border text-text-muted hover:text-white rounded-xl text-sm transition-colors"
+                  className="px-6 py-2.5 bg-[#FAFAFA] border-2 border-[#111111] text-[#111111] rounded-xl text-sm font-semibold transition-colors"
                 >
                   Cancel
                 </button>
@@ -219,14 +219,14 @@ export default function AdminUsers() {
             <input
               type="text" placeholder="Search by name, email, or specialization..."
               value={search} onChange={e => setSearch(e.target.value)}
-              className="w-full bg-background border border-border rounded-xl pl-9 pr-4 py-2.5 text-sm text-text placeholder-text-muted focus:outline-none focus:border-purple-500/50 transition-all"
+              className="w-full bg-background border border-border rounded-xl pl-9 pr-4 py-2.5 text-sm text-[#111111] placeholder-[#111111]/40 focus:outline-none focus:border-[#F4C542] transition-all"
             />
           </div>
         </Card>
 
         {/* Active Psychologists */}
-        <h2 className="font-semibold text-white mb-3 flex items-center gap-2">
-          <CheckCircle2 size={16} className="text-green-400" />
+        <h2 className="font-semibold text-[#111111] mb-3 flex items-center gap-2">
+          <CheckCircle2 size={16} className="text-green-600" />
           Active ({active.length})
         </h2>
 
@@ -243,15 +243,15 @@ export default function AdminUsers() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
             {active.map(psych => (
-              <Card key={psych.id} className="p-4 border-green-500/10">
+              <Card key={psych.id} className="p-4 border-2 border-[#111111]/20">
                 <div className="flex items-start gap-3">
-                  <div className="w-11 h-11 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center flex-shrink-0">
-                    <Brain className="text-blue-400" size={18} />
+                  <div className="w-11 h-11 rounded-xl bg-[#F4C542] border-2 border-[#111111] flex items-center justify-center flex-shrink-0">
+                    <Brain className="text-[#111111]" size={18} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-white text-sm">{psych.name}</p>
+                    <p className="font-semibold text-[#111111] text-sm">{psych.name}</p>
                     {psych.specialization && (
-                      <p className="text-xs text-text-muted mt-0.5">{psych.specialization}</p>
+                      <p className="text-xs text-[#111111]/70 mt-0.5">{psych.specialization}</p>
                     )}
                     {psych.email && (
                       <p className="text-xs text-text-muted/60 mt-0.5 flex items-center gap-1">

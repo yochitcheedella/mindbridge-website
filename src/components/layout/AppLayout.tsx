@@ -5,7 +5,7 @@ import {
   Calendar, Users, Moon, AlertTriangle, Settings, LogOut, 
   Menu, X, Bell, UserCheck, PieChart, FileText, ChevronRight
 } from 'lucide-react';
-import { getAuth, clearAuth, getAlias, getUserName, getRole, type UserRole } from '../../utils/auth';
+import { getAuth, clearAuth, getAlias, getUserName, getRole, getHomeRoute, type UserRole } from '../../utils/auth';
 
 interface NavItem {
   path: string;
@@ -19,12 +19,18 @@ const STUDENT_NAV: NavItem[] = [
   { path: '/student/home', icon: 'home', label: 'Dashboard' },
   { path: '/student/appointments', icon: 'psychology', label: 'Psychologists & Counselors', badge: '7 PRO' },
   { path: '/student/chat', icon: 'smart_toy', label: 'AI Therapy Guide', badge: 'PRO' },
+  { path: '/student/voice-therapist', icon: 'record_voice_over', label: 'AI Voice Therapist', badge: 'VOICE' },
   { path: '/student/messages', icon: 'forum', label: 'Counselor Messages', badge: 'ANON' },
   { path: '/student/cbt-reframing', icon: 'psychology', label: 'CBT Thought Studio', badge: 'NEW' },
   { path: '/student/breathwork', icon: 'air', label: 'Calm Canopy Breathwork' },
+  { path: '/student/digital-detox', icon: 'screen_lock_portrait', label: 'Digital Detox' },
+  { path: '/student/mind-puzzles', icon: 'extension', label: 'Mind Games & Puzzles' },
   { path: '/student/wellness', icon: 'self_improvement', label: 'Wellness Exercises' },
   { path: '/student/sleep', icon: 'bedtime', label: 'Sleep & Mood Tracker' },
+  { path: '/student/habits', icon: 'check_circle', label: 'Habit Tracker' },
+  { path: '/student/assessments', icon: 'quiz', label: 'Clinical Assessments' },
   { path: '/student/journal', icon: 'edit_note', label: 'Clinical Journal' },
+  { path: '/student/recovery-plan', icon: 'healing', label: 'Follow-Up Plan' },
   { path: '/student/community', icon: 'diversity_3', label: 'Peer Community' },
   { path: '/student/emergency', icon: 'emergency', label: 'Crisis SOS & Helplines', isSpecial: true },
 ];
@@ -44,6 +50,14 @@ const ADMIN_NAV: NavItem[] = [
   { path: '/admin/settings', icon: 'security', label: 'Platform Security' },
 ];
 
+const SUPERADMIN_NAV: NavItem[] = [
+  { path: '/superadmin/dashboard', icon: 'corporate_fare', label: 'Campus Deployments', badge: 'ROOT' },
+  { path: '/admin/dashboard', icon: 'pie_chart', label: 'Executive Analytics' },
+  { path: '/admin/users', icon: 'manage_accounts', label: 'Personnel & Accounts' },
+  { path: '/admin/reports', icon: 'analytics', label: 'Institutional Reports' },
+  { path: '/admin/settings', icon: 'security', label: 'Security & Governance' },
+];
+
 export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -53,7 +67,9 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
   const role: UserRole = getRole() || 'student';
 
   let navItems: NavItem[] = STUDENT_NAV;
-  if (role === 'psychologist' || location.pathname.startsWith('/psychologist')) {
+  if (role === 'super_admin' || location.pathname.startsWith('/superadmin')) {
+    navItems = SUPERADMIN_NAV;
+  } else if (role === 'psychologist' || location.pathname.startsWith('/psychologist')) {
     navItems = PSYCHOLOGIST_NAV;
   } else if (role === 'admin' || location.pathname.startsWith('/admin')) {
     navItems = ADMIN_NAV;
@@ -174,7 +190,7 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
         {/* Sidebar Brand Header */}
         <div className="h-20 flex items-center justify-between px-5 border-b border-[#111111]/10">
           {!isCollapsed ? (
-            <Link to={auth?.role === 'psychologist' ? '/psychologist/dashboard' : '/student/home'} className="flex items-center gap-3 group overflow-hidden">
+            <Link to={getHomeRoute(role)} className="flex items-center gap-3 group overflow-hidden">
               <img 
                 src="/logo.png" 
                 alt="Vishnu Wellness Centre" 
@@ -289,7 +305,7 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
               >
                 <Menu size={20} />
               </button>
-              <Link to={auth?.role === 'psychologist' ? '/psychologist/dashboard' : '/student/home'} className="flex items-center gap-2 min-w-0">
+              <Link to={getHomeRoute(role)} className="flex items-center gap-2 min-w-0">
                 <img src="/logo.png" alt="Vishnu Wellness Centre" className="w-7 h-7 rounded-full object-cover shrink-0 border border-[#111111]/20" />
                 <span className="font-heading font-black text-sm text-[#111111] truncate">MindBridge</span>
               </Link>

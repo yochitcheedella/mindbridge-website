@@ -110,27 +110,26 @@ export default function CognitiveReframing() {
   return (
     <div className="space-y-8 animate-fade-in max-w-5xl mx-auto">
       {/* Hero Banner */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-900/40 via-surface-container to-purple-950/30 border border-interactive-primary/30 p-8 shadow-2xl">
-        <div className="absolute top-0 right-0 w-80 h-80 bg-interactive-primary/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div className="relative overflow-hidden rounded-3xl bg-[#FFFFFF] border-2 border-[#111111] p-6 sm:p-8 shadow-xs">
         <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-interactive-primary/20 text-secondary-fixed text-xs font-mono font-semibold uppercase tracking-wider border border-interactive-primary/40 mb-3">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F4C542] text-[#111111] text-xs font-mono font-bold uppercase tracking-wider border border-[#111111] mb-3">
               <Brain size={14} />
               <span>Cognitive Behavioral Therapy (CBT) Suite</span>
             </div>
-            <h1 className="text-3xl sm:text-4xl font-heading font-extrabold text-white tracking-tight">
+            <h1 className="text-3xl sm:text-4xl font-heading font-black text-[#111111] tracking-tight">
               Thought Reframing Studio
             </h1>
-            <p className="text-on-surface-variant max-w-2xl mt-2 text-sm sm:text-base leading-relaxed">
+            <p className="text-[#111111]/70 max-w-2xl mt-2 text-sm sm:text-base leading-relaxed font-medium">
               Transform anxious or self-critical automatic thoughts into balanced, powerful mental resilience using guided CBT protocols.
             </p>
           </div>
           {streakBonus && (
-            <div className="flex items-center gap-3 px-4 py-3 bg-emerald-500/20 border border-emerald-400/50 rounded-2xl text-emerald-300 animate-scale-in">
-              <Sparkles className="animate-bounce text-emerald-400" size={24} />
+            <div className="flex items-center gap-3 px-4 py-3 bg-[#FAFAFA] border-2 border-[#111111] rounded-2xl text-[#111111] animate-scale-in shadow-xs">
+              <Sparkles className="animate-bounce text-[#111111]" size={24} />
               <div>
-                <div className="text-xs font-mono uppercase font-bold">Mental Fitness Boost!</div>
-                <div className="text-sm font-heading font-extrabold">+50 Mastery XP Awarded</div>
+                <div className="text-xs font-mono uppercase font-bold text-[#111111]/70">Mental Fitness Boost!</div>
+                <div className="text-sm font-heading font-black text-[#111111]">+50 Mastery XP Awarded</div>
               </div>
             </div>
           )}
@@ -139,8 +138,8 @@ export default function CognitiveReframing() {
 
       {/* Step 1: Select Cognitive Distortion */}
       <section className="space-y-4">
-        <h2 className="text-lg font-heading font-bold text-white flex items-center gap-2">
-          <span className="w-6 h-6 rounded-full bg-interactive-primary text-white text-xs flex items-center justify-center font-mono">1</span>
+        <h2 className="text-lg font-heading font-black text-[#111111] flex items-center gap-2">
+          <span className="w-6 h-6 rounded-full bg-[#F4C542] text-[#111111] border border-[#111111] text-xs flex items-center justify-center font-mono font-bold">1</span>
           <span>Identify Your Cognitive Distortion Pattern</span>
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -150,25 +149,25 @@ export default function CognitiveReframing() {
               <button
                 key={d.id}
                 onClick={() => { setSelectedDistortion(d); setAiAnalysis(''); setIsSaved(false); }}
-                className={`text-left p-5 rounded-2xl border transition-all duration-300 relative overflow-hidden flex flex-col justify-between h-full ${
+                className={`text-left p-5 rounded-2xl border-2 transition-all duration-200 relative overflow-hidden flex flex-col justify-between h-full cursor-pointer ${
                   isActive
-                    ? 'bg-gradient-to-b from-surface-container-high to-interactive-primary/10 border-interactive-primary shadow-lg shadow-interactive-primary/20 scale-[1.02]'
-                    : 'bg-surface-container-low border-border-structural hover:border-outline-variant hover:bg-surface-container'
+                    ? 'bg-[#F4C542] border-[#111111] shadow-xs scale-[1.02]'
+                    : 'bg-[#FFFFFF] border-[#111111]/15 hover:border-[#111111] hover:bg-[#FAFAFA]'
                 }`}
               >
                 <div>
                   <div className="flex items-center justify-between mb-3">
-                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
-                      isActive ? 'bg-interactive-primary text-white' : 'bg-surface-container-high text-on-surface-variant'
+                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center border border-[#111111] ${
+                      isActive ? 'bg-[#FFFFFF] text-[#111111]' : 'bg-[#FAFAFA] text-[#111111]'
                     }`}>
                       <span className="material-symbols-outlined">{d.icon}</span>
                     </div>
-                    {isActive && <span className="w-2.5 h-2.5 rounded-full bg-secondary-fixed animate-ping"></span>}
+                    {isActive && <span className="w-2.5 h-2.5 rounded-full bg-[#111111]"></span>}
                   </div>
-                  <h3 className="font-heading font-bold text-white text-base mb-1">{d.name}</h3>
-                  <p className="text-on-surface-variant text-xs leading-relaxed line-clamp-3">{d.desc}</p>
+                  <h3 className="font-heading font-black text-[#111111] text-base mb-1">{d.name}</h3>
+                  <p className="text-[#111111]/70 text-xs leading-relaxed line-clamp-3 font-medium">{d.desc}</p>
                 </div>
-                <div className="mt-4 pt-3 border-t border-border-structural/60 text-[11px] font-mono text-secondary-fixed/80 italic">
+                <div className="mt-4 pt-3 border-t border-[#111111]/20 text-[11px] font-mono text-[#111111]/80 italic">
                   "{d.example}"
                 </div>
               </button>
@@ -179,12 +178,12 @@ export default function CognitiveReframing() {
 
       {/* Step 2: Input & AI Reframe Engine */}
       <section className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
-        <div className="glass-panel p-6 rounded-3xl space-y-4 shadow-xl border border-border-structural">
-          <h3 className="text-base font-heading font-bold text-white flex items-center gap-2">
-            <span className="w-6 h-6 rounded-full bg-interactive-primary text-white text-xs flex items-center justify-center font-mono">2</span>
+        <div className="p-6 rounded-3xl space-y-4 shadow-xs border-2 border-[#111111] bg-[#FFFFFF]">
+          <h3 className="text-base font-heading font-black text-[#111111] flex items-center gap-2">
+            <span className="w-6 h-6 rounded-full bg-[#F4C542] text-[#111111] border border-[#111111] text-xs flex items-center justify-center font-mono font-bold">2</span>
             <span>Record Automatic Anxious Thought</span>
           </h3>
-          <p className="text-xs text-on-surface-variant">
+          <p className="text-xs text-[#111111]/70 font-medium">
             What stressful or self-doubtful thought is passing through your awareness today?
           </p>
           <textarea
@@ -192,12 +191,12 @@ export default function CognitiveReframing() {
             onChange={(e) => setAutomaticThought(e.target.value)}
             rows={5}
             placeholder={`Example: "I messed up one question in my presentation, so my entire evaluation is ruined and everyone thinks I'm incapable..."`}
-            className="w-full bg-surface-container-low border border-border-structural focus:border-interactive-primary rounded-2xl p-4 text-sm text-white placeholder-on-surface-variant/60 outline-none resize-none transition-all leading-relaxed shadow-inner"
+            className="w-full bg-[#FAFAFA] border border-[#111111]/20 focus:border-[#111111] rounded-2xl p-4 text-sm text-[#111111] placeholder-[#111111]/40 outline-none resize-none transition-all leading-relaxed"
           />
           <button
             onClick={handleGenerateReframe}
             disabled={!automaticThought.trim() || isAnalyzing}
-            className="w-full py-3 px-6 rounded-xl bg-gradient-to-r from-interactive-primary to-secondary hover:brightness-110 disabled:opacity-50 font-heading font-bold text-on-primary text-sm flex items-center justify-center gap-2 transition-all duration-200 shadow-lg shadow-interactive-primary/25"
+            className="w-full py-3.5 px-6 rounded-xl bg-[#F4C542] hover:bg-[#e0b435] text-[#111111] border-2 border-[#111111] disabled:opacity-50 font-heading font-black text-sm flex items-center justify-center gap-2 transition-all duration-200 shadow-xs cursor-pointer active:scale-95"
           >
             {isAnalyzing ? (
               <>
@@ -214,34 +213,34 @@ export default function CognitiveReframing() {
         </div>
 
         {/* AI Guide Output & Reframe Save */}
-        <div className="glass-panel p-6 rounded-3xl space-y-4 shadow-xl border border-border-structural min-h-[360px] flex flex-col justify-between">
+        <div className="p-6 rounded-3xl space-y-4 shadow-xs border-2 border-[#111111] bg-[#FFFFFF] min-h-[360px] flex flex-col justify-between">
           <div>
-            <h3 className="text-base font-heading font-bold text-white flex items-center gap-2">
-              <span className="w-6 h-6 rounded-full bg-secondary-fixed text-on-secondary-fixed text-xs flex items-center justify-center font-mono font-extrabold">3</span>
+            <h3 className="text-base font-heading font-black text-[#111111] flex items-center gap-2">
+              <span className="w-6 h-6 rounded-full bg-[#F4C542] text-[#111111] border border-[#111111] text-xs flex items-center justify-center font-mono font-bold">3</span>
               <span>Constructive Cognitive Realignment</span>
             </h3>
 
             {aiAnalysis ? (
-              <div className="mt-4 p-5 rounded-2xl bg-surface-container-lowest/80 border border-secondary/30 space-y-4 text-sm text-on-surface leading-relaxed animate-fade-in">
-                <div className="flex items-center gap-2 text-secondary-fixed font-bold text-xs uppercase font-mono">
-                  <Lightbulb size={14} />
+              <div className="mt-4 p-5 rounded-2xl bg-[#FAFAFA] border border-[#111111]/15 space-y-4 text-sm text-[#111111] leading-relaxed animate-fade-in">
+                <div className="flex items-center gap-2 text-[#111111] font-bold text-xs uppercase font-mono">
+                  <Lightbulb size={14} className="text-[#F4C542]" />
                   <span>Personalized Therapeutic Guidance</span>
                 </div>
-                <div className="whitespace-pre-line text-xs sm:text-sm text-on-surface-variant/90 font-sans">
+                <div className="whitespace-pre-line text-xs sm:text-sm text-[#111111]/80 font-sans">
                   {aiAnalysis}
                 </div>
               </div>
             ) : (
-              <div className="h-48 flex flex-col items-center justify-center text-center p-6 text-on-surface-variant/50 border border-dashed border-border-structural/80 rounded-2xl my-4">
+              <div className="h-48 flex flex-col items-center justify-center text-center p-6 text-[#111111]/50 border border-dashed border-[#111111]/20 rounded-2xl my-4">
                 <Brain size={36} className="mb-2 opacity-30 animate-pulse-slow" />
-                <span className="text-xs">Your clinical cognitive breakdown and guided reframing techniques will emerge here once you submit your thought above.</span>
+                <span className="text-xs font-medium">Your clinical cognitive breakdown and guided reframing techniques will emerge here once you submit your thought above.</span>
               </div>
             )}
           </div>
 
           {aiAnalysis && !isSaved && (
-            <div className="space-y-3 pt-4 border-t border-border-structural/60">
-              <label className="text-xs font-bold text-white block">
+            <div className="space-y-3 pt-4 border-t border-[#111111]/10">
+              <label className="text-xs font-bold text-[#111111] block">
                 Type your new empowering, balanced perspective to cement your progress:
               </label>
               <textarea
@@ -249,12 +248,12 @@ export default function CognitiveReframing() {
                 onChange={(e) => setReframedThought(e.target.value)}
                 rows={3}
                 placeholder="e.g., Even if I made a mistake, I explained the rest of my project clearly and learned how to prepare better for next time."
-                className="w-full bg-surface-container-low border border-emerald-500/30 focus:border-emerald-400 rounded-xl p-3 text-sm text-white placeholder-on-surface-variant/50 outline-none resize-none"
+                className="w-full bg-[#FAFAFA] border border-[#111111]/20 focus:border-[#111111] rounded-xl p-3 text-sm text-[#111111] placeholder-[#111111]/40 outline-none resize-none"
               />
               <button
                 onClick={handleSaveReframe}
                 disabled={!reframedThought.trim()}
-                className="w-full py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm flex items-center justify-center gap-2 transition-all shadow-lg shadow-emerald-600/30 disabled:opacity-50"
+                className="w-full py-3 px-4 rounded-xl bg-[#F4C542] hover:bg-[#e0b435] text-[#111111] border-2 border-[#111111] font-black text-sm flex items-center justify-center gap-2 transition-all shadow-xs cursor-pointer disabled:opacity-50 active:scale-95"
               >
                 <CheckCircle2 size={16} />
                 <span>Log to Encrypted Resilience Journal</span>
@@ -263,12 +262,12 @@ export default function CognitiveReframing() {
           )}
 
           {isSaved && (
-            <div className="p-4 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-center space-y-2 animate-scale-in">
-              <div className="font-bold text-sm flex items-center justify-center gap-2">
+            <div className="p-4 rounded-xl bg-[#FAFAFA] border-2 border-[#111111] text-[#111111] text-center space-y-2 animate-scale-in">
+              <div className="font-black text-sm flex items-center justify-center gap-2">
                 <CheckCircle2 size={18} />
                 <span>Reframe Saved Successfully!</span>
               </div>
-              <p className="text-xs text-emerald-200/80">
+              <p className="text-xs text-[#111111]/70 font-medium">
                 Your cognitive shift has been securely recorded to your anonymous wellness timeline. Great commitment to emotional health!
               </p>
             </div>

@@ -25,6 +25,10 @@ const ADMIN_NAV = [
 
 const SUPERADMIN_NAV = [
   { path: '/superadmin/dashboard', icon: 'corporate_fare', label: 'Campuses' },
+  { path: '/admin/dashboard',      icon: 'pie_chart',      label: 'Analytics' },
+  { path: '/admin/users',          icon: 'groups',         label: 'Personnel' },
+  { path: '/admin/reports',        icon: 'bar_chart',      label: 'Reports' },
+  { path: '/admin/settings',       icon: 'settings',       label: 'Security' },
 ];
 
 export function Navbar() {

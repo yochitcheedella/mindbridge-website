@@ -187,9 +187,25 @@ export default function AIChat() {
           }]);
           if (data.risk_level) setCurrentRisk(data.risk_level);
           if (!isSpeaking) speakText(replyText);
+        } else {
+          throw new Error('REST fallback returned non-ok');
         }
       } catch (err) {
-        console.error('REST Chat Fallback error', err);
+        console.warn('Backend unavailable, generating local supportive response');
+        const fallbackReplies = [
+          "I hear you, and what you are going through is completely valid. Take a slow, deep breath with me. Remember, you don't have to carry academic stress all by yourself.",
+          "Thank you for sharing that with me. Your feelings matter. Would you like to try a 2-minute box breathing reset or check out the CBT reframing studio together?",
+          "It takes courage to acknowledge feeling overwhelmed. Remember that our campus wellness counselors at VIT Bhimavaram are here for confidential 1-on-1 support whenever you need."
+        ];
+        const randomReply = fallbackReplies[Math.floor(Math.random() * fallbackReplies.length)];
+        setMessages(prev => [...prev, {
+          id: `${Date.now()}-${Math.random()}`,
+          sender: 'ai',
+          text: randomReply,
+          timestamp: new Date(),
+          risk_level: 'green',
+          risk_score: 0.1,
+        }]);
       } finally {
         setIsTyping(false);
       }

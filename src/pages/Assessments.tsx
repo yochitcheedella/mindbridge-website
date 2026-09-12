@@ -162,24 +162,25 @@ export default function Assessments() {
   return (
     <div className="space-y-8 max-w-5xl mx-auto animate-fade-in">
       {/* Header Bar */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-6 rounded-3xl bg-surface-container border border-border-structural">
+      {/* Header Bar */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-6 rounded-3xl bg-[#FAFAFA] border-2 border-[#111111] shadow-[3px_3px_0px_#111111]">
         <div className="flex items-center gap-4">
           <button 
             onClick={() => (active && !result) ? handleReset() : (active && result) ? setResult(null) : navigate(-1)}
-            className="w-11 h-11 rounded-2xl bg-surface-container-high hover:bg-white/10 flex items-center justify-center text-on-surface-variant hover:text-white transition-all border border-border-structural"
+            className="w-11 h-11 rounded-2xl bg-white hover:bg-neutral-100 flex items-center justify-center text-[#111111] transition-all border-2 border-[#111111]"
             title="Return"
           >
             <ArrowLeft size={20} />
           </button>
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-interactive-primary/20 text-secondary-fixed text-xs font-mono font-bold uppercase tracking-wider mb-2">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F4C542] text-[#111111] border border-[#111111] text-xs font-mono font-bold uppercase tracking-wider mb-2">
               <Brain size={14} />
               <span>Standardized Clinical Psychometrics</span>
             </div>
-            <h1 className="text-3xl font-heading font-extrabold text-white">
+            <h1 className="text-3xl font-heading font-extrabold text-[#111111]">
               {assessment ? `${assessment.name} — ${assessment.title}` : 'Clinical Diagnostic Suite'}
             </h1>
-            <p className="text-xs sm:text-sm text-on-surface-variant max-w-2xl mt-1">
+            <p className="text-xs sm:text-sm text-[#111111]/70 max-w-2xl mt-1">
               {assessment ? `Completion Progress: ${answered} of ${totalQ} questions answered` : 'Gold-standard clinical psychological questionnaires utilized by institutional mental health professionals.'}
             </p>
           </div>
@@ -193,21 +194,21 @@ export default function Assessments() {
             {ASSESSMENTS.map((a) => (
               <div 
                 key={a.id}
-                className="glass-panel p-7 rounded-3xl border border-border-structural hover:border-interactive-primary transition-all duration-300 flex flex-col justify-between group cursor-pointer hover:shadow-2xl hover:scale-[1.01]"
+                className="p-7 rounded-3xl border-2 border-[#111111] bg-white shadow-[4px_4px_0px_#111111] hover:translate-y-[-2px] hover:shadow-[6px_6px_0px_#111111] transition-all duration-200 flex flex-col justify-between group cursor-pointer"
                 onClick={() => { setActive(a.id); setAnswers({}); setResult(null); }}
               >
                 <div>
-                  <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${a.color} flex items-center justify-center text-2xl mb-5 shadow-lg group-hover:scale-110 transition-transform`}>
+                  <div className="w-14 h-14 rounded-2xl bg-[#F4C542] border-2 border-[#111111] flex items-center justify-center text-2xl mb-5 shadow-sm group-hover:scale-105 transition-transform">
                     {a.emoji}
                   </div>
-                  <h2 className="text-xl font-heading font-extrabold text-white mb-1 group-hover:text-secondary-fixed transition-colors">
+                  <h2 className="text-xl font-heading font-extrabold text-[#111111] mb-1">
                     {a.name} • {a.title}
                   </h2>
-                  <h3 className="text-xs font-mono text-secondary-fixed/90 uppercase font-bold mb-3">{a.subtitle}</h3>
-                  <p className="text-xs text-on-surface-variant leading-relaxed">{a.intro}</p>
+                  <h3 className="text-xs font-mono text-[#111111]/70 uppercase font-bold mb-3">{a.subtitle}</h3>
+                  <p className="text-xs text-[#111111]/80 leading-relaxed">{a.intro}</p>
                 </div>
 
-                <div className="mt-6 pt-4 border-t border-border-structural/80 flex items-center justify-between text-xs font-bold text-interactive-primary group-hover:text-white transition-colors">
+                <div className="mt-6 pt-4 border-t border-[#111111]/20 flex items-center justify-between text-xs font-bold text-[#111111] transition-colors">
                   <span>Begin Clinical Screening</span>
                   <ChevronRight size={18} className="transform group-hover:translate-x-1 transition-transform" />
                 </div>
@@ -217,25 +218,25 @@ export default function Assessments() {
 
           {/* Historical Test Logs */}
           {history.length > 0 && (
-            <div className="glass-panel p-7 rounded-3xl border border-border-structural space-y-4">
+            <div className="p-7 rounded-3xl border-2 border-[#111111] bg-white shadow-[4px_4px_0px_#111111] space-y-4">
               <div className="flex items-center gap-3">
-                <TrendingUp className="text-secondary-fixed" size={22} />
-                <h3 className="text-lg font-heading font-bold text-white">Your Historical Screening Trend</h3>
+                <TrendingUp className="text-[#111111]" size={22} />
+                <h3 className="text-lg font-heading font-bold text-[#111111]">Your Historical Screening Trend</h3>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                 {history.map((h) => {
                   const item = ASSESSMENTS.find(a => a.id === h.assessmentId) || ASSESSMENTS[0];
                   return (
-                    <div key={h.id} className="p-4 rounded-2xl bg-surface-container-low border border-border-structural flex items-center justify-between">
+                    <div key={h.id} className="p-4 rounded-2xl bg-[#FAFAFA] border-2 border-[#111111]/20 flex items-center justify-between">
                       <div>
-                        <div className="font-bold text-sm text-white">{item.name} Test</div>
-                        <div className="text-[11px] font-mono text-on-surface-variant mt-0.5">
+                        <div className="font-bold text-sm text-[#111111]">{item.name} Test</div>
+                        <div className="text-[11px] font-mono text-[#111111]/60 mt-0.5">
                           {new Date(h.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
                         </div>
                       </div>
                       <div className="text-right">
-                        <div className="text-base font-mono font-black text-secondary-fixed">{h.score} pts</div>
-                        <div className="text-[11px] font-semibold text-on-surface-variant/90">{h.label}</div>
+                        <div className="text-base font-mono font-black text-[#111111]">{h.score} pts</div>
+                        <div className="text-[11px] font-semibold text-[#111111]/70">{h.label}</div>
                       </div>
                     </div>
                   );

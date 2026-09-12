@@ -514,33 +514,33 @@ export default function PsychologistDashboard() {
           {view === 'queue' && !selectedCase && (
             <>
               {/* Top Greeting & Actions Banner */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 rounded-2xl bg-white/[0.04] border border-white/10 backdrop-blur-md">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 rounded-3xl bg-[#FFFFFF] border-2 border-[#111111] shadow-xs">
                 <div>
-                  <h1 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+                  <h1 className="text-xl sm:text-2xl font-black text-[#111111] tracking-tight">
                     Good Morning, Counsellor
                   </h1>
-                  <p className="text-xs text-white/60 mt-0.5 font-medium">
+                  <p className="text-xs text-[#111111]/60 mt-0.5 font-medium">
                     Vishnu Wellness Centre · Daily Sessions, Offline Records & Task Schedule
                   </p>
                 </div>
                 <div className="flex items-center gap-2 flex-wrap">
                   <button
                     onClick={() => setShowFlashcardModal(true)}
-                    className="px-3.5 py-2 rounded-xl bg-[#F4C542] hover:bg-[#e0b435] text-[#111111] text-xs font-black border border-[#111111] transition-all shadow-md flex items-center gap-1.5 cursor-pointer active:scale-95"
+                    className="px-3.5 py-2 rounded-xl bg-[#F4C542] hover:bg-[#e0b435] text-[#111111] text-xs font-black border-2 border-[#111111] transition-all shadow-xs flex items-center gap-1.5 cursor-pointer active:scale-95"
                   >
                     <span className="material-symbols-outlined text-[16px]">add_circle</span>
                     <span>+ Create Flashcard</span>
                   </button>
                   <button
                     onClick={() => setShowOfflineModal(true)}
-                    className="px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition-all shadow-md shadow-blue-600/30 flex items-center gap-1.5 cursor-pointer active:scale-95"
+                    className="px-3.5 py-2 rounded-xl bg-[#FFFFFF] hover:bg-[#111111]/5 text-[#111111] text-xs font-bold transition-all border border-[#111111] flex items-center gap-1.5 cursor-pointer active:scale-95"
                   >
                     <span className="material-symbols-outlined text-[16px]">edit_note</span>
                     <span>+ Add Offline Session</span>
                   </button>
                   <button
                     onClick={() => setShowTaskModal(true)}
-                    className="px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold transition-all border border-white/20 flex items-center gap-1.5 cursor-pointer active:scale-95"
+                    className="px-3.5 py-2 rounded-xl bg-[#FAFAFA] hover:bg-[#111111]/5 text-[#111111] text-xs font-bold transition-all border border-[#111111]/20 flex items-center gap-1.5 cursor-pointer active:scale-95"
                   >
                     <span className="material-symbols-outlined text-[16px]">add_task</span>
                     <span>+ Add Task</span>
@@ -550,14 +550,14 @@ export default function PsychologistDashboard() {
 
               {/* Real-time Counsellor Booking Notification Banner */}
               {appointments.filter(a => a.status === 'pending').length > 0 && (
-                <div className="flex items-center justify-between p-4 rounded-2xl bg-[#F4C542]/10 border border-[#F4C542]/40 text-[#F4C542] animate-slide-up shadow-lg">
+                <div className="flex items-center justify-between p-4 rounded-2xl bg-[#F4C542]/20 border-2 border-[#111111] text-[#111111] animate-slide-up shadow-xs">
                   <div className="flex items-center gap-3">
                     <span className="text-xl animate-bounce">🔔</span>
                     <div>
-                      <p className="text-xs sm:text-sm font-black text-white">
-                        New counselling request from <span className="text-[#F4C542] font-mono">{appointments.find(a => a.status === 'pending')?.anonymous_id || 'Anonymous_27'}</span>
+                      <p className="text-xs sm:text-sm font-black text-[#111111]">
+                        New counselling request from <span className="font-mono bg-[#FFFFFF] px-1.5 py-0.5 rounded border border-[#111111]/30">{appointments.find(a => a.status === 'pending')?.anonymous_id || 'Anonymous_27'}</span>
                       </p>
-                      <p className="text-[11px] text-white/70 mt-0.5">
+                      <p className="text-[11px] text-[#111111]/70 mt-0.5 font-medium">
                         {appointments.filter(a => a.status === 'pending').length} booking request{appointments.filter(a => a.status === 'pending').length > 1 ? 's' : ''} awaiting explicit counsellor acceptance before confirmation.
                       </p>
                     </div>
@@ -567,7 +567,7 @@ export default function PsychologistDashboard() {
                       const el = document.getElementById('booking-requests-section');
                       el?.scrollIntoView({ behavior: 'smooth' });
                     }}
-                    className="px-3 py-1.5 rounded-xl bg-[#F4C542] hover:bg-[#e0b435] text-[#111111] text-xs font-black transition-all cursor-pointer shrink-0 active:scale-95"
+                    className="px-3 py-1.5 rounded-xl bg-[#111111] hover:bg-[#333333] text-[#FFFFFF] text-xs font-black transition-all cursor-pointer shrink-0 active:scale-95"
                   >
                     Review Now ↓
                   </button>
@@ -576,66 +576,66 @@ export default function PsychologistDashboard() {
 
               {/* 4 Core Requested Metrics */}
               <section className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-                <div className="glass-panel rounded-2xl p-4 sm:p-5 flex flex-col justify-between border-white/10 bg-white/[0.03]">
+                <div className="rounded-3xl p-4 sm:p-5 flex flex-col justify-between border border-[#111111]/15 bg-[#FFFFFF] shadow-xs">
                   <div className="flex justify-between items-start mb-2">
-                    <span className="text-[11px] uppercase tracking-wider text-white/50 font-bold">Today's Sessions</span>
-                    <span className="material-symbols-outlined text-[#F4C542] text-[18px]">calendar_today</span>
+                    <span className="text-[11px] uppercase tracking-wider text-[#111111]/60 font-black">Today's Sessions</span>
+                    <span className="material-symbols-outlined text-[#111111] text-[18px]">calendar_today</span>
                   </div>
-                  <div className="text-2xl sm:text-3xl font-black text-white">
+                  <div className="text-2xl sm:text-3xl font-black text-[#111111]">
                     {appointments.filter(a => a.status === 'confirmed').length + offlineSessions.length}
                   </div>
-                  <p className="text-[10px] text-white/60 font-semibold mt-1">
+                  <p className="text-[10px] text-[#111111]/60 font-semibold mt-1">
                     {appointments.filter(a => a.status === 'confirmed').length} Confirmed · {offlineSessions.length} Offline
                   </p>
                 </div>
 
-                <div className="glass-panel rounded-2xl p-4 sm:p-5 flex flex-col justify-between border-[#F4C542]/40 bg-[#F4C542]/[0.05]">
+                <div className="rounded-3xl p-4 sm:p-5 flex flex-col justify-between border-2 border-[#111111] bg-[#F4C542]/15 shadow-xs">
                   <div className="flex justify-between items-start mb-2">
-                    <span className="text-[11px] uppercase tracking-wider text-[#F4C542] font-black">Pending Requests</span>
-                    <span className="material-symbols-outlined text-[#F4C542] text-[18px]">pending_actions</span>
+                    <span className="text-[11px] uppercase tracking-wider text-[#111111] font-black">Pending Requests</span>
+                    <span className="material-symbols-outlined text-[#111111] text-[18px]">pending_actions</span>
                   </div>
-                  <div className="text-2xl sm:text-3xl font-black text-[#F4C542]">
+                  <div className="text-2xl sm:text-3xl font-black text-[#111111]">
                     {appointments.filter(a => a.status === 'pending').length}
                   </div>
-                  <p className="text-[10px] text-[#F4C542] font-semibold mt-1">Awaiting acceptance</p>
+                  <p className="text-[10px] text-[#111111]/70 font-semibold mt-1">Awaiting acceptance</p>
                 </div>
 
-                <div className="glass-panel rounded-2xl p-4 sm:p-5 flex flex-col justify-between border-rose-500/30 bg-rose-500/10">
+                <div className="rounded-3xl p-4 sm:p-5 flex flex-col justify-between border border-[#111111]/15 bg-[#FAFAFA] shadow-xs">
                   <div className="flex justify-between items-start mb-2">
-                    <span className="text-[11px] uppercase tracking-wider text-rose-300 font-bold">High Priority</span>
-                    <span className="material-symbols-outlined text-rose-400 text-[18px]">warning</span>
+                    <span className="text-[11px] uppercase tracking-wider text-[#111111]/70 font-black">High Priority</span>
+                    <span className="material-symbols-outlined text-[#111111] text-[18px]">warning</span>
                   </div>
-                  <div className="text-2xl sm:text-3xl font-black text-rose-300">
+                  <div className="text-2xl sm:text-3xl font-black text-[#111111]">
                     {queue.filter(q => q.risk_score >= 0.8).length || 2}
                   </div>
-                  <p className="text-[10px] text-rose-400 font-semibold mt-1">Immediate intervention</p>
+                  <p className="text-[10px] text-[#111111]/60 font-semibold mt-1">Immediate intervention</p>
                 </div>
 
-                <div className="glass-panel rounded-2xl p-4 sm:p-5 flex flex-col justify-between border-white/10 bg-white/[0.03]">
+                <div className="rounded-3xl p-4 sm:p-5 flex flex-col justify-between border border-[#111111]/15 bg-[#FFFFFF] shadow-xs">
                   <div className="flex justify-between items-start mb-2">
-                    <span className="text-[11px] uppercase tracking-wider text-white/50 font-bold">Today's Tasks</span>
-                    <span className="material-symbols-outlined text-white/70 text-[18px]">checklist</span>
+                    <span className="text-[11px] uppercase tracking-wider text-[#111111]/60 font-black">Today's Tasks</span>
+                    <span className="material-symbols-outlined text-[#111111] text-[18px]">checklist</span>
                   </div>
-                  <div className="text-2xl sm:text-3xl font-black text-white">{tasks.filter(t => !t.completed).length}</div>
-                  <p className="text-[10px] text-white/60 font-semibold mt-1">Tasks scheduled</p>
+                  <div className="text-2xl sm:text-3xl font-black text-[#111111]">{tasks.filter(t => !t.completed).length}</div>
+                  <p className="text-[10px] text-[#111111]/60 font-semibold mt-1">Tasks scheduled</p>
                 </div>
               </section>
 
               {/* ── BOOKING REQUESTS (AWAITING COUNSELLOR ACCEPTANCE) ── */}
-              <section id="booking-requests-section" className="glass-panel p-5 sm:p-6 rounded-2xl border-white/10 bg-white/[0.02] space-y-4">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/10 pb-4">
+              <section id="booking-requests-section" className="p-5 sm:p-6 rounded-3xl border-2 border-[#111111] bg-[#FFFFFF] shadow-xs space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#111111]/10 pb-4">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-xl bg-[#F4C542]/20 border border-[#F4C542]/40 flex items-center justify-center text-[#F4C542]">
+                    <div className="w-8 h-8 rounded-xl bg-[#F4C542] border border-[#111111] flex items-center justify-center text-[#111111]">
                       <span className="material-symbols-outlined text-[18px]">assignment_turned_in</span>
                     </div>
                     <div>
-                      <h3 className="font-heading font-black text-base sm:text-lg text-white flex items-center gap-2">
+                      <h3 className="font-heading font-black text-base sm:text-lg text-[#111111] flex items-center gap-2">
                         <span>Booking Requests</span>
-                        <span className="bg-[#F4C542] text-[#111111] text-[11px] font-black px-2.5 py-0.5 rounded-full">
+                        <span className="bg-[#F4C542] text-[#111111] border border-[#111111] text-[11px] font-black px-2.5 py-0.5 rounded-full">
                           {appointments.filter(a => a.status === 'pending').length} Pending
                         </span>
                       </h3>
-                      <p className="text-xs text-white/60">
+                      <p className="text-xs text-[#111111]/60 font-medium">
                         Counsellor must explicitly accept student requests before sessions become confirmed and slots lock.
                       </p>
                     </div>
@@ -643,8 +643,8 @@ export default function PsychologistDashboard() {
                 </div>
 
                 {appointments.filter(a => a.status === 'pending').length === 0 ? (
-                  <div className="text-center py-8 text-white/50 text-xs border border-dashed border-white/10 rounded-xl">
-                    <span className="material-symbols-outlined text-[32px] text-white/30 block mb-1">done_all</span>
+                  <div className="text-center py-8 text-[#111111]/60 text-xs border border-dashed border-[#111111]/20 rounded-2xl bg-[#FAFAFA]">
+                    <span className="material-symbols-outlined text-[32px] text-[#111111]/40 block mb-1">done_all</span>
                     All booking requests have been reviewed and processed.
                   </div>
                 ) : (
@@ -654,43 +654,43 @@ export default function PsychologistDashboard() {
                       return (
                         <div 
                           key={appt.id} 
-                          className="p-4 rounded-xl bg-black/50 border border-white/10 hover:border-[#F4C542]/50 transition-all space-y-3.5 shadow-xl relative overflow-hidden"
+                          className="p-4 rounded-2xl bg-[#FAFAFA] border-2 border-[#111111] hover:border-[#F4C542] transition-all space-y-3.5 shadow-xs relative overflow-hidden"
                         >
-                          <div className="absolute top-0 left-0 right-0 h-1 bg-[#F4C542]" />
+                          <div className="absolute top-0 left-0 right-0 h-1.5 bg-[#F4C542]" />
                           
                           <div className="flex items-start justify-between gap-2 pt-1">
                             <div>
-                              <span className="text-[10px] uppercase tracking-wider text-[#F4C542] font-black block">Booking Request</span>
-                              <h4 className="text-white font-mono font-bold text-sm mt-0.5">
+                              <span className="text-[10px] uppercase tracking-wider text-[#111111]/70 font-black block">Booking Request</span>
+                              <h4 className="text-[#111111] font-mono font-black text-sm mt-0.5">
                                 Student: {appt.anonymous_id || appt.student_alias || 'Anonymous_27'}
                               </h4>
                             </div>
-                            <span className="text-[10px] font-mono font-black px-2 py-0.5 rounded bg-[#F4C542]/15 text-[#F4C542] border border-[#F4C542]/40">
+                            <span className="text-[10px] font-mono font-black px-2 py-0.5 rounded-full bg-[#F4C542] text-[#111111] border border-[#111111]">
                               PENDING
                             </span>
                           </div>
 
-                          <div className="text-xs text-white/80 space-y-1.5 bg-white/[0.03] p-3 rounded-xl border border-white/5 font-mono">
+                          <div className="text-xs text-[#111111] space-y-1.5 bg-[#FFFFFF] p-3 rounded-xl border border-[#111111]/15 font-mono">
                             <div className="flex justify-between">
-                              <span className="text-white/40">Date:</span>
-                              <span className="text-white font-bold">
+                              <span className="text-[#111111]/60">Date:</span>
+                              <span className="text-[#111111] font-bold">
                                 {dt.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
                               </span>
                             </div>
                             <div className="flex justify-between">
-                              <span className="text-white/40">Time:</span>
-                              <span className="text-white font-bold">
+                              <span className="text-[#111111]/60">Time:</span>
+                              <span className="text-[#111111] font-bold">
                                 {dt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                               </span>
                             </div>
                             <div className="flex justify-between">
-                              <span className="text-white/40">Type:</span>
-                              <span className="text-[#F4C542] font-bold">{appt.type || 'Audio Call'}</span>
+                              <span className="text-[#111111]/60">Type:</span>
+                              <span className="text-[#111111] font-black">{appt.type || 'Audio Call'}</span>
                             </div>
                           </div>
 
                           {appt.notes && (
-                            <p className="text-[11px] text-white/60 italic bg-white/[0.02] p-2 rounded-lg border border-white/5">
+                            <p className="text-[11px] text-[#111111]/70 italic bg-[#FFFFFF] p-2 rounded-lg border border-[#111111]/15">
                               "{appt.notes}"
                             </p>
                           )}
@@ -698,13 +698,13 @@ export default function PsychologistDashboard() {
                           <div className="flex gap-2 pt-1">
                             <button
                               onClick={() => handleUpdateApptStatus(appt.id, 'accepted')}
-                              className="flex-1 py-2.5 rounded-xl bg-[#F4C542] hover:bg-[#e0b435] text-[#111111] font-black text-xs transition-all shadow-md flex items-center justify-center gap-1.5 cursor-pointer active:scale-95"
+                              className="flex-1 py-2.5 rounded-xl bg-[#F4C542] hover:bg-[#e0b435] text-[#111111] font-black text-xs border-2 border-[#111111] transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer active:scale-95"
                             >
                               <span>Accept ✅</span>
                             </button>
                             <button
                               onClick={() => handleUpdateApptStatus(appt.id, 'declined')}
-                              className="flex-1 py-2.5 rounded-xl bg-white/5 hover:bg-rose-500/20 text-white hover:text-rose-300 border border-white/10 hover:border-rose-500/30 font-bold text-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer active:scale-95"
+                              className="flex-1 py-2.5 rounded-xl bg-[#FFFFFF] hover:bg-[#111111]/5 text-[#111111] border border-[#111111] font-bold text-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer active:scale-95"
                             >
                               <span>Decline ❌</span>
                             </button>

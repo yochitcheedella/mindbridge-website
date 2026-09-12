@@ -351,21 +351,21 @@ export default function WellnessExercises() {
   return (
     <div className="max-w-4xl mx-auto space-y-6 sm:space-y-8 animate-fade-in pb-20">
       {/* Header Banner */}
-      <div className="flex items-center justify-between gap-4 bg-surface-container/60 p-4 sm:p-5 rounded-2xl border border-border-structural/80 backdrop-blur-xl shadow-md">
+      <div className="flex items-center justify-between gap-4 bg-[#FAFAFA] p-4 sm:p-5 rounded-2xl border-2 border-[#111111] shadow-[3px_3px_0px_#111111]">
         <div className="flex items-center gap-3.5">
           <button 
             onClick={() => navigate(-1)} 
-            className="p-2.5 rounded-xl bg-surface-container-high/70 hover:bg-surface-container-highest text-on-surface-variant hover:text-white border border-border-structural/60 transition-colors active:scale-95 flex items-center justify-center shrink-0 shadow-sm"
+            className="p-2.5 rounded-xl bg-white hover:bg-neutral-100 text-[#111111] border-2 border-[#111111] transition-colors active:scale-95 flex items-center justify-center shrink-0 shadow-sm"
             aria-label="Go back"
           >
             <ArrowLeft size={18} />
           </button>
           <div>
-            <h1 className="text-xl sm:text-2xl font-heading font-extrabold text-white tracking-tight flex items-center gap-2">
+            <h1 className="text-xl sm:text-2xl font-heading font-extrabold text-[#111111] tracking-tight flex items-center gap-2">
               <span>Breathe &amp; Reset Studio</span>
-              <span className="hidden sm:inline-flex px-2 py-0.5 rounded-md text-[10px] uppercase font-mono font-extrabold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Mindfulness</span>
+              <span className="hidden sm:inline-flex px-2 py-0.5 rounded-md text-[10px] uppercase font-mono font-extrabold bg-[#F4C542] text-[#111111] border border-[#111111]">Mindfulness</span>
             </h1>
-            <p className="text-xs sm:text-sm text-on-surface-variant font-medium mt-0.5">
+            <p className="text-xs sm:text-sm text-[#111111]/70 font-medium mt-0.5">
               Guided acoustic relaxation, clinical somatic breathing, and daily wellness challenges.
             </p>
           </div>
@@ -374,18 +374,18 @@ export default function WellnessExercises() {
 
       <main className="space-y-6">
         {/* ── Page-level tabs ── */}
-        <div className="flex bg-surface-container-highest/60 backdrop-blur-md rounded-2xl p-1.5 gap-1.5 border border-border-structural">
+        <div className="flex bg-[#FAFAFA] rounded-2xl p-1.5 gap-1.5 border-2 border-[#111111] shadow-[2px_2px_0px_#111111]">
           {PAGE_TABS.map(({ key, label, icon: Icon }) => (
             <button 
               key={key} 
               onClick={() => setPageTab(key)}
               className={`flex-1 py-2.5 px-3 rounded-xl font-heading font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all active:scale-95 ${
                 pageTab === key 
-                  ? 'bg-gradient-to-r from-interactive-primary/30 to-secondary/30 text-secondary-fixed border border-interactive-primary/40 shadow-md' 
-                  : 'text-on-surface-variant hover:text-white hover:bg-white/5'
+                  ? 'bg-[#F4C542] text-[#111111] border border-[#111111] shadow-sm font-extrabold' 
+                  : 'text-[#111111]/70 hover:text-[#111111] hover:bg-neutral-200'
               }`}
             >
-              <Icon size={16} className={pageTab === key ? 'text-secondary-fixed' : 'text-outline'} /> 
+              <Icon size={16} className={pageTab === key ? 'text-[#111111]' : 'text-[#111111]/60'} /> 
               <span>{label}</span>
             </button>
           ))}

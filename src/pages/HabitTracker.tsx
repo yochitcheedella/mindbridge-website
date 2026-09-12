@@ -137,28 +137,29 @@ export default function HabitTracker() {
   return (
     <div className="max-w-4xl mx-auto space-y-6 sm:space-y-8 animate-fade-in">
       {/* Header Banner */}
-      <div className="flex items-center justify-between gap-4 bg-surface-container/60 p-4 sm:p-5 rounded-2xl border border-border-structural/80 backdrop-blur-xl shadow-md">
+      {/* Top Header Bar */}
+      <div className="flex items-center justify-between gap-4 bg-[#FAFAFA] p-4 sm:p-5 rounded-2xl border-2 border-[#111111] shadow-[3px_3px_0px_#111111]">
         <div className="flex items-center gap-3.5">
           <button 
             onClick={() => navigate(-1)} 
-            className="p-2.5 rounded-xl bg-surface-container-high/70 hover:bg-surface-container-highest text-on-surface-variant hover:text-white border border-border-structural/60 transition-colors active:scale-95 flex items-center justify-center shrink-0 shadow-sm"
+            className="p-2.5 rounded-xl bg-white hover:bg-neutral-100 text-[#111111] border-2 border-[#111111] transition-colors active:scale-95 flex items-center justify-center shrink-0 shadow-sm"
             aria-label="Go back"
           >
             <ArrowLeft size={18} />
           </button>
           <div>
-            <h1 className="text-xl sm:text-2xl font-heading font-extrabold text-white tracking-tight flex items-center gap-2">
-              <span>Habit & Routine Studio</span>
-              <span className="hidden sm:inline-flex px-2 py-0.5 rounded-md text-[10px] uppercase font-mono font-extrabold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Daily Wellness</span>
+            <h1 className="text-xl sm:text-2xl font-heading font-extrabold text-[#111111] tracking-tight flex items-center gap-2">
+              <span>Habit &amp; Routine Studio</span>
+              <span className="hidden sm:inline-flex px-2 py-0.5 rounded-md text-[10px] uppercase font-mono font-extrabold bg-[#F4C542] text-[#111111] border border-[#111111]">Daily Wellness</span>
             </h1>
-            <p className="text-xs sm:text-sm text-on-surface-variant font-medium mt-0.5">
+            <p className="text-xs sm:text-sm text-[#111111]/70 font-medium mt-0.5">
               Consistent daily positive behavior stacking builds academic resilience.
             </p>
           </div>
         </div>
         <button
           onClick={() => setShowAdd(s => !s)}
-          className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-interactive-primary to-secondary text-white font-heading font-extrabold text-xs sm:text-sm tracking-wide hover:brightness-110 shadow-lg shadow-interactive-primary/30 active:scale-[0.98] transition-all flex items-center gap-2 shrink-0"
+          className="px-4 py-2.5 rounded-xl bg-[#F4C542] hover:bg-[#E5B532] text-[#111111] border-2 border-[#111111] shadow-[2px_2px_0px_#111111] font-heading font-extrabold text-xs sm:text-sm tracking-wide active:scale-[0.98] transition-all flex items-center gap-2 shrink-0"
         >
           <Plus size={16} /> <span>Add Habit</span>
         </button>
@@ -168,16 +169,16 @@ export default function HabitTracker() {
       {totalHabits > 0 && (
         <div className="grid grid-cols-3 gap-3 sm:gap-6">
           {[
-            { label: "Today's Progress", value: `${completionPct}%`, icon: '✅', color: 'from-emerald-400 to-teal-500' },
-            { label: 'Done Today', value: `${totalDoneToday}/${totalHabits}`, icon: '🎯', color: 'from-blue-400 to-indigo-500' },
-            { label: 'Best Streak', value: `${longestStreak}d`, icon: '🔥', color: 'from-amber-400 to-orange-500' },
-          ].map(({ label, value, icon, color }) => (
-            <div key={label} className="glass-panel p-4 sm:p-5 rounded-2xl border border-border-structural text-center space-y-1 shadow-lg">
+            { label: "Today's Progress", value: `${completionPct}%`, icon: '✅' },
+            { label: 'Done Today', value: `${totalDoneToday}/${totalHabits}`, icon: '🎯' },
+            { label: 'Best Streak', value: `${longestStreak}d`, icon: '🔥' },
+          ].map(({ label, value, icon }) => (
+            <div key={label} className="bg-white p-4 sm:p-5 rounded-2xl border-2 border-[#111111] shadow-[3px_3px_0px_#111111] text-center space-y-1">
               <span className="text-xl sm:text-2xl inline-block">{icon}</span>
-              <div className={`text-xl sm:text-3xl font-heading font-black text-transparent bg-clip-text bg-gradient-to-r ${color}`}>
+              <div className="text-xl sm:text-3xl font-heading font-black text-[#111111]">
                 {value}
               </div>
-              <div className="text-[10px] sm:text-xs font-mono font-bold uppercase text-on-surface-variant tracking-wider truncate">
+              <div className="text-[10px] sm:text-xs font-mono font-bold uppercase text-[#111111]/70 tracking-wider truncate">
                 {label}
               </div>
             </div>
@@ -187,15 +188,15 @@ export default function HabitTracker() {
 
       {/* Add habit modal/panel */}
       {showAdd && (
-        <div className="glass-panel p-5 sm:p-7 rounded-3xl border border-interactive-primary/40 shadow-2xl space-y-6 relative overflow-hidden bg-surface-container-high/90 animate-slide-up">
-          <div className="flex justify-between items-center border-b border-border-structural/60 pb-3">
-            <h3 className="font-heading font-bold text-base sm:text-lg text-white flex items-center gap-2">
-              <Sparkles className="text-secondary-fixed" size={18} />
+        <div className="p-5 sm:p-7 rounded-3xl border-2 border-[#111111] shadow-[4px_4px_0px_#111111] space-y-6 relative overflow-hidden bg-white animate-slide-up">
+          <div className="flex justify-between items-center border-b border-[#111111]/20 pb-3">
+            <h3 className="font-heading font-bold text-base sm:text-lg text-[#111111] flex items-center gap-2">
+              <Sparkles className="text-[#111111]" size={18} />
               <span>Add a Wellness Habit</span>
             </h3>
             <button 
               onClick={() => setShowAdd(false)} 
-              className="p-1 rounded-lg text-on-surface-variant hover:text-white hover:bg-white/10 transition-colors"
+              className="p-1 rounded-lg text-[#111111]/60 hover:text-[#111111] hover:bg-neutral-100 transition-colors"
             >
               <X size={20} />
             </button>
@@ -203,7 +204,7 @@ export default function HabitTracker() {
 
           {/* Presets */}
           <div className="space-y-3">
-            <label className="text-xs font-mono font-bold uppercase tracking-wider text-on-surface-variant block">
+            <label className="text-xs font-mono font-bold uppercase tracking-wider text-[#111111] block">
               Quick Presets
             </label>
             <div className="flex flex-wrap gap-2">
@@ -214,10 +215,10 @@ export default function HabitTracker() {
                     key={p.id}
                     onClick={() => addPreset(p)}
                     disabled={already}
-                    className={`px-3 py-2 rounded-xl border text-xs sm:text-sm font-semibold transition-all active:scale-95 flex items-center gap-2 ${
+                    className={`px-3 py-2 rounded-xl border-2 text-xs sm:text-sm font-bold transition-all active:scale-95 flex items-center gap-2 ${
                       already
-                        ? 'border-border-structural bg-surface-container text-on-surface-variant/60 cursor-default'
-                        : 'border-interactive-primary/50 bg-interactive-primary/15 text-secondary-fixed hover:bg-interactive-primary/25 cursor-pointer shadow-sm shadow-interactive-primary/10'
+                        ? 'border-[#111111]/20 bg-neutral-100 text-[#111111]/40 cursor-default'
+                        : 'border-[#111111] bg-[#FAFAFA] text-[#111111] hover:bg-[#F4C542] cursor-pointer shadow-sm'
                     }`}
                   >
                     <span>{p.emoji}</span>
@@ -230,14 +231,14 @@ export default function HabitTracker() {
 
           {/* Custom habit input */}
           <div className="space-y-3 pt-2">
-            <label className="text-xs font-mono font-bold uppercase tracking-wider text-on-surface-variant block">
+            <label className="text-xs font-mono font-bold uppercase tracking-wider text-[#111111] block">
               Or Create Custom Habit
             </label>
             <div className="flex gap-2 sm:gap-3">
               <input
                 value={customEmoji}
                 onChange={e => setCustomEmoji(e.target.value)}
-                className="w-14 text-center text-xl bg-surface-container-lowest border border-border-structural rounded-xl py-2 px-1 text-white focus:outline-none focus:ring-2 focus:ring-secondary-fixed shrink-0"
+                className="w-14 text-center text-xl bg-[#FAFAFA] border-2 border-[#111111] rounded-xl py-2 px-1 text-[#111111] focus:outline-none focus:border-[#F4C542] shrink-0"
                 maxLength={2}
                 title="Choose an emoji"
               />
@@ -246,11 +247,11 @@ export default function HabitTracker() {
                 onChange={e => setCustomName(e.target.value)}
                 placeholder="Enter routine name..."
                 onKeyDown={e => e.key === 'Enter' && addCustom()}
-                className="flex-1 bg-surface-container-lowest border border-border-structural rounded-xl py-2 px-3.5 text-sm text-white placeholder-on-surface-variant focus:outline-none focus:ring-2 focus:ring-secondary-fixed"
+                className="flex-1 bg-[#FAFAFA] border-2 border-[#111111] rounded-xl py-2 px-3.5 text-sm text-[#111111] placeholder-[#111111]/40 focus:outline-none focus:border-[#F4C542]"
               />
               <button
                 onClick={addCustom}
-                className="px-5 py-2 rounded-xl bg-interactive-primary hover:brightness-110 text-white font-heading font-bold text-sm tracking-wide shadow-md active:scale-95 transition-transform shrink-0"
+                className="px-5 py-2 rounded-xl bg-[#F4C542] hover:bg-[#E5B532] text-[#111111] border-2 border-[#111111] shadow-[2px_2px_0px_#111111] font-heading font-bold text-sm tracking-wide active:scale-95 transition-transform shrink-0"
               >
                 Create
               </button>
@@ -261,17 +262,17 @@ export default function HabitTracker() {
 
       {/* Habit List */}
       {habits.length === 0 ? (
-        <div className="glass-panel py-16 px-6 rounded-3xl border border-border-structural text-center space-y-4 shadow-xl">
-          <Trophy size={48} className="mx-auto text-outline/30 animate-pulse" />
-          <h4 className="text-lg font-heading font-extrabold text-white">No Routines Configured Yet</h4>
-          <p className="text-sm text-on-surface-variant max-w-md mx-auto leading-relaxed">
-            Tap the <span className="text-secondary-fixed font-bold">"+ Add Habit"</span> button above to quickly adopt science-backed sleep, hydration, and mental calm rituals.
+        <div className="bg-white py-16 px-6 rounded-3xl border-2 border-[#111111] shadow-[4px_4px_0px_#111111] text-center space-y-4">
+          <Trophy size={48} className="mx-auto text-[#111111]/40 animate-pulse" />
+          <h4 className="text-lg font-heading font-extrabold text-[#111111]">No Routines Configured Yet</h4>
+          <p className="text-sm text-[#111111]/70 max-w-md mx-auto leading-relaxed">
+            Tap the <span className="text-[#111111] font-bold">"+ Add Habit"</span> button above to quickly adopt science-backed sleep, hydration, and mental calm rituals.
           </p>
         </div>
       ) : (
         <div className="space-y-4">
-          <h3 className="text-xs sm:text-sm font-heading font-extrabold text-on-surface-variant uppercase tracking-wider flex items-center gap-2 px-1">
-            <Flame size={16} className="text-amber-400 animate-bounce" />
+          <h3 className="text-xs sm:text-sm font-heading font-extrabold text-[#111111] uppercase tracking-wider flex items-center gap-2 px-1">
+            <Flame size={16} className="text-amber-500 animate-bounce" />
             <span>Active Daily Rituals ({totalDoneToday} / {totalHabits} completed today)</span>
           </h3>
           
@@ -281,10 +282,10 @@ export default function HabitTracker() {
               return (
                 <div 
                   key={habit.id}
-                  className={`p-4 sm:p-5 rounded-2xl border transition-all duration-200 flex items-center gap-3.5 sm:gap-5 shadow-md ${
+                  className={`p-4 sm:p-5 rounded-2xl border-2 transition-all duration-200 flex items-center gap-3.5 sm:gap-5 shadow-[3px_3px_0px_#111111] ${
                     doneToday 
-                      ? 'bg-emerald-500/10 border-emerald-500/40 shadow-emerald-500/10' 
-                      : 'glass-panel border-border-structural hover:border-white/30'
+                      ? 'bg-emerald-50 border-emerald-600' 
+                      : 'bg-white border-[#111111]'
                   }`}
                 >
                   {/* Check Toggle Button */}
@@ -294,8 +295,8 @@ export default function HabitTracker() {
                     aria-label={doneToday ? 'Mark incomplete' : 'Mark complete'}
                   >
                     {doneToday
-                      ? <CheckCircle2 size={32} className="text-emerald-400 drop-shadow-[0_0_8px_rgba(52,211,153,0.5)]" />
-                      : <Circle size={32} className="text-outline hover:text-white transition-colors" />
+                      ? <CheckCircle2 size={32} className="text-emerald-600" />
+                      : <Circle size={32} className="text-[#111111]/40 hover:text-[#111111] transition-colors" />
                     }
                   </button>
 
@@ -304,7 +305,7 @@ export default function HabitTracker() {
                     <div className="flex items-center gap-2.5">
                       <span className="text-xl sm:text-2xl filter drop-shadow">{habit.emoji}</span>
                       <span className={`font-heading font-extrabold text-sm sm:text-base truncate ${
-                        doneToday ? 'text-emerald-300' : 'text-white'
+                        doneToday ? 'text-emerald-900 line-through opacity-70' : 'text-[#111111]'
                       }`}>
                         {habit.name}
                       </span>

@@ -69,17 +69,17 @@ export default function PsychologistPatients() {
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="font-bold text-2xl text-white flex items-center gap-2">
-              <Users className="text-blue-400" size={24} />
+            <h1 className="font-bold text-2xl text-[#111111] flex items-center gap-2">
+              <Users className="text-[#111111]" size={24} />
               All Patients
             </h1>
-            <p className="text-text-muted text-sm mt-0.5">
+            <p className="text-[#111111]/70 text-sm mt-0.5">
               Anonymous patient list — sorted by risk score
             </p>
           </div>
           <button
             onClick={fetchPatients}
-            className="flex items-center gap-2 px-3 py-2 bg-surface border border-border rounded-xl text-sm text-text-muted hover:text-white transition-colors"
+            className="flex items-center gap-2 px-3 py-2 bg-white border-2 border-[#111111] rounded-xl text-sm font-bold text-[#111111] hover:bg-[#FAFAFA] transition-colors"
           >
             <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
             Refresh
@@ -89,21 +89,21 @@ export default function PsychologistPatients() {
         {/* Risk Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
           {[
-            { key: 'critical', label: 'Critical', color: 'border-red-500/30 bg-red-500/5', dot: 'bg-red-500', text: 'text-red-400' },
-            { key: 'high', label: 'High', color: 'border-orange-500/30 bg-orange-500/5', dot: 'bg-orange-500', text: 'text-orange-400' },
-            { key: 'moderate', label: 'Moderate', color: 'border-yellow-500/30 bg-yellow-500/5', dot: 'bg-yellow-500', text: 'text-yellow-400' },
-            { key: 'low', label: 'Low', color: 'border-green-500/30 bg-green-500/5', dot: 'bg-green-500', text: 'text-green-400' },
+            { key: 'critical', label: 'Critical', color: 'border-red-500/40 bg-red-50', dot: 'bg-red-500', text: 'text-red-700' },
+            { key: 'high', label: 'High', color: 'border-orange-500/40 bg-orange-50', dot: 'bg-orange-500', text: 'text-orange-700' },
+            { key: 'moderate', label: 'Moderate', color: 'border-yellow-500/40 bg-yellow-50', dot: 'bg-yellow-500', text: 'text-yellow-700' },
+            { key: 'low', label: 'Low', color: 'border-green-500/40 bg-green-50', dot: 'bg-green-500', text: 'text-green-700' },
           ].map(({ key, label, color, dot, text }) => (
             <button
               key={key}
               onClick={() => setFilterLevel(filterLevel === key as any ? 'all' : key as any)}
-              className={`p-4 rounded-2xl border ${color} transition-all ${filterLevel === key ? 'ring-2 ring-white/10' : ''}`}
+              className={`p-4 rounded-2xl border-2 ${color} transition-all ${filterLevel === key ? 'ring-2 ring-[#111111]' : ''}`}
             >
               <div className="flex items-center gap-2 mb-1">
                 <div className={`w-2 h-2 rounded-full ${dot}`} />
                 <span className={`text-xs font-semibold ${text}`}>{label}</span>
               </div>
-              <p className="font-bold text-2xl text-white">{stats[key as keyof typeof stats]}</p>
+              <p className="font-bold text-2xl text-[#111111]">{stats[key as keyof typeof stats]}</p>
             </button>
           ))}
         </div>
@@ -118,10 +118,10 @@ export default function PsychologistPatients() {
                 placeholder="Search by alias or department..."
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                className="w-full bg-background border border-border rounded-xl pl-9 pr-4 py-2.5 text-sm text-text placeholder-text-muted focus:outline-none focus:border-blue-500/50 transition-all"
+                className="w-full bg-background border border-border rounded-xl pl-9 pr-4 py-2.5 text-sm text-[#111111] placeholder-[#111111]/50 focus:outline-none focus:border-[#F4C542] transition-all"
               />
             </div>
-            <div className="flex items-center gap-1 text-xs text-text-muted">
+            <div className="flex items-center gap-1 text-xs text-[#111111]/70">
               <Filter size={12} />
               <span>{filtered.length} shown</span>
             </div>
@@ -163,13 +163,13 @@ export default function PsychologistPatients() {
                     {/* Info */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
-                        <p className="font-semibold text-white text-sm truncate">{patient.anonymous_id}</p>
+                        <p className="font-semibold text-[#111111] text-sm truncate">{patient.anonymous_id}</p>
                         <span className={`px-2 py-0.5 rounded-full text-xs font-semibold border ${risk.color} flex items-center gap-1`}>
                           <RiskIcon size={10} />
                           {risk.label}
                         </span>
                       </div>
-                      <div className="flex items-center gap-3 text-xs text-text-muted">
+                      <div className="flex items-center gap-3 text-xs text-[#111111]/70">
                         <span>{patient.department}</span>
                         <span>·</span>
                         <span>Year {patient.year}</span>
@@ -178,12 +178,12 @@ export default function PsychologistPatients() {
 
                     {/* Risk Score */}
                     <div className="text-right flex-shrink-0">
-                      <p className="font-bold text-lg text-white">{Math.round(patient.risk_score * 100)}</p>
-                      <p className="text-xs text-text-muted">Risk Score</p>
+                      <p className="font-bold text-lg text-[#111111]">{Math.round(patient.risk_score * 100)}</p>
+                      <p className="text-xs text-[#111111]/70">Risk Score</p>
                     </div>
 
                     {/* Arrow */}
-                    <ChevronRight size={16} className="text-text-muted group-hover:text-blue-400 group-hover:translate-x-1 transition-all" />
+                    <ChevronRight size={16} className="text-[#111111]/40 group-hover:text-[#111111] group-hover:translate-x-1 transition-all" />
                   </div>
 
                   {/* Risk Progress Bar */}

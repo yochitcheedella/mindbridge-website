@@ -90,8 +90,7 @@ export default function PsychologistCalendar() {
     .sort((a, b) => new Date(a.slot_time).getTime() - new Date(b.slot_time).getTime());
 
   return (
-    <div className="flex-1 overflow-y-auto bg-[#FFFFFF] p-4 md:p-6 pb-24 text-[#111111]">
-      <div className="max-w-5xl mx-auto space-y-6">
+    <div className="w-full max-w-5xl mx-auto space-y-6 animate-fade-in text-[#111111] pb-16">
 
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -350,7 +349,6 @@ export default function PsychologistCalendar() {
             )}
           </div>
         )}
-      </div>
     </div>
   );
 }

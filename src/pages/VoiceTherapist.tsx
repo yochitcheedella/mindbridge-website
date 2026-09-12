@@ -179,33 +179,38 @@ export default function VoiceTherapist() {
   };
 
   return (
-    <div className="flex-1 overflow-y-auto bg-canvas-global p-4 md:p-8 max-w-4xl mx-auto pb-24 w-full h-full flex flex-col items-center">
-      {/* Header */}
-      <div className="w-full flex items-center justify-between mb-8 pb-4 border-b border-border/40">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shadow-sm">
-            <Sparkles size={20} />
+    <div className="w-full max-w-4xl mx-auto space-y-6 animate-fade-in text-[#111111] pb-16">
+      {/* ── Top Header ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-[#111111]/10">
+        <div className="flex items-center gap-3.5">
+          <div className="w-11 h-11 rounded-2xl bg-[#F4C542] border-2 border-[#111111] flex items-center justify-center text-[#111111] shadow-xs shrink-0">
+            <Sparkles size={22} className="stroke-[2.5]" />
           </div>
           <div>
-            <h1 className="font-heading font-bold text-2xl md:text-3xl text-text flex items-center gap-2">
-              AI Voice Therapist
-            </h1>
-            <p className="text-xs text-text-muted">Real-time clinical voice guidance · 100% confidential</p>
+            <div className="flex flex-wrap items-center gap-2">
+              <h1 className="font-heading font-black text-xl sm:text-2xl text-[#111111] tracking-tight">
+                AI Voice Therapist
+              </h1>
+              <span className="px-2.5 py-0.5 rounded-full bg-[#F4C542]/20 border border-[#F4C542] text-[#111111] text-[11px] font-black uppercase">
+                24/7 Voice Care
+              </span>
+            </div>
+            <p className="text-xs text-[#111111]/60 mt-0.5 font-medium">Real-time clinical voice guidance · 100% confidential</p>
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5 self-start sm:self-auto">
           <button
             onClick={toggleAudio}
             title={isAudioMuted ? "Unmute Voice" : "Mute Voice"}
-            className="p-2 rounded-xl bg-surface border border-border/60 hover:border-primary/40 text-text-muted hover:text-text transition-colors"
+            className="p-2.5 rounded-2xl bg-[#FFFFFF] border-2 border-[#111111] hover:bg-[#F4C542] text-[#111111] transition-all shadow-xs cursor-pointer flex items-center justify-center"
           >
-            {isAudioMuted ? <VolumeX size={18} className="text-error" /> : <Volume2 size={18} className="text-primary" />}
+            {isAudioMuted ? <VolumeX size={18} className="text-rose-600" /> : <Volume2 size={18} className="text-[#111111]" />}
           </button>
-          <div className={`px-2.5 py-1 rounded-full text-xs font-medium border flex items-center gap-1.5 ${
-            riskLevel === 'green' ? 'bg-[#a1f3c3]/10 text-[#a1f3c3] border-[#a1f3c3]/30' :
-            riskLevel === 'yellow' ? 'bg-amber-500/10 text-amber-400 border-amber-500/30' :
-            'bg-rose-500/10 text-rose-400 border-rose-500/30'
+          <div className={`px-3 py-1.5 rounded-full text-xs font-mono font-bold border-2 flex items-center gap-1.5 ${
+            riskLevel === 'green' ? 'bg-emerald-500/15 text-emerald-700 border-emerald-500/30' :
+            riskLevel === 'yellow' ? 'bg-[#F4C542]/20 text-[#111111] border-[#111111]' :
+            'bg-rose-500/15 text-rose-700 border-rose-500/30'
           }`}>
             <span className="w-2 h-2 rounded-full bg-current animate-pulse" />
             <span className="capitalize">{riskLevel === 'green' ? 'Safe Zone' : riskLevel + ' Risk'}</span>
@@ -213,100 +218,84 @@ export default function VoiceTherapist() {
         </div>
       </div>
 
-      {/* Center Interactive Animated Aura */}
-      <div className="flex-1 w-full flex flex-col items-center justify-center my-6 relative min-h-[260px]">
-        <div className={`relative flex items-center justify-center w-48 h-48 rounded-full transition-all duration-700 ${
-          isSpeaking 
-            ? 'bg-primary/20 scale-110 shadow-[0_0_60px_rgba(99,102,241,0.4)] border-2 border-primary/50' 
-            : isThinking 
-            ? 'bg-amber-500/10 scale-105 border-2 border-amber-500/40 animate-pulse'
-            : isListening 
-            ? 'bg-rose-500/15 scale-105 shadow-[0_0_50px_rgba(244,63,94,0.3)] border-2 border-rose-500/40' 
-            : 'bg-surface/80 border border-border/60 shadow-lg'
-        }`}>
-          {isSpeaking && <div className="absolute inset-0 rounded-full animate-ping bg-primary/25 pointer-events-none" />}
-          {isListening && <div className="absolute inset-0 rounded-full animate-ping bg-rose-500/20 pointer-events-none" />}
-          
-          <Activity 
-            size={64} 
-            className={`transition-all duration-500 ${
-              isSpeaking ? 'text-primary animate-pulse' : 
-              isThinking ? 'text-amber-400 animate-spin' :
-              isListening ? 'text-rose-400 scale-110' : 
-              'text-text-muted/60'
-            }`} 
+      {/* ── Interactive Audio Stage ── */}
+      <div className="bg-[#FFFFFF] border-2 border-[#111111]/10 rounded-3xl p-6 sm:p-10 shadow-sm flex flex-col items-center justify-center text-center">
+        
+        {/* Animated Visualizer Aura */}
+        <div className="relative flex items-center justify-center w-48 h-48 sm:w-56 sm:h-56 my-2">
+          <div
+            className={`absolute inset-0 rounded-full transition-all duration-700 ${
+              isSpeaking
+                ? 'bg-[#F4C542]/30 scale-115 shadow-[0_0_50px_rgba(244,197,66,0.5)] border-2 border-[#F4C542]'
+                : isThinking
+                ? 'bg-[#F4C542]/15 scale-105 border-2 border-[#F4C542] animate-pulse'
+                : isListening
+                ? 'bg-rose-500/20 scale-110 shadow-[0_0_50px_rgba(244,63,94,0.3)] border-2 border-rose-500/50'
+                : 'bg-[#111111]/5 border border-[#111111]/10'
+            }`}
           />
+
+          {isSpeaking && <div className="absolute inset-0 rounded-full animate-ping bg-[#F4C542]/25 pointer-events-none" />}
+          {isListening && <div className="absolute inset-0 rounded-full animate-ping bg-rose-500/20 pointer-events-none" />}
+
+          <div className="relative z-10 w-36 h-36 sm:w-40 sm:h-40 rounded-full bg-[#FFFFFF] border-4 border-[#111111] shadow-lg flex items-center justify-center">
+            <Activity
+              size={52}
+              className={`transition-all duration-500 ${
+                isSpeaking ? 'text-[#111111] animate-pulse' :
+                isThinking ? 'text-[#F4C542] animate-spin' :
+                isListening ? 'text-rose-600 scale-110' :
+                'text-[#111111]/40'
+              }`}
+            />
+          </div>
         </div>
 
-        {/* Dynamic Status / Speech Preview */}
-        <div className="mt-8 text-center max-w-lg px-4 min-h-[60px] flex items-center justify-center">
+        {/* Dynamic Status / Speech Preview (Fixed min height to prevent jumping) */}
+        <div className="w-full max-w-xl mx-auto min-h-[72px] flex items-center justify-center px-4 mt-6">
           {isListening && (
-            <p className="text-base md:text-lg text-rose-300 animate-pulse font-medium">
+            <p className="text-sm sm:text-base text-rose-600 animate-pulse font-bold bg-rose-500/10 px-4 py-2 rounded-2xl border border-rose-500/20">
               "{transcript || 'Listening to your voice...'}"
             </p>
           )}
           {isThinking && (
-            <div className="flex items-center gap-2 text-amber-300 font-medium">
-              <Sparkles size={16} className="animate-spin" />
-              <span>Thinking & formulating guidance...</span>
+            <div className="flex items-center gap-2 text-xs sm:text-sm font-bold text-[#111111] bg-[#F4C542]/20 px-4 py-2 rounded-2xl border border-[#F4C542]">
+              <Sparkles size={16} className="animate-spin text-[#111111]" />
+              <span>Formulating compassionate clinical guidance...</span>
             </div>
           )}
           {!isListening && !isThinking && (
-            <p className="text-sm md:text-base text-text-muted leading-relaxed italic">
+            <p className="text-xs sm:text-sm text-[#111111]/80 leading-relaxed font-medium italic max-w-lg">
               "{aiResponse}"
             </p>
           )}
         </div>
-      </div>
 
-      {/* Suggested Voice Prompts */}
-      <div className="w-full max-w-xl mb-6">
-        <p className="text-xs uppercase tracking-wider text-text-muted font-semibold mb-2.5 text-center flex items-center justify-center gap-1.5">
-          <Heart size={13} className="text-primary" />
-          <span>Quick Therapeutic Prompts</span>
-        </p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-          {PROMPT_SUGGESTIONS.map((prompt, i) => (
-            <button
-              key={i}
-              onClick={() => processVoiceInput(prompt)}
-              className="text-left px-3.5 py-2.5 rounded-xl bg-surface/70 hover:bg-surface border border-border/50 hover:border-primary/40 text-xs text-text-muted hover:text-text transition-all duration-200 flex items-center justify-between group shadow-sm"
-            >
-              <span className="truncate mr-2">{prompt}</span>
-              <ArrowRight size={13} className="opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 text-primary transition-all shrink-0" />
-            </button>
-          ))}
-        </div>
-      </div>
+        {/* Main Mic Button & Controls */}
+        <div className="flex flex-col items-center gap-3 mt-6 pt-6 border-t border-[#111111]/10 w-full max-w-md">
+          <button
+            onClick={toggleListening}
+            id="voice-mic-trigger"
+            className={`w-20 h-20 rounded-full flex items-center justify-center transition-all cursor-pointer shadow-md border-4 border-[#111111] ${
+              isListening
+                ? 'bg-rose-500 text-white hover:bg-rose-600 animate-pulse ring-4 ring-rose-500/30'
+                : 'bg-[#F4C542] text-[#111111] hover:bg-[#e0b435] hover:scale-105 active:scale-95'
+            }`}
+          >
+            {isListening ? <Square size={26} className="fill-current" /> : <Mic size={32} className="stroke-[2.5]" />}
+          </button>
 
-      {/* Voice & Text Interaction Controls */}
-      <Card className="w-full max-w-xl p-5 bg-surface/90 backdrop-blur-xl border border-primary/20 shadow-xl rounded-2xl">
-        <div className="flex flex-col items-center gap-5">
-          <div className="flex items-center gap-4">
-            <button
-              onClick={toggleListening}
-              id="voice-mic-trigger"
-              className={`w-16 h-16 rounded-full flex items-center justify-center transition-all shadow-xl ${
-                isListening 
-                  ? 'bg-rose-500 text-white hover:bg-rose-600 animate-pulse shadow-rose-500/40 ring-4 ring-rose-500/20' 
-                  : 'bg-primary text-white hover:bg-primary/90 hover:scale-105 shadow-primary/30'
-              }`}
-            >
-              {isListening ? <Square size={24} className="fill-current" /> : <Mic size={28} />}
-            </button>
-          </div>
-
-          <p className="text-xs font-semibold tracking-wider text-text-muted uppercase">
-            {isSpeaking ? 'AI is speaking (Tap to interrupt)' : isListening ? 'Listening... Tap to stop' : 'Tap mic to speak out loud'}
+          <p className="text-[11px] font-black tracking-wider text-[#111111] uppercase mt-1">
+            {isSpeaking ? 'AI is speaking (Tap to interrupt)' : isListening ? 'Listening... Tap to stop' : 'Tap microphone to speak'}
           </p>
 
-          {/* Text input fallback bar */}
+          {/* Text Input Fallback Bar */}
           <form
             onSubmit={(e) => {
               e.preventDefault();
               if (typedInput.trim()) processVoiceInput(typedInput);
             }}
-            className="w-full flex items-center gap-2 pt-2 border-t border-border/40"
+            className="w-full flex items-center gap-2 pt-3"
           >
             <input
               id="voice-therapist-input"
@@ -314,23 +303,43 @@ export default function VoiceTherapist() {
               placeholder="Or type what's on your mind..."
               value={typedInput}
               onChange={(e) => setTypedInput(e.target.value)}
-              className="flex-1 px-4 py-2.5 text-sm bg-surface-dim/80 border border-border/60 rounded-xl focus:outline-none focus:border-primary text-text placeholder:text-text-muted/60 transition-colors"
+              className="flex-1 px-4 py-3 text-xs sm:text-sm bg-[#FFFFFF] border-2 border-[#111111] rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#F4C542] text-[#111111] placeholder:text-[#111111]/40 font-medium"
             />
             <button
               type="submit"
               disabled={!typedInput.trim() || isThinking}
-              className="px-4 py-2.5 bg-primary text-white rounded-xl text-sm font-medium hover:bg-primary/90 disabled:opacity-40 disabled:cursor-not-allowed transition-all flex items-center gap-1.5 shadow-sm"
+              className="px-5 py-3 bg-[#F4C542] hover:bg-[#e0b435] text-[#111111] rounded-2xl text-xs sm:text-sm font-black border-2 border-[#111111] disabled:opacity-40 disabled:cursor-not-allowed transition-all flex items-center gap-1.5 shadow-sm shrink-0 cursor-pointer active:scale-95"
             >
-              <span>Speak</span>
+              <span>Send</span>
               <Send size={14} />
             </button>
           </form>
         </div>
-      </Card>
+      </div>
 
-      {/* Anonymity Banner */}
-      <div className="mt-6 flex items-center gap-2 text-xs text-text-muted/70">
-        <ShieldCheck size={14} className="text-[#a1f3c3]" />
+      {/* ── Quick Therapeutic Prompts ── */}
+      <div className="w-full max-w-2xl mx-auto space-y-3">
+        <p className="text-[11px] uppercase tracking-wider text-[#111111]/60 font-black text-center flex items-center justify-center gap-1.5">
+          <Heart size={13} className="text-[#111111]" />
+          <span>Quick Therapeutic Prompts</span>
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          {PROMPT_SUGGESTIONS.map((prompt, i) => (
+            <button
+              key={i}
+              onClick={() => processVoiceInput(prompt)}
+              className="text-left p-3.5 rounded-2xl bg-[#FFFFFF] hover:bg-[#F4C542]/20 border-2 border-[#111111]/15 hover:border-[#111111] text-xs font-bold text-[#111111] transition-all duration-200 flex items-center justify-between group shadow-2xs cursor-pointer active:scale-98"
+            >
+              <span className="truncate mr-2 font-medium">{prompt}</span>
+              <ArrowRight size={14} className="opacity-40 group-hover:opacity-100 group-hover:translate-x-1 text-[#111111] transition-all shrink-0 stroke-[2.5]" />
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Anonymity & Security Banner ── */}
+      <div className="pt-2 flex items-center justify-center gap-2 text-[11px] text-[#111111]/60 font-mono text-center">
+        <ShieldCheck size={15} className="text-[#111111] shrink-0" />
         <span>Protected by AES-256 Vault. Audio is processed client-side with zero retention.</span>
       </div>
     </div>

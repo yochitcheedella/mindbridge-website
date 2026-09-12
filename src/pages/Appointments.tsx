@@ -46,6 +46,7 @@ export default function Appointments() {
   const [reqDate, setReqDate] = useState('');
   const [reqTime, setReqTime] = useState('');
   const [isBooking, setIsBooking] = useState(false);
+  const [selectedMode, setSelectedMode] = useState<'Chat' | 'Audio Call' | 'Video Call' | 'Physical Session'>('Audio Call');
   const [loadingMine, setLoadingMine] = useState(true);
   const [bookedMsg, setBookedMsg] = useState('');
   const [activeModalCounselor, setActiveModalCounselor] = useState<CounselorData | null>(null);
@@ -320,12 +321,16 @@ export default function Appointments() {
         ══════════════════════════════════════════════════════════════════════ */}
         {activeTab === 'team' && (
           <div className="space-y-6 animate-fade-in">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/10 pb-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#111111]/10 pb-4">
               <div>
-                <h3 className="text-lg font-heading font-bold text-white">Our Dedicated Wellness Counsellors</h3>
-                <p className="text-xs text-white/60">Every counsellor specializes in creating empathetic, non-judgemental spaces for students.</p>
+                <h3 className="text-lg sm:text-xl font-heading font-black text-[#111111]">
+                  Our Dedicated Wellness Counsellors
+                </h3>
+                <p className="text-xs text-[#111111]/60 mt-0.5 font-medium">
+                  Every counsellor specializes in creating empathetic, non-judgemental spaces for students.
+                </p>
               </div>
-              <span className="text-xs font-mono text-teal-300 self-start sm:self-auto bg-teal-500/10 px-3 py-1 rounded-full border border-teal-500/20">
+              <span className="text-xs font-mono font-bold text-[#111111] self-start sm:self-auto bg-[#F4C542]/20 px-3.5 py-1.5 rounded-full border border-[#F4C542]">
                 100% Free Campus Care
               </span>
             </div>
@@ -336,7 +341,7 @@ export default function Appointments() {
                 return (
                   <div 
                     key={c.name} 
-                    className="p-5 sm:p-6 rounded-3xl bg-[#101422]/90 border border-white/10 hover:border-teal-500/40 transition-all duration-300 flex flex-col justify-between group shadow-xl hover:shadow-2xl hover:-translate-y-1 backdrop-blur-xl relative overflow-hidden"
+                    className="p-5 sm:p-6 rounded-3xl bg-[#FFFFFF] border-2 border-[#111111]/15 hover:border-[#111111] transition-all duration-300 flex flex-col justify-between group shadow-sm hover:shadow-md relative overflow-hidden h-full"
                   >
                     <div className="space-y-4">
                       {/* Top Row: Photo, Status, Name, Campus */}
@@ -345,46 +350,46 @@ export default function Appointments() {
                           <img 
                             src={c.avatar_url} 
                             alt={c.name} 
-                            className="w-16 h-16 rounded-2xl object-cover border-2 border-teal-500/30 shadow-md group-hover:scale-105 transition-transform bg-[#151a2a]"
+                            className="w-16 h-16 rounded-2xl object-cover border-2 border-[#111111] shadow-xs group-hover:scale-105 transition-transform bg-[#FFFFFF]"
                             onError={(e) => { (e.target as HTMLImageElement).src = '/logo.png'; }}
                           />
                           {/* Live Online Badge */}
                           <span className="absolute -bottom-1 -right-1 flex h-4 w-4">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                            <span className="relative inline-flex rounded-full h-4 w-4 bg-emerald-500 border-2 border-[#101422]" />
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75" />
+                            <span className="relative inline-flex rounded-full h-4 w-4 bg-emerald-500 border-2 border-[#FFFFFF]" />
                           </span>
                         </div>
 
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-1.5 mb-1">
-                            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 font-semibold">
+                            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-700 border border-emerald-500/30 font-bold">
                               ● Available
                             </span>
                           </div>
-                          <h4 className="font-heading font-bold text-base text-white tracking-tight leading-snug truncate">
+                          <h4 className="font-heading font-black text-base text-[#111111] tracking-tight leading-snug truncate">
                             {c.name}
                           </h4>
-                          <p className="text-[11px] font-semibold text-teal-300 truncate mt-0.5">
+                          <p className="text-[11px] font-bold text-[#111111]/75 truncate mt-0.5">
                             {c.specialization}
                           </p>
-                          <p className="text-[10px] font-mono text-white/60 truncate mt-1">
+                          <p className="text-[10px] font-mono text-[#111111]/50 truncate mt-1">
                             📍 {c.institution}
                           </p>
                         </div>
                       </div>
 
-                      {/* Official Quote from PDF */}
+                      {/* Official Quote from PDF with fixed min-height for uniform alignment */}
                       {c.quote && (
-                        <div className="p-3 rounded-2xl bg-white/[0.03] border border-white/10 text-xs text-teal-200/90 italic font-serif leading-relaxed line-clamp-3">
+                        <div className="p-3.5 rounded-2xl bg-[#FAFAFA] border border-[#111111]/10 text-xs text-[#111111]/80 italic font-serif leading-relaxed line-clamp-3 min-h-[68px] flex items-center">
                           “{c.quote.replace('♡', '').trim()} ♡”
                         </div>
                       )}
 
-                      {/* Core Pillars */}
+                      {/* Core Pillars with fixed min-height for uniform alignment */}
                       {c.pillars && c.pillars.length > 0 && (
-                        <div className="flex flex-wrap gap-1">
+                        <div className="flex flex-wrap gap-1 min-h-[28px]">
                           {c.pillars.map((p, idx) => (
-                            <span key={idx} className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-teal-500/10 border border-teal-500/20 text-teal-300">
+                            <span key={idx} className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-[#F4C542]/20 border border-[#F4C542]/40 text-[#111111] font-bold">
                               {p}
                             </span>
                           ))}
@@ -392,34 +397,34 @@ export default function Appointments() {
                       )}
 
                       {/* Experience & Languages Meta */}
-                      <div className="space-y-1 pt-2 border-t border-white/5 text-xs text-white/70">
+                      <div className="space-y-1 pt-2 border-t border-[#111111]/10 text-xs text-[#111111]/70">
                         <div className="flex items-center gap-2 font-mono text-[11px]">
-                          <Award size={13} className="text-teal-400 shrink-0" />
-                          <span>Experience: <strong className="text-white">{c.experience}</strong></span>
+                          <Award size={14} className="text-[#111111] shrink-0" />
+                          <span>Experience: <strong className="text-[#111111] font-black">{c.experience}</strong></span>
                         </div>
                         <div className="flex items-center gap-2 font-mono text-[11px]">
-                          <Globe size={13} className="text-[#111111]/60 shrink-0" />
-                          <span className="truncate text-[#111111]/75">Languages: <strong className="text-[#111111]">{c.languages}</strong></span>
+                          <Globe size={14} className="text-[#111111] shrink-0" />
+                          <span className="truncate">Languages: <strong className="text-[#111111] font-black">{c.languages}</strong></span>
                         </div>
                       </div>
                     </div>
 
-                    {/* Action Buttons */}
-                    <div className="pt-4 mt-4 border-t border-[#111111]/10 space-y-2">
+                    {/* Action Buttons pinned to bottom */}
+                    <div className="pt-4 mt-5 border-t border-[#111111]/10 space-y-2">
                       <div className="grid grid-cols-2 gap-2">
                         <button 
                           onClick={() => setActiveModalCounselor(c)}
-                          className="py-2.5 px-3 rounded-xl bg-[#FFFFFF] hover:bg-[#111111]/5 text-[#111111] text-xs font-bold border border-[#111111]/20 transition-all text-center flex items-center justify-center gap-1 active:scale-95"
+                          className="py-2.5 px-3 rounded-xl bg-[#FFFFFF] hover:bg-[#111111]/5 text-[#111111] text-xs font-bold border-2 border-[#111111]/20 hover:border-[#111111] transition-all text-center flex items-center justify-center gap-1.5 cursor-pointer active:scale-95"
                         >
-                          <BookOpen size={13} className="text-[#111111]" />
-                          <span>View Full Bio</span>
+                          <BookOpen size={14} className="text-[#111111]" />
+                          <span>View Bio</span>
                         </button>
 
                         <button 
                           onClick={() => handleSelectCounselorForBooking(c.id)}
-                          className="py-2.5 px-3 rounded-xl bg-[#F4C542] hover:bg-[#e0b435] text-[#111111] text-xs font-black border-2 border-[#111111] transition-all shadow-sm text-center flex items-center justify-center gap-1 active:scale-95"
+                          className="py-2.5 px-3 rounded-xl bg-[#F4C542] hover:bg-[#e0b435] text-[#111111] text-xs font-black border-2 border-[#111111] transition-all shadow-xs text-center flex items-center justify-center gap-1.5 cursor-pointer active:scale-95"
                         >
-                          <Calendar size={13} />
+                          <Calendar size={14} />
                           <span>Book Session</span>
                         </button>
                       </div>
@@ -428,7 +433,7 @@ export default function Appointments() {
                       {confirmedAppt ? (
                         <button
                           onClick={() => navigate(`/call/${confirmedAppt.id}`)}
-                          className="w-full py-2.5 px-3 rounded-xl bg-[#F4C542] hover:bg-[#e0b435] text-[#111111] text-xs font-black border-2 border-[#111111] transition-all flex items-center justify-center gap-2 shadow-sm active:scale-95"
+                          className="w-full py-2.5 px-3 rounded-xl bg-[#F4C542] hover:bg-[#e0b435] text-[#111111] text-xs font-black border-2 border-[#111111] transition-all flex items-center justify-center gap-2 shadow-xs cursor-pointer active:scale-95"
                         >
                           <PhoneCall size={14} />
                           <span>Start Session</span>
@@ -436,7 +441,7 @@ export default function Appointments() {
                       ) : (
                         <div className="w-full py-2 px-3 rounded-xl bg-[#111111]/5 border border-[#111111]/10 text-[11px] text-[#111111]/60 flex items-center justify-center gap-1.5 font-mono">
                           <Lock size={12} />
-                          <span>Audio call unlocks upon confirmed session</span>
+                          <span>Audio call unlocks on confirmed booking</span>
                         </div>
                       )}
                     </div>
@@ -609,20 +614,25 @@ export default function Appointments() {
                   <span>Select Appointment Mode</span>
                 </label>
 
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
                   {[
-                    { mode: 'Chat', icon: '💬', desc: 'Text Session' },
-                    { mode: 'Audio Call', icon: '📞', desc: 'Private Voice' },
-                    { mode: 'Video Call', icon: '🎥', desc: 'Secure Video' },
-                    { mode: 'Physical Session', icon: '🏫', desc: 'Campus Room' },
+                    { mode: 'Chat' as const, icon: '💬', desc: 'Text Session' },
+                    { mode: 'Audio Call' as const, icon: '📞', desc: 'Private Voice' },
+                    { mode: 'Video Call' as const, icon: '🎥', desc: 'Secure Video' },
+                    { mode: 'Physical Session' as const, icon: '🏫', desc: 'Campus Room' },
                   ].map((item) => (
                     <div
                       key={item.mode}
-                      className="p-3 rounded-2xl bg-[#FFFFFF] border border-[#111111]/15 hover:border-[#111111] transition-all text-center cursor-pointer group"
+                      onClick={() => setSelectedMode(item.mode)}
+                      className={`p-3.5 rounded-2xl border-2 transition-all text-center cursor-pointer group flex flex-col items-center justify-center ${
+                        selectedMode === item.mode
+                          ? 'bg-[#F4C542] border-[#111111] shadow-xs'
+                          : 'bg-[#FFFFFF] border-[#111111]/15 hover:border-[#111111]'
+                      }`}
                     >
                       <span className="text-xl block mb-1">{item.icon}</span>
-                      <p className="text-xs font-bold text-[#111111]">{item.mode}</p>
-                      <p className="text-[10px] text-[#111111]/60 mt-0.5">{item.desc}</p>
+                      <p className="text-xs font-black text-[#111111]">{item.mode}</p>
+                      <p className="text-[10px] text-[#111111]/70 mt-0.5 font-medium">{item.desc}</p>
                     </div>
                   ))}
                 </div>
@@ -655,7 +665,7 @@ export default function Appointments() {
                 ) : (
                   <>
                     <Calendar size={18} />
-                    <span>Book Counsellor as {getAlias()}</span>
+                    <span>Book {selectedMode} Session as {getAlias()}</span>
                   </>
                 )}
               </button>
@@ -669,20 +679,22 @@ export default function Appointments() {
         {activeTab === 'mine' && (
           <div className="max-w-2xl mx-auto space-y-4 animate-fade-in">
             {loadingMine ? (
-              <div className="text-center py-12 text-[#111111]/50 text-sm">Loading your sessions...</div>
+              <div className="text-center py-12 text-[#111111]/50 text-sm font-medium">Loading your sessions...</div>
             ) : myAppts.length === 0 ? (
-              <div className="text-center py-14 rounded-3xl text-[#111111]/70 border border-[#111111]/15 p-6 bg-[#FFFFFF] shadow-sm">
-                <span className="material-symbols-outlined text-[44px] mx-auto mb-3 opacity-30 text-[#111111]">event_busy</span>
-                <h3 className="text-lg font-heading font-bold text-[#111111] mb-1">No counseling sessions yet</h3>
-                <p className="text-xs text-[#111111]/60 max-w-sm mx-auto mb-5 leading-relaxed">
+              <div className="text-center py-14 rounded-3xl text-[#111111]/70 border-2 border-[#111111]/15 p-6 sm:p-8 bg-[#FFFFFF] shadow-sm space-y-3">
+                <span className="material-symbols-outlined text-[44px] mx-auto text-[#111111]/30">event_busy</span>
+                <h3 className="text-lg font-heading font-black text-[#111111]">No counseling sessions yet</h3>
+                <p className="text-xs text-[#111111]/60 max-w-sm mx-auto leading-relaxed font-medium">
                   You haven't requested any counseling sessions yet. Our 7 dedicated campus counsellors are here to listen and help.
                 </p>
-                <button 
-                  onClick={() => setActiveTab('team')} 
-                  className="px-6 py-2.5 rounded-xl bg-[#F4C542] hover:bg-[#e0b435] text-[#111111] font-black text-xs border-2 border-[#111111] transition-all shadow-sm"
-                >
-                  Meet Counselors & Book →
-                </button>
+                <div className="pt-2">
+                  <button 
+                    onClick={() => setActiveTab('team')} 
+                    className="px-6 py-3 rounded-2xl bg-[#F4C542] hover:bg-[#e0b435] text-[#111111] font-black text-xs border-2 border-[#111111] transition-all shadow-xs cursor-pointer"
+                  >
+                    Meet Counselors & Book →
+                  </button>
+                </div>
               </div>
             ) : (
               myAppts.map(appt => {
@@ -691,16 +703,17 @@ export default function Appointments() {
                 const isConfirmed = appt.status === 'confirmed';
 
                 return (
-                  <div key={appt.id} className="p-5 sm:p-6 rounded-3xl bg-[#FFFFFF] border border-[#111111]/15 animate-slide-up group shadow-sm space-y-4">
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="flex items-start gap-3.5">
-                        <div className="w-12 h-12 rounded-2xl bg-[#F4C542]/20 border border-[#111111]/15 flex items-center justify-center shrink-0 mt-0.5">
-                          <span className="material-symbols-outlined text-[#111111] text-[24px]">psychology</span>
+                  <div key={appt.id} className="p-5 sm:p-6 rounded-3xl bg-[#FFFFFF] border-2 border-[#111111]/15 hover:border-[#111111] transition-all animate-slide-up group shadow-xs space-y-4">
+                    {/* Header Row */}
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2">
+                      <div className="flex items-center gap-3.5">
+                        <div className="w-12 h-12 rounded-2xl bg-[#F4C542] border-2 border-[#111111] flex items-center justify-center shrink-0 text-[#111111]">
+                          <span className="material-symbols-outlined text-[24px]">psychology</span>
                         </div>
                         <div>
-                          <h3 className="font-heading font-bold text-base text-[#111111]">{appt.psychologist_name}</h3>
-                          <p className="text-xs text-[#111111]/60">{appt.specialization}</p>
-                          <div className="flex items-center gap-2 mt-2 font-mono text-[11px] text-[#111111]/70">
+                          <h3 className="font-heading font-black text-base text-[#111111]">{appt.psychologist_name}</h3>
+                          <p className="text-xs text-[#111111]/60 font-medium">{appt.specialization}</p>
+                          <div className="flex items-center gap-2 mt-1 font-mono text-[11px] text-[#111111]/80 font-bold">
                             <Calendar size={13} className="text-[#111111]" />
                             <span>{dt.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}</span>
                             <span>•</span>
@@ -709,14 +722,16 @@ export default function Appointments() {
                           </div>
                         </div>
                       </div>
-                      <span className={`text-[10px] px-2.5 py-1 rounded-full border font-bold flex items-center gap-1 shrink-0 ${statusCfg.color}`}>
-                        <span className="material-symbols-outlined text-[12px]">{statusCfg.icon}</span> {statusCfg.label}
+
+                      <span className={`text-[11px] px-3 py-1 rounded-full border-2 font-bold font-mono flex items-center gap-1.5 self-start sm:self-auto ${statusCfg.color}`}>
+                        <span className="material-symbols-outlined text-[14px]">{statusCfg.icon}</span> 
+                        <span>{statusCfg.label}</span>
                       </span>
                     </div>
 
                     {/* State-specific Notice Banner */}
                     {appt.status === 'pending' && (
-                      <div className="p-3.5 rounded-2xl bg-[#F4C542]/10 border border-[#F4C542]/40 flex items-start gap-3">
+                      <div className="p-3.5 rounded-2xl bg-[#F4C542]/15 border-2 border-[#111111]/20 flex items-start gap-3">
                         <span className="text-base shrink-0 mt-0.5">🟡</span>
                         <div className="text-xs">
                           <p className="font-bold text-[#111111]">Booking Request Sent</p>
@@ -728,7 +743,7 @@ export default function Appointments() {
                     )}
 
                     {isConfirmed && (
-                      <div className="p-3.5 rounded-2xl bg-[#FFFFFF] border-2 border-[#111111] flex items-start gap-3">
+                      <div className="p-3.5 rounded-2xl bg-[#FFFFFF] border-2 border-[#111111] flex items-start gap-3 shadow-xs">
                         <span className="text-base shrink-0 mt-0.5">✅</span>
                         <div className="text-xs">
                           <p className="font-bold text-[#111111]">Appointment Confirmed</p>
@@ -740,7 +755,7 @@ export default function Appointments() {
                     )}
 
                     {(appt.status === 'rejected' || appt.status === 'declined') && (
-                      <div className="p-3.5 rounded-2xl bg-[#111111]/5 border border-[#111111]/20 flex items-start justify-between gap-3">
+                      <div className="p-3.5 rounded-2xl bg-[#111111]/5 border-2 border-[#111111]/15 flex items-start justify-between gap-3">
                         <div className="flex items-start gap-3">
                           <span className="text-base shrink-0 mt-0.5">❌</span>
                           <div className="text-xs">
@@ -752,7 +767,7 @@ export default function Appointments() {
                         </div>
                         <button
                           onClick={() => setActiveTab('team')}
-                          className="px-3 py-1.5 rounded-xl border border-[#111111] bg-white hover:bg-[#111111] hover:text-white text-[#111111] text-xs font-bold transition-all shrink-0 cursor-pointer"
+                          className="px-3.5 py-1.5 rounded-xl border-2 border-[#111111] bg-white hover:bg-[#F4C542] text-[#111111] text-xs font-bold transition-all shrink-0 cursor-pointer"
                         >
                           Choose Slot →
                         </button>
@@ -763,27 +778,28 @@ export default function Appointments() {
                     <div className="pt-3 border-t border-[#111111]/10 flex items-center justify-between text-xs">
                       <div className="text-[#111111]/60 flex items-center gap-1.5">
                         <span>Your identity:</span>
-                        <span className="font-bold text-[#111111] bg-[#F4C542]/20 px-2 py-0.5 rounded border border-[#F4C542] text-[11px]">
+                        <span className="font-bold text-[#111111] bg-[#F4C542]/20 px-2.5 py-0.5 rounded-full border border-[#F4C542] text-[11px]">
                           {appt.student_alias || getAlias() || 'Anonymous Student'}
                         </span>
                       </div>
                       <span className="text-[10px] text-[#111111]/40 font-mono">Encrypted 256-Bit</span>
                     </div>
                     
+                    {/* Action Bar */}
                     {appt.status !== 'cancelled' && (
                       <div className="pt-3 border-t border-[#111111]/10 flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3">
                         <button 
                           onClick={() => handleCancel(appt.id)}
-                          className="text-xs text-[#111111]/60 hover:text-[#111111] transition-colors flex items-center gap-1 font-bold cursor-pointer"
+                          className="text-xs text-[#111111]/60 hover:text-rose-600 transition-colors flex items-center gap-1 font-bold cursor-pointer py-1 self-start sm:self-auto"
                         >
-                          <span className="material-symbols-outlined text-[15px]">cancel</span> 
-                          <span>Cancel Session</span>
+                          <span className="material-symbols-outlined text-[16px]">cancel</span> 
+                          <span>Cancel Request</span>
                         </button>
 
                         <div className="flex items-center gap-2">
                           <button
                             onClick={() => navigate(`/student/messages?appointmentId=${appt.id}`)}
-                            className="text-xs bg-[#FFFFFF] hover:bg-[#111111]/5 text-[#111111] border border-[#111111]/20 px-3.5 py-2.5 rounded-xl font-bold transition-all flex items-center justify-center gap-1.5 active:scale-95 flex-1 sm:flex-initial cursor-pointer"
+                            className="text-xs bg-[#FFFFFF] hover:bg-[#111111]/5 text-[#111111] border-2 border-[#111111]/20 hover:border-[#111111] px-4 py-2.5 rounded-xl font-bold transition-all flex items-center justify-center gap-1.5 active:scale-95 flex-1 sm:flex-initial cursor-pointer"
                           >
                             <MessageSquare size={14} className="text-[#111111]" />
                             <span>Message</span>
@@ -793,7 +809,7 @@ export default function Appointments() {
                           {isConfirmed ? (
                             <button
                               onClick={() => navigate(`/call/${appt.id}`)}
-                              className="text-xs bg-[#F4C542] hover:bg-[#e0b435] text-[#111111] px-4 py-2.5 rounded-xl font-black border-2 border-[#111111] transition-all flex items-center justify-center gap-1.5 shadow-sm active:scale-95 flex-1 sm:flex-initial cursor-pointer"
+                              className="text-xs bg-[#F4C542] hover:bg-[#e0b435] text-[#111111] px-5 py-2.5 rounded-xl font-black border-2 border-[#111111] transition-all flex items-center justify-center gap-1.5 shadow-xs active:scale-95 flex-1 sm:flex-initial cursor-pointer"
                             >
                               <PhoneCall size={14} />
                               <span>Start Session</span>
@@ -801,7 +817,7 @@ export default function Appointments() {
                           ) : (
                             <div className="text-[11px] font-mono text-[#111111]/60 bg-[#111111]/5 border border-[#111111]/10 px-3 py-2 rounded-xl flex items-center gap-1.5">
                               <Lock size={12} />
-                              <span>Audio call unlocks on confirmation</span>
+                              <span>Call unlocks on confirmation</span>
                             </div>
                           )}
                         </div>

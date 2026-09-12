@@ -1761,7 +1761,9 @@ export default function PsychologistDashboard() {
                 nextSessionDate: offFollowUp ? offNextDate : undefined,
                 recordedAt: 'Just now'
               };
-              setOfflineSessions([newSession, ...offlineSessions]);
+              const updated = [newSession, ...offlineSessions];
+              setOfflineSessions(updated);
+              localStorage.setItem('mindbridge_offline_sessions', JSON.stringify(updated));
               setShowOfflineModal(false);
               setOffNotes('');
             }} className="space-y-3.5 text-xs">
@@ -1933,7 +1935,9 @@ export default function PsychologistDashboard() {
                 studentAlias: newTaskStudent || undefined,
                 completed: false,
               };
-              setTasks([t, ...tasks]);
+              const updated = [t, ...tasks];
+              setTasks(updated);
+              localStorage.setItem('mindbridge_counselor_tasks', JSON.stringify(updated));
               setShowTaskModal(false);
               setNewTaskTitle('');
               setNewTaskStudent('');

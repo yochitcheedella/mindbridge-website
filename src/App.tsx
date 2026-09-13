@@ -26,6 +26,7 @@ import VoiceTherapist from './pages/VoiceTherapist';
 import EmergencyResponse from './pages/EmergencyResponse';
 import ProfileSettings from './pages/ProfileSettings';
 import Community from './pages/Community';
+import CampusFeed from './pages/CampusFeed';
 
 // ── NEW Mindblowing & Clinical Student Pages ───────────────────────────────────
 import CognitiveReframing from './pages/CognitiveReframing';
@@ -43,6 +44,7 @@ import AdminUsers from './pages/AdminUsers';
 import AdminReports from './pages/AdminReports';
 import AnonymousAudioCall from './pages/AnonymousAudioCall';
 import CounselorChat from './pages/CounselorChat';
+import AdminFeedManager from './pages/AdminFeedManager';
 
 // ── NEW Institutional Features: Super Admin, Digital Detox & Mind Puzzles ────
 import SuperAdminDashboard from './pages/SuperAdminDashboard';
@@ -50,6 +52,7 @@ import DigitalDetox from './pages/DigitalDetox';
 import MindPuzzles from './pages/MindPuzzles';
 
 import LandingPage from './pages/LandingPage';
+import StudentEvents from './pages/StudentEvents';
 import { AppSplashScreen } from './components/common/AppSplashScreen';
 
 const withLayout = (element: React.ReactNode) => (
@@ -136,6 +139,7 @@ function App() {
 
         {/* ── Student Routes (Wrapped in Widescreen AppLayout) ── */}
         <Route path="/student/home"            element={withLayout(<StudentDashboard />)} />
+        <Route path="/student/events"          element={withLayout(<StudentEvents />)} />
         <Route path="/student/chat"            element={withLayout(<AIChat />)} />
         <Route path="/student/messages"        element={<CounselorChat />} />
         <Route path="/student/counselor-chat"  element={<CounselorChat />} />
@@ -154,21 +158,25 @@ function App() {
         <Route path="/student/notifications"   element={withLayout(<Notifications />)} />
         <Route path="/student/voice-therapist" element={withLayout(<VoiceTherapist />)} />
         <Route path="/student/community"       element={withLayout(<Community />)} />
+        <Route path="/student/campus-feed"     element={withLayout(<CampusFeed />)} />
         <Route path="/student/emergency"       element={withLayout(<EmergencyResponse />)} />
         <Route path="/student/profile"         element={withLayout(<ProfileSettings />)} />
 
         {/* ── Psychologist Routes ── */}
-        <Route path="/psychologist/dashboard"  element={withLayout(<PsychologistDashboard />)} />
-        <Route path="/psychologist/patients"   element={withLayout(<PsychologistPatients />)} />
-        <Route path="/psychologist/soap-notes" element={withLayout(<ClinicalSOAPNotes />)} />
-        <Route path="/psychologist/calendar"   element={withLayout(<PsychologistCalendar />)} />
-        <Route path="/psychologist/profile"    element={withLayout(<ProfileSettings />)} />
+        <Route path="/psychologist/dashboard"    element={withLayout(<PsychologistDashboard />)} />
+        <Route path="/psychologist/patients"     element={withLayout(<PsychologistPatients />)} />
+        <Route path="/psychologist/soap-notes"   element={withLayout(<ClinicalSOAPNotes />)} />
+        <Route path="/psychologist/calendar"     element={withLayout(<PsychologistCalendar />)} />
+        <Route path="/psychologist/mind-puzzles" element={withLayout(<MindPuzzles />)} />
+        <Route path="/psychologist/diary"        element={withLayout(<Journal />)} />
+        <Route path="/psychologist/profile"      element={withLayout(<ProfileSettings />)} />
 
         {/* ── Admin Routes ── */}
         <Route path="/admin/dashboard"  element={withLayout(<AdminAnalytics />)} />
         <Route path="/admin/users"      element={withLayout(<AdminUsers />)} />
         <Route path="/admin/reports"    element={withLayout(<AdminReports />)} />
         <Route path="/admin/settings"   element={withLayout(<ProfileSettings />)} />
+        <Route path="/admin/manage-feed" element={withLayout(<AdminFeedManager />)} />
 
         {/* ── Super Admin Routes ── */}
         <Route path="/superadmin/dashboard" element={withLayout(<SuperAdminDashboard />)} />

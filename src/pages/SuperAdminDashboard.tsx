@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { 
   Building2, Users, ShieldAlert, Cpu, Activity, Plus, Search, 
   Settings, Lock, CheckCircle2, ChevronRight, AlertTriangle, Key, 
-  Database, RefreshCw, BarChart3, Sliders, ExternalLink
+  Database, RefreshCw, BarChart3, Sliders, ExternalLink, FileText, Download
 } from 'lucide-react';
 import { getAuth } from '../utils/auth';
+import { generateConsolidatedReportPDF, type ConsolidatedReportData } from '../utils/consolidatedReportPdf';
+import { generateCounselorMonthlyReportPDF, type CounselorMonthlyReportData } from '../utils/counselorReportPdf';
 
 interface CollegeDeployment {
   id: string;
@@ -64,7 +66,21 @@ export default function SuperAdminDashboard() {
       return INITIAL_COLLEGES;
     }
   });
-  const [activeTab, setActiveTab] = useState<'colleges' | 'ai_config' | 'security' | 'audit'>('colleges');
+  const [activeTab, setActiveTab] = useState<'colleges' | 'consolidated_reports' | 'counselor_reports' | 'ai_config' | 'security' | 'audit'>('colleges');
+  const [consolidatedReports, setConsolidatedReports] = useState<ConsolidatedReportData[]>(() => {
+    try {
+      const stored = localStorage.getItem('mindbridge_consolidated_monthly_reports');
+      if (stored) return JSON.parse(stored);
+    } catch {}
+    return [];
+  });
+  const [counselorReports, setCounselorReports] = useState<CounselorMonthlyReportData[]>(() => {
+    try {
+      const stored = localStorage.getItem('mindbridge_counselor_monthly_reports');
+      if (stored) return JSON.parse(stored);
+    } catch {}
+    return [];
+  });
   const [searchTerm, setSearchTerm] = useState('');
   
   // AI Config State
@@ -236,7 +252,195 @@ export default function SuperAdminDashboard() {
           <BarChart3 size={14} />
           <span>Platform Audit Logs</span>
         </button>
+        <button
+          onClick={() => setActiveTab('consolidated_reports')}
+          className={`px-4 py-2.5 text-xs font-black rounded-xl transition-all flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
+            activeTab === 'consolidated_reports'
+              ? 'bg-[#F4C542] text-[#111111] border border-[#111111] shadow-xs'
+              : 'text-[#111111]/70 hover:text-[#111111] hover:bg-[#111111]/5'
+          }`}
+        >
+          <FileText size={14} />
+          <span>Consolidated Reports ({consolidatedReports.length})</span>
+        </button>
+        <button
+          onClick={() => setActiveTab('counselor_reports')}
+          className={`px-4 py-2.5 text-xs font-black rounded-xl transition-all flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
+            activeTab === 'counselor_reports'
+              ? 'bg-[#F4C542] text-[#111111] border border-[#111111] shadow-xs'
+              : 'text-[#111111]/70 hover:text-[#111111] hover:bg-[#111111]/5'
+          }`}
+        >
+          <Building2 size={14} />
+          <span>Counsellor Reports ({counselorReports.length})</span>
+        </button>
       </div>
+
+      {/* ── TAB: CONSOLIDATED REPORTS (ATTACHMENT 5) ── */}
+      {activeTab === 'consolidated_reports' && (
+        <div className="space-y-6 animate-fade-in text-[#111111]">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-3xl bg-[#FFFFFF] border-2 border-[#111111] shadow-xs">
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-[10px] font-mono font-black uppercase tracking-wider bg-[#F4C542] px-2 py-0.5 rounded-full border border-[#111111]">
+                  Attachment 5 Governance
+                </span>
+                <span className="text-xs font-mono text-[#111111]/60">SVES Centralized Repository</span>
+              </div>
+              <h2 className="text-2xl font-heading font-black text-[#111111]">
+                Consolidated Society Reports ({consolidatedReports.length})
+              </h2>
+              <p className="text-xs text-[#111111]/70 mt-1">
+                All monthly reports consolidated across Sri Vishnu Educational Society campuses submitted by Central Admin.
+              </p>
+            </div>
+          </div>
+
+          {consolidatedReports.length === 0 ? (
+            <div className="text-center py-16 border-2 border-dashed border-[#111111]/20 rounded-3xl bg-[#FFFFFF] space-y-2">
+              <FileText size={36} className="mx-auto text-[#111111]/30" />
+              <p className="text-sm font-bold text-[#111111]">No Consolidated Reports filed yet</p>
+              <p className="text-xs text-[#111111]/60 max-w-sm mx-auto">
+                Reports compiled by campus administrators will appear here automatically for executive society review.
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {consolidatedReports.map((rep) => (
+                <div 
+                  key={rep.id}
+                  className="p-6 rounded-3xl border-2 border-[#111111] bg-[#FFFFFF] shadow-sm space-y-4"
+                >
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#111111]/10 pb-3">
+                    <div>
+                      <h3 className="text-lg font-heading font-black text-[#111111]">
+                        {rep.reportTitle}
+                      </h3>
+                      <p className="text-xs text-[#111111]/60 font-mono">
+                        Compiled by: {rep.compiledBy} · Approved by: {rep.approvedBy}
+                      </p>
+                    </div>
+                    <span className="text-[10px] font-mono font-black px-2.5 py-1 rounded-full bg-green-100 text-green-900 border border-green-300">
+                      SOCIETY LEVEL AUDIT
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-[#FAFAFA] p-4 rounded-2xl border border-[#111111]/15 text-center font-mono">
+                    <div>
+                      <span className="block text-[10px] text-[#111111]/60 uppercase">Society Campuses</span>
+                      <span className="text-lg font-heading font-black text-[#111111]">{rep.institutionBreakdown.length}</span>
+                    </div>
+                    <div>
+                      <span className="block text-[10px] text-[#111111]/60 uppercase">Total Sessions</span>
+                      <span className="text-lg font-heading font-black text-[#111111]">{rep.executiveSummary.totalSessionsAcrossCampuses}</span>
+                    </div>
+                    <div>
+                      <span className="block text-[10px] text-[#111111]/60 uppercase">Students Reach</span>
+                      <span className="text-lg font-heading font-black text-[#111111]">{rep.executiveSummary.totalSocietyStudents.toLocaleString()}</span>
+                    </div>
+                    <div>
+                      <span className="block text-[10px] text-[#111111]/60 uppercase">Satisfaction</span>
+                      <span className="text-lg font-heading font-black text-[#111111]">{rep.executiveSummary.avgSatisfactionIndex}</span>
+                    </div>
+                  </div>
+
+                  <div className="pt-2 flex justify-end">
+                    <button
+                      onClick={() => generateConsolidatedReportPDF(rep)}
+                      className="px-5 py-2.5 rounded-xl bg-[#F4C542] hover:bg-[#e0b435] text-[#111111] font-heading font-black text-xs border-2 border-[#111111] transition-all shadow-xs flex items-center gap-2 cursor-pointer active:scale-95"
+                    >
+                      <Download size={14} />
+                      <span>Download Attachment 5 Vector PDF</span>
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ── TAB: COUNSELLOR MONTHLY REPORTS (ATTACHMENT 4) ── */}
+      {activeTab === 'counselor_reports' && (
+        <div className="space-y-6 animate-fade-in text-[#111111]">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-3xl bg-[#FFFFFF] border-2 border-[#111111] shadow-xs">
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-[10px] font-mono font-black uppercase tracking-wider bg-[#F4C542] text-[#111111] px-2 py-0.5 rounded-full border border-[#111111]">
+                  Attachment 4 Clinical Archive
+                </span>
+                <span className="text-xs font-mono text-[#111111]/60">All Institutional Counsellors</span>
+              </div>
+              <h2 className="text-2xl font-heading font-black text-[#111111]">
+                Counsellor Monthly Reports ({counselorReports.length})
+              </h2>
+              <p className="text-xs text-[#111111]/70 mt-1">
+                Review individualized psychologist submissions across SVECW, VIT, VDC, SVCP, SBSP, and BVRC campuses.
+              </p>
+            </div>
+          </div>
+
+          {counselorReports.length === 0 ? (
+            <div className="text-center py-16 border-2 border-dashed border-[#111111]/20 rounded-3xl bg-[#FFFFFF] space-y-2">
+              <Building2 size={36} className="mx-auto text-[#111111]/30" />
+              <p className="text-sm font-bold text-[#111111]">No Counsellor Reports filed yet</p>
+              <p className="text-xs text-[#111111]/60 max-w-sm mx-auto">
+                When psychologists file their monthly reports from their clinical portal, they reflect here in real-time.
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {counselorReports.map((cRep) => (
+                <div 
+                  key={cRep.id}
+                  className="p-6 rounded-3xl border-2 border-[#111111] bg-[#FFFFFF] shadow-sm space-y-4 hover:border-[#F4C542] transition-all flex flex-col justify-between"
+                >
+                  <div className="space-y-3">
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
+                        <span className="text-[10px] font-mono font-black uppercase text-[#111111]/60">
+                          {cRep.institution}
+                        </span>
+                        <h3 className="text-lg font-heading font-black text-[#111111] mt-0.5">
+                          {cRep.counselorName} · {cRep.month} {cRep.year}
+                        </h3>
+                      </div>
+                      <span className="text-[10px] font-mono font-black px-2.5 py-1 rounded-full bg-green-100 text-green-900 border border-green-300">
+                        OFFICIALLY FILED
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-3 gap-2 bg-[#FAFAFA] p-3 rounded-2xl border border-[#111111]/15 text-center font-mono">
+                      <div>
+                        <span className="block text-[9px] text-[#111111]/60 uppercase">Sessions</span>
+                        <span className="text-base font-heading font-black text-[#111111]">{cRep.sessionStats.total}</span>
+                      </div>
+                      <div>
+                        <span className="block text-[9px] text-[#111111]/60 uppercase">Meetings</span>
+                        <span className="text-base font-heading font-black text-[#111111]">{cRep.administrativeMeetings.length}</span>
+                      </div>
+                      <div>
+                        <span className="block text-[9px] text-[#111111]/60 uppercase">Workshops</span>
+                        <span className="text-base font-heading font-black text-[#111111]">{cRep.activitiesConducted.length}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="pt-2 border-t border-[#111111]/10">
+                    <button
+                      onClick={() => generateCounselorMonthlyReportPDF(cRep)}
+                      className="w-full py-2.5 rounded-xl bg-[#F4C542] hover:bg-[#e0b435] text-[#111111] font-heading font-black text-xs border-2 border-[#111111] transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer active:scale-95"
+                    >
+                      <Download size={14} />
+                      <span>Download Attachment 4 Vector PDF</span>
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* ── TAB 1: COLLEGES DIRECTORY ── */}
       {activeTab === 'colleges' && (
@@ -447,7 +651,7 @@ export default function SuperAdminDashboard() {
             <div className="py-3 flex justify-between items-center">
               <div>
                 <p className="font-black text-[#111111]">Student (Anonymous)</p>
-                <p className="text-[#111111]/60 text-[11px]">Private journals, BookMyShow appointments, AI emotional chat, digital detox, mind puzzles</p>
+                <p className="text-[#111111]/60 text-[11px]">Private journals, scheduled appointments, AI emotional chat, digital detox, mind puzzles</p>
               </div>
               <span className="px-2.5 py-1 rounded-full bg-[#FAFAFA] border border-[#111111]/20 text-[#111111] font-bold text-[10px]">PRIVACY-FIRST</span>
             </div>
@@ -489,7 +693,7 @@ export default function SuperAdminDashboard() {
                   <td className="p-3 font-mono text-[11px] text-[#111111]/60">08/09/2026 16:15</td>
                   <td className="p-3 font-bold text-[#111111]">BVRITH-HYD</td>
                   <td className="p-3 font-black text-[#111111]">Counsellor</td>
-                  <td className="p-3 font-medium">Completed BookMyShow audio session with Student_482</td>
+                  <td className="p-3 font-medium">Completed audio session with Student_482</td>
                   <td className="p-3 text-[#111111] font-black">Archived</td>
                 </tr>
               </tbody>

@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Card } from '../components/ui/Card';
 import { Badge } from '../components/ui/Badge';
-import { BarChart3, Shield, Users, AlertTriangle, TrendingDown, TrendingUp, Activity, Eye, Settings, UserPlus, Trash2 } from 'lucide-react';
+import { 
+  BarChart3, Shield, Users, AlertTriangle, TrendingDown, TrendingUp, 
+  Activity, Eye, Settings, UserPlus, Trash2, BellRing, Calendar, 
+  Send, Sparkles, CheckCircle2, Megaphone, MapPin, Clock 
+} from 'lucide-react';
 import { apiFetch } from '../utils/auth';
 import { getStoredFlashcards, updateFlashcardStatus, type Flashcard } from '../data/defaultFlashcards';
 
@@ -72,11 +76,75 @@ function DeptStressBar({ name, stress }: { name: string; stress: number }) {
 }
 
 export default function AdminAnalytics() {
-  const [activeTab, setActiveTab] = useState<'analytics' | 'personnel' | 'flashcards' | 'settings'>('analytics');
+  const [activeTab, setActiveTab] = useState<'analytics' | 'events_broadcast' | 'personnel' | 'flashcards' | 'settings'>('analytics');
   const [allFlashcards, setAllFlashcards] = useState<Flashcard[]>(() => getStoredFlashcards());
   const [dailyQuota, setDailyQuota] = useState(5);
   const [autoGenAI, setAutoGenAI] = useState(true);
   const [requireReview, setRequireReview] = useState(true);
+
+  // Campus Event Broadcast State (Requirement 5)
+  const [bTitle, setBTitle] = useState('');
+  const [bCategory, setBCategory] = useState<'Workshop' | 'Orientation' | 'Awareness' | 'Interactive Club' | 'Digital Detox'>('Workshop');
+  const [bCampus, setBCampus] = useState('All Vishnu Campuses');
+  const [bDate, setBDate] = useState('22 Sept 2026');
+  const [bTime, setBTime] = useState('4:00 PM - 5:30 PM');
+  const [bVenue, setBVenue] = useState('Campus Central Auditorium');
+  const [bFacilitator, setBFacilitator] = useState('Ram Prudhvi Teja');
+  const [bMessage, setBMessage] = useState('');
+  const [bSuccess, setBSuccess] = useState('');
+  const [broadcasts, setBroadcasts] = useState<any[]>(() => {
+    try {
+      const stored = localStorage.getItem('mindbridge_broadcast_notifications');
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  const handlePushBroadcast = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!bTitle.trim() || !bMessage.trim()) return;
+
+    const newNotification = {
+      id: Date.now(),
+      title: `📢 VWC Event: ${bTitle}`,
+      message: `${bMessage} | 📅 ${bDate} at ${bTime} (${bVenue}). Target: ${bCampus}.`,
+      is_read: false,
+      type: 'info' as const,
+      created_at: new Date().toISOString(),
+    };
+
+    const newEvent = {
+      id: `evt-${Date.now()}`,
+      title: bTitle,
+      category: bCategory,
+      institution: bCampus,
+      date: bDate,
+      time: bTime,
+      venue: bVenue,
+      facilitator: bFacilitator,
+      facilitator_role: 'Wellness Counsellor',
+      description: bMessage,
+      attendees_count: 0,
+      max_capacity: 120,
+      tags: ['Campus Broadcast', bCategory, 'VWC'],
+      is_featured: true,
+    };
+
+    const updatedNotifications = [newNotification, ...broadcasts];
+    setBroadcasts(updatedNotifications);
+    localStorage.setItem('mindbridge_broadcast_notifications', JSON.stringify(updatedNotifications));
+
+    try {
+      const existingEvents = JSON.parse(localStorage.getItem('mindbridge_campus_events') || '[]');
+      localStorage.setItem('mindbridge_campus_events', JSON.stringify([newEvent, ...existingEvents]));
+    } catch {}
+
+    setBSuccess(`🎉 Push notification dispatched to all students! Event posted to campus events.`);
+    setBTitle('');
+    setBMessage('');
+    setTimeout(() => setBSuccess(''), 5000);
+  };
   
   // Analytics State
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
@@ -191,6 +259,16 @@ export default function AdminAnalytics() {
             }`}
           >
             <BarChart3 size={16} /> <span>Analytics</span>
+          </button>
+          <button 
+            onClick={() => setActiveTab('events_broadcast')}
+            className={`flex-1 sm:flex-initial px-4 py-2 rounded-xl font-heading font-black text-xs sm:text-sm transition-all flex items-center justify-center gap-2 cursor-pointer ${
+              activeTab === 'events_broadcast' 
+                ? 'bg-[#F4C542] text-[#111111] border border-[#111111] shadow-xs' 
+                : 'text-[#111111]/70 hover:text-[#111111] hover:bg-[#111111]/5'
+            }`}
+          >
+            <BellRing size={16} /> <span>Push Broadcasts</span>
           </button>
           <button 
             onClick={() => setActiveTab('personnel')}
@@ -716,6 +794,216 @@ export default function AdminAnalytics() {
                       <span className="text-xs font-bold text-[#111111] ml-2">Minimal White + Yellow + Black (Locked)</span>
                     </div>
                   </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ══════════════════════════════════════════════════════════════════ */}
+        {/* TAB: CAMPUS EVENT BROADCAST & NOTIFICATION ENGINE (Requirement 5) */}
+        {/* ══════════════════════════════════════════════════════════════════ */}
+        {activeTab === 'events_broadcast' && (
+          <div className="space-y-6 animate-fade-in">
+            {/* Top Info Banner */}
+            <div className="p-6 rounded-3xl bg-[#FFFFFF] border-2 border-[#111111] shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div>
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#F4C542] text-[#111111] border border-[#111111] text-xs font-mono font-black uppercase mb-2">
+                  <Megaphone size={13} />
+                  <span>Push Broadcast Engine</span>
+                </div>
+                <h2 className="text-xl sm:text-2xl font-heading font-black text-[#111111]">
+                  Broadcast VWC Events &amp; Campus Alerts
+                </h2>
+                <p className="text-xs sm:text-sm text-[#111111]/70 mt-1">
+                  Send real-time notifications to students across all campuses regarding upcoming workshops, digital detox sessions, gatekeeper programmes, or important campus announcements.
+                </p>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <div className="p-3.5 rounded-2xl bg-[#FAFAFA] border border-[#111111]/15 text-center min-w-[120px]">
+                  <span className="text-2xl font-black text-[#111111] block font-heading">{broadcasts.length}</span>
+                  <span className="text-[10px] uppercase font-mono font-bold text-[#111111]/60">Dispatched</span>
+                </div>
+              </div>
+            </div>
+
+            {bSuccess && (
+              <div className="p-4 rounded-2xl bg-emerald-50 border-2 border-emerald-500 text-emerald-900 font-bold text-xs sm:text-sm flex items-center gap-2 animate-slide-up shadow-xs">
+                <CheckCircle2 size={18} className="text-emerald-600 shrink-0" />
+                <span>{bSuccess}</span>
+              </div>
+            )}
+
+            {/* Grid: Create Broadcast + Broadcast History */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+              {/* Broadcast Creation Form */}
+              <div className="lg:col-span-7 p-6 rounded-3xl bg-[#FFFFFF] border-2 border-[#111111] shadow-xs space-y-5">
+                <h3 className="font-heading font-black text-lg text-[#111111] flex items-center gap-2">
+                  <Send size={18} />
+                  <span>Compose New Event Broadcast</span>
+                </h3>
+
+                <form onSubmit={handlePushBroadcast} className="space-y-4">
+                  <div>
+                    <label className="block text-xs font-bold text-[#111111] uppercase tracking-wider mb-1.5">
+                      Event Title *
+                    </label>
+                    <input 
+                      type="text"
+                      required
+                      placeholder="e.g. Suicide Prevention Gatekeeper Session / COPE Open Mic"
+                      value={bTitle}
+                      onChange={(e) => setBTitle(e.target.value)}
+                      className="w-full px-4 py-3 rounded-2xl bg-[#FAFAFA] border border-[#111111]/20 text-xs sm:text-sm font-semibold focus:outline-none focus:border-[#111111]"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-bold text-[#111111] uppercase tracking-wider mb-1.5">
+                        Category
+                      </label>
+                      <select
+                        value={bCategory}
+                        onChange={(e) => setBCategory(e.target.value as any)}
+                        className="w-full px-4 py-3 rounded-2xl bg-[#FAFAFA] border border-[#111111]/20 text-xs sm:text-sm font-bold focus:outline-none focus:border-[#111111]"
+                      >
+                        <option value="Workshop">Workshop</option>
+                        <option value="Orientation">Orientation</option>
+                        <option value="Awareness">Awareness</option>
+                        <option value="Interactive Club">Interactive Club</option>
+                        <option value="Digital Detox">Digital Detox</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold text-[#111111] uppercase tracking-wider mb-1.5">
+                        Target Institution
+                      </label>
+                      <select
+                        value={bCampus}
+                        onChange={(e) => setBCampus(e.target.value)}
+                        className="w-full px-4 py-3 rounded-2xl bg-[#FAFAFA] border border-[#111111]/20 text-xs sm:text-sm font-bold focus:outline-none focus:border-[#111111]"
+                      >
+                        <option value="All Vishnu Campuses">All Vishnu Campuses (Universal)</option>
+                        <option value="Vishnu Institute of Technology (VIT)">Vishnu Institute of Technology (VIT)</option>
+                        <option value="Shri Vishnu Engineering College for Women (SVECW)">SVECW Bhimavaram</option>
+                        <option value="Vishnu Dental College (VDC)">Vishnu Dental College (VDC)</option>
+                        <option value="SHRI VISHNU COLLEGE OF PHARMACY (SVCP)">SVCP Pharmacy College</option>
+                        <option value="Smt. B. Seetha Polytechnic College (SBSP)">SBSP Polytechnic</option>
+                        <option value="Vishnu Women's University">Vishnu Women's University</option>
+                        <option value="B.V. Raju College">B.V. Raju College</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div>
+                      <label className="block text-xs font-bold text-[#111111] uppercase tracking-wider mb-1">
+                        Date
+                      </label>
+                      <input 
+                        type="text"
+                        value={bDate}
+                        onChange={(e) => setBDate(e.target.value)}
+                        className="w-full px-3 py-2.5 rounded-xl bg-[#FAFAFA] border border-[#111111]/20 text-xs font-semibold focus:outline-none focus:border-[#111111]"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-[#111111] uppercase tracking-wider mb-1">
+                        Time
+                      </label>
+                      <input 
+                        type="text"
+                        value={bTime}
+                        onChange={(e) => setBTime(e.target.value)}
+                        className="w-full px-3 py-2.5 rounded-xl bg-[#FAFAFA] border border-[#111111]/20 text-xs font-semibold focus:outline-none focus:border-[#111111]"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-[#111111] uppercase tracking-wider mb-1">
+                        Venue
+                      </label>
+                      <input 
+                        type="text"
+                        value={bVenue}
+                        onChange={(e) => setBVenue(e.target.value)}
+                        className="w-full px-3 py-2.5 rounded-xl bg-[#FAFAFA] border border-[#111111]/20 text-xs font-semibold focus:outline-none focus:border-[#111111]"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-[#111111] uppercase tracking-wider mb-1.5">
+                      Facilitating Counsellor
+                    </label>
+                    <input 
+                      type="text"
+                      value={bFacilitator}
+                      onChange={(e) => setBFacilitator(e.target.value)}
+                      placeholder="e.g. Ram Prudhvi Teja / Devika Babu / Guest Counsellor"
+                      className="w-full px-4 py-2.5 rounded-2xl bg-[#FAFAFA] border border-[#111111]/20 text-xs sm:text-sm font-semibold focus:outline-none focus:border-[#111111]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-[#111111] uppercase tracking-wider mb-1.5">
+                      Notification Message / Details *
+                    </label>
+                    <textarea 
+                      required
+                      rows={3}
+                      placeholder="Provide brief details about the event, registration details, or instructions for students..."
+                      value={bMessage}
+                      onChange={(e) => setBMessage(e.target.value)}
+                      className="w-full px-4 py-3 rounded-2xl bg-[#FAFAFA] border border-[#111111]/20 text-xs sm:text-sm font-medium focus:outline-none focus:border-[#111111]"
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="w-full py-3.5 rounded-2xl bg-[#F4C542] hover:bg-[#e0b435] text-[#111111] border-2 border-[#111111] font-black text-sm flex items-center justify-center gap-2 shadow-xs cursor-pointer active:scale-98 transition-all"
+                  >
+                    <Megaphone size={18} />
+                    <span>Push Notification to All Students Now</span>
+                  </button>
+                </form>
+              </div>
+
+              {/* Broadcasts History */}
+              <div className="lg:col-span-5 space-y-4">
+                <div className="p-6 rounded-3xl bg-[#FFFFFF] border-2 border-[#111111] shadow-xs space-y-4">
+                  <h3 className="font-heading font-black text-base text-[#111111] flex items-center gap-2">
+                    <Clock size={16} />
+                    <span>Recent Broadcast Dispatches</span>
+                  </h3>
+
+                  {broadcasts.length === 0 ? (
+                    <div className="p-8 text-center text-[#111111]/50 border-2 border-dashed border-[#111111]/15 rounded-2xl text-xs font-bold">
+                      No broadcast notifications sent yet. Use the form to send one.
+                    </div>
+                  ) : (
+                    <div className="space-y-3 max-h-[480px] overflow-y-auto pr-1">
+                      {broadcasts.map((b) => (
+                        <div key={b.id} className="p-4 rounded-2xl bg-[#FAFAFA] border border-[#111111]/15 space-y-2">
+                          <div className="flex items-center justify-between gap-2">
+                            <span className="text-xs font-black text-[#111111] truncate">{b.title}</span>
+                            <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 shrink-0">
+                              Dispatched
+                            </span>
+                          </div>
+                          <p className="text-xs text-[#111111]/80 leading-relaxed line-clamp-3">
+                            {b.message}
+                          </p>
+                          <div className="pt-2 border-t border-[#111111]/10 flex items-center justify-between text-[10px] font-mono text-[#111111]/50">
+                            <span>{new Date(b.created_at || Date.now()).toLocaleDateString()}</span>
+                            <span>Target: Students</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

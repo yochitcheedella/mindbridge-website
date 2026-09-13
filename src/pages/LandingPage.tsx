@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { getAuth } from '../utils/auth';
 import { OFFICIAL_COUNSELORS, VISHNU_WELLNESS_CENTRE, type CounselorData } from '../data/counselors';
+import CounselorFlashcard from '../components/flashcards/CounselorFlashcard';
 
 const PSEUDONYMS = [
   { name: 'Sapphire Falcon #4102', avatar: '🦅', branch: 'CSE' },
@@ -567,87 +568,14 @@ export default function LandingPage() {
           {/* Counselor Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
             {OFFICIAL_COUNSELORS.map((counselor) => (
-              <div 
+              <CounselorFlashcard
                 key={counselor.id}
-                className="p-6 rounded-3xl bg-[#FAFAFA] border-2 border-[#111111] shadow-[4px_4px_0px_#111111] hover:shadow-[6px_6px_0px_#111111] hover:-translate-y-1 transition-all flex flex-col justify-between group"
-              >
-                <div>
-                  {/* Card Header: Photo + Badges */}
-                  <div className="flex items-start gap-4 mb-4">
-                    <div className="relative shrink-0">
-                      <img 
-                        src={counselor.avatar_url} 
-                        alt={counselor.name} 
-                        className="w-16 h-16 rounded-2xl object-cover border-2 border-[#111111] shadow-xs bg-[#FFFFFF]"
-                        onError={(e) => { (e.target as HTMLImageElement).src = '/logo.png'; }}
-                      />
-                      <span className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-[#10B981] border-2 border-[#FFFFFF]" title="Available" />
-                    </div>
-
-                    <div className="min-w-0 flex-1">
-                      <div className="flex flex-wrap items-center gap-1.5 mb-1">
-                        <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#F4C542] text-[#111111] border border-[#111111] font-bold">
-                          {counselor.experience} Exp
-                        </span>
-                        {counselor.crn && (
-                          <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-md bg-[#111111] text-[#FFFFFF] font-bold">
-                            {counselor.crn}
-                          </span>
-                        )}
-                      </div>
-                      <h3 className="font-heading font-black text-lg text-[#111111] truncate group-hover:text-[#111111]">
-                        {counselor.name}
-                      </h3>
-                      <p className="text-xs font-semibold text-[#111111]/70 truncate">
-                        {counselor.institution}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Specialization / Title */}
-                  <div className="text-xs font-mono font-medium text-[#111111]/80 mb-3 bg-[#FFFFFF] p-2 rounded-xl border border-[#111111]/15">
-                    {counselor.specialization}
-                  </div>
-
-                  {/* Focus Areas Pills */}
-                  <div className="flex flex-wrap gap-1.5 mb-4">
-                    {counselor.focus_areas.slice(0, 4).map((area, idx) => (
-                      <span 
-                        key={idx}
-                        className="text-[11px] font-medium bg-[#FFFFFF] text-[#111111] px-2.5 py-0.5 rounded-lg border border-[#111111]/15"
-                      >
-                        {area}
-                      </span>
-                    ))}
-                    {counselor.focus_areas.length > 4 && (
-                      <span className="text-[10px] font-mono text-[#111111]/60 px-1.5 py-0.5">
-                        +{counselor.focus_areas.length - 4} more
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                {/* Card Actions */}
-                <div className="pt-4 border-t border-[#111111]/10 flex items-center gap-2">
-                  <button
-                    onClick={() => setSelectedCounselor(counselor)}
-                    className="flex-1 py-2 px-3 rounded-xl bg-[#FFFFFF] hover:bg-[#111111] hover:text-[#FFFFFF] text-[#111111] text-xs font-bold border border-[#111111] transition-all flex items-center justify-center gap-1 cursor-pointer"
-                  >
-                    <span>View Bio</span>
-                    <ChevronRight size={14} />
-                  </button>
-                  <Link
-                    to="/login"
-                    className="py-2 px-3.5 rounded-xl bg-[#F4C542] hover:bg-[#e0b435] text-[#111111] text-xs font-black border border-[#111111] transition-all shadow-xs flex items-center justify-center gap-1"
-                  >
-                    <span>Book</span>
-                    <Calendar size={13} />
-                  </Link>
-                </div>
-              </div>
+                counselor={counselor}
+                onSelectBooking={() => navigate('/login')}
+                onViewBio={(c) => setSelectedCounselor(c)}
+              />
             ))}
           </div>
-
         </div>
       </section>
 

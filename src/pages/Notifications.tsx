@@ -21,14 +21,22 @@ export default function Notifications() {
 
   const fetchNotifications = async () => {
     setLoading(true);
+    let broadcasts: any[] = [];
+    try {
+      const stored = localStorage.getItem('mindbridge_broadcast_notifications');
+      if (stored) broadcasts = JSON.parse(stored);
+    } catch {}
+
     try {
       const res = await apiFetch('/api/notifications');
       if (res.ok) {
         const data = await res.json();
-        setNotifications(data);
+        setNotifications([...broadcasts, ...data]);
+      } else if (broadcasts.length > 0) {
+        setNotifications(broadcasts);
       }
     } catch (e) {
-      console.error(e);
+      if (broadcasts.length > 0) setNotifications(broadcasts);
     } finally {
       setLoading(false);
     }

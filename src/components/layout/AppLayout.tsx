@@ -17,6 +17,8 @@ interface NavItem {
 
 const STUDENT_NAV: NavItem[] = [
   { path: '/student/home', icon: 'home', label: 'Dashboard' },
+  { path: '/student/campus-feed', icon: 'dynamic_feed', label: 'Campus Feed', badge: 'NEW' },
+  { path: '/student/events', icon: 'event', label: 'Campus Wellness Events', badge: 'VWC' },
   { path: '/student/appointments', icon: 'psychology', label: 'Psychologists & Counselors', badge: '7 PRO' },
   { path: '/student/chat', icon: 'smart_toy', label: 'AI Therapy Guide', badge: 'PRO' },
   { path: '/student/voice-therapist', icon: 'record_voice_over', label: 'AI Voice Therapist', badge: 'VOICE' },
@@ -40,6 +42,8 @@ const PSYCHOLOGIST_NAV: NavItem[] = [
   { path: '/psychologist/patients', icon: 'groups', label: 'Patient Roster' },
   { path: '/psychologist/soap-notes', icon: 'clinical_notes', label: 'SOAP Clinical Notes' },
   { path: '/psychologist/calendar', icon: 'calendar_month', label: 'Session Schedule' },
+  { path: '/psychologist/mind-puzzles', icon: 'extension', label: 'Mind Games & Puzzles' },
+  { path: '/psychologist/diary', icon: 'edit_note', label: 'Counsellor Diary' },
   { path: '/psychologist/profile', icon: 'settings', label: 'Counselor Profile' },
 ];
 
@@ -47,6 +51,7 @@ const ADMIN_NAV: NavItem[] = [
   { path: '/admin/dashboard', icon: 'pie_chart', label: 'Executive Analytics' },
   { path: '/admin/users', icon: 'manage_accounts', label: 'User Management' },
   { path: '/admin/reports', icon: 'analytics', label: 'Institutional Reports' },
+  { path: '/admin/manage-feed', icon: 'dynamic_feed', label: 'Manage Campus Feed' },
   { path: '/admin/settings', icon: 'security', label: 'Platform Security' },
 ];
 
@@ -55,6 +60,7 @@ const SUPERADMIN_NAV: NavItem[] = [
   { path: '/admin/dashboard', icon: 'pie_chart', label: 'Executive Analytics' },
   { path: '/admin/users', icon: 'manage_accounts', label: 'Personnel & Accounts' },
   { path: '/admin/reports', icon: 'analytics', label: 'Institutional Reports' },
+  { path: '/admin/manage-feed', icon: 'dynamic_feed', label: 'Manage Campus Feed' },
   { path: '/admin/settings', icon: 'security', label: 'Security & Governance' },
 ];
 
@@ -328,6 +334,18 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
               </Link>
             )}
 
+            {/* ── HIGHLIGHTED THREE CORE WORDS (Requirement 9) ── */}
+            <div className="flex items-center gap-1.5 px-2.5 sm:px-3.5 py-1.5 rounded-full bg-[#F4C542] border-2 border-[#111111] text-[#111111] shadow-xs font-black shrink-0 tracking-wide select-none">
+              <span className="w-2 h-2 rounded-full bg-[#111111] shrink-0 animate-ping" />
+              <span className="text-[10px] sm:text-xs uppercase font-heading font-black tracking-wider whitespace-nowrap">
+                <span>CONFIDENTIAL</span>
+                <span className="mx-1 text-[#111111]/40">•</span>
+                <span>EMPATHY</span>
+                <span className="mx-1 text-[#111111]/40">•</span>
+                <span>NON-JUDGMENT</span>
+              </span>
+            </div>
+
             <Link
               to={role === 'student' ? '/student/notifications' : '#'}
               className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#FAFAFA] hover:bg-[#111111]/5 flex items-center justify-center text-[#111111] transition-colors relative border border-[#111111]/15 shrink-0"
@@ -370,6 +388,50 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
         <div className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8 pb-36 sm:pb-32 md:pb-12">
           {children}
         </div>
+
+        {/* ── SOCIAL MEDIA & SUPPORT ACTION BAR (Requirement 10) ── */}
+        <footer className="w-full border-t border-[#111111]/10 bg-[#FAFAFA] py-4 px-4 sm:px-8 mt-auto">
+          <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-2.5 text-xs text-[#111111]/75">
+              <img src="/logo.png" alt="Vishnu Wellness Centre" className="w-7 h-7 rounded-full object-cover border border-[#111111]/20 bg-white" />
+              <div>
+                <span className="font-heading font-black text-[#111111] block sm:inline">Vishnu Wellness Centre</span>
+                <span className="text-[#111111]/60 text-[11px] sm:ml-1 font-medium">Empowering Minds. Inspiring Lives.</span>
+              </div>
+            </div>
+
+            {/* Social Action Buttons */}
+            <div className="flex items-center gap-2 sm:gap-3 flex-wrap justify-center">
+              <a 
+                href="https://www.instagram.com/vishnu_wellness_centre?stkn=MW10Z2RqZW92c25xOQ=="
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-[#FFFFFF] hover:bg-pink-50 border-2 border-[#111111] text-xs font-black text-[#111111] hover:text-pink-600 transition-all shadow-xs group cursor-pointer active:scale-95"
+                title="Follow us on Instagram"
+              >
+                <span className="w-2.5 h-2.5 rounded-full bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600" />
+                <span>Instagram</span>
+                <span className="text-[10px] font-mono text-[#111111]/50 group-hover:text-pink-600 font-normal">@vishnu_wellness_centre</span>
+              </a>
+
+              <Link 
+                to="/student/events"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#FFFFFF] hover:bg-[#F4C542]/20 border border-[#111111]/20 text-xs font-bold text-[#111111] transition-all shadow-2xs"
+              >
+                <Calendar size={13} />
+                <span>VWC Events</span>
+              </Link>
+
+              <Link
+                to="/student/emergency"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#FFFFFF] hover:bg-rose-50 border border-[#111111]/20 text-xs font-bold text-rose-600 transition-all shadow-2xs"
+              >
+                <AlertTriangle size={13} />
+                <span>Crisis Helpline</span>
+              </Link>
+            </div>
+          </div>
+        </footer>
       </main>
     </div>
   );

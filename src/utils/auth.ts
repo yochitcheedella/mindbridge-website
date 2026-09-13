@@ -12,6 +12,15 @@ export interface AuthState {
   // Student fields
   anonymous_alias?: string;
   student_id?: number;
+  original_name?: string;
+  college_name?: string;
+  branch?: string;
+  department?: string;
+  section?: string;
+  year?: string | number;
+  mobile_number?: string;
+  phone?: string;
+  gender?: string;
   // Psychologist fields
   psychologist_id?: number;
   name?: string;
@@ -244,6 +253,71 @@ export function getHomeRoute(role: UserRole): string {
     case 'admin':        return '/admin/dashboard';
     case 'psychologist': return '/psychologist/dashboard';
     default:             return '/student/home';
+  }
+}
+
+export interface StudentProfileData {
+  original_name: string;
+  college_name: string;
+  institution?: string;
+  branch: string;
+  department?: string;
+  section: string;
+  year: string | number;
+  mobile_number: string;
+  phone?: string;
+  gender: string;
+  anonymous_alias: string;
+  email?: string;
+}
+
+export const STUDENT_PROFILE_KEY = 'mindbridge_student_profile';
+
+export function getStudentProfile(): StudentProfileData {
+  try {
+    const raw = localStorage.getItem(STUDENT_PROFILE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed.original_name) return parsed;
+    }
+  } catch {}
+
+  const auth = getAuth();
+  return {
+    original_name: auth?.original_name || auth?.name || 'Vamsi Krishna',
+    college_name: auth?.college_name || auth?.institution || 'Vishnu Institute of Technology (VIT)',
+    institution: auth?.college_name || auth?.institution || 'Vishnu Institute of Technology (VIT)',
+    branch: auth?.branch || auth?.department || 'CSE',
+    department: auth?.branch || auth?.department || 'CSE',
+    section: auth?.section || 'Section A',
+    year: auth?.year || '3rd Year',
+    mobile_number: auth?.mobile_number || auth?.phone || '+91 98765 43210',
+    phone: auth?.mobile_number || auth?.phone || '+91 98765 43210',
+    gender: auth?.gender || 'Male',
+    anonymous_alias: auth?.anonymous_alias || 'Silent Phoenix #6718',
+    email: '',
+  };
+}
+
+export function setStudentProfile(profile: StudentProfileData): void {
+  localStorage.setItem(STUDENT_PROFILE_KEY, JSON.stringify(profile));
+  const currentAuth = getAuth();
+  if (currentAuth) {
+    const updated: AuthState = {
+      ...currentAuth,
+      original_name: profile.original_name,
+      college_name: profile.college_name,
+      institution: profile.college_name,
+      branch: profile.branch,
+      department: profile.branch,
+      section: profile.section,
+      year: profile.year,
+      mobile_number: profile.mobile_number,
+      phone: profile.mobile_number,
+      gender: profile.gender,
+      anonymous_alias: profile.anonymous_alias || currentAuth.anonymous_alias,
+    };
+    setAuth(updated, profile.email);
   }
 }
 

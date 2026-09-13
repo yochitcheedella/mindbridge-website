@@ -10,6 +10,10 @@ import { getAlias, apiFetch, isLoggedIn } from '../utils/auth';
 import { OFFICIAL_COUNSELORS, VISHNU_WELLNESS_CENTRE, type CounselorData } from '../data/counselors';
 
 import DailyFlashcardsModal from '../components/flashcards/DailyFlashcardsModal';
+import CounselorFlashcard from '../components/flashcards/CounselorFlashcard';
+import StudentScreeningModal, { type ScreeningSubmission } from '../components/clinical/StudentScreeningModal';
+import SessionFeedbackModal from '../components/clinical/SessionFeedbackModal';
+import ShareWorkModal from '../components/clinical/ShareWorkModal';
 import { isTodayFlashcardsCompleted } from '../data/defaultFlashcards';
 
 const MOOD_CONFIG = [
@@ -29,6 +33,19 @@ export default function StudentDashboard() {
   const [showConsent, setShowConsent] = useState(false);
   const [showFlashcardsModal, setShowFlashcardsModal] = useState(false);
   const [flashcardsDoneToday, setFlashcardsDoneToday] = useState(() => isTodayFlashcardsCompleted());
+  const [showScreeningModal, setShowScreeningModal] = useState(false);
+  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
+  const [showShareWorkModal, setShowShareWorkModal] = useState(false);
+  const [latestScreening, setLatestScreening] = useState<ScreeningSubmission | null>(() => {
+    try {
+      const stored = localStorage.getItem('mindbridge_screening_results');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        return Array.isArray(parsed) && parsed.length > 0 ? parsed[0] : null;
+      }
+    } catch {}
+    return null;
+  });
   const [consentChecks, setConsentChecks] = useState({
     privacy: true,
     anonymous: true,
@@ -253,6 +270,103 @@ export default function StudentDashboard() {
         </div>
       )}
 
+      {/* ── SVES STUDENT WELLBEING SCREENING FORM (REQ 14) ── */}
+      <div className="p-6 sm:p-7 rounded-3xl border-2 border-[#111111] bg-[#FFFFFF] shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-[#F4C542]/10 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20" />
+        <div className="space-y-2.5 max-w-2xl">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="px-3 py-1 rounded-full text-xs font-mono font-black uppercase tracking-wider bg-[#F4C542] text-[#111111] border border-[#111111]">
+              Mandatory Wellbeing Screening
+            </span>
+            {latestScreening ? (
+              <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-mono font-black border ${
+                (latestScreening.riskTier || latestScreening.risk_level) === 'High' 
+                  ? 'bg-red-100 text-red-800 border-red-300' 
+                  : (latestScreening.riskTier || latestScreening.risk_level) === 'Medium'
+                  ? 'bg-amber-100 text-amber-900 border-amber-300'
+                  : 'bg-green-100 text-green-900 border-green-300'
+              }`}>
+                ✓ Completed ({(latestScreening.riskTier || latestScreening.risk_level || 'Low')} Risk Tier · DASS Score {latestScreening.dassScores?.total ?? latestScreening.dass_scores?.total ?? 0})
+              </span>
+            ) : (
+              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold bg-[#FAFAFA] text-[#111111] border border-[#111111]/20">
+                Action Recommended
+              </span>
+            )}
+            <span className="text-[11px] font-mono text-[#111111]/60">38 Clinical Questions · Bilingual EN/TE</span>
+          </div>
+
+          <h2 className="text-2xl sm:text-3xl font-heading font-black text-[#111111] tracking-tight flex items-center gap-2">
+            <span>🛡️</span>
+            <span>Student Wellbeing &amp; Triage Assessment</span>
+          </h2>
+          <p className="text-sm text-[#111111]/70 leading-relaxed font-medium">
+            Confidential DASS-21 psychological screening aligned with Sri Vishnu Educational Society clinical protocols. Automatically stratifies support needs and connects you directly with campus counsellors.
+          </p>
+        </div>
+
+        <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto shrink-0 z-10">
+          <button
+            onClick={() => setShowScreeningModal(true)}
+            className="w-full sm:w-auto px-7 py-3.5 rounded-2xl bg-[#F4C542] hover:bg-[#e0b435] text-[#111111] font-heading font-black text-sm border-2 border-[#111111] shadow-xs active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
+          >
+            <span>{latestScreening ? 'Retake / Update Screening' : 'Take Wellbeing Screening'}</span>
+            <ArrowRight size={16} />
+          </button>
+        </div>
+      </div>
+
+      {/* ── QUICK ACTION DOCK: RAPPORT SHARING (REQ 6) & SESSION FEEDBACK (REQ 11, 12) ── */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Share Work Card (Req 6) */}
+        <div className="p-5 sm:p-6 rounded-3xl border-2 border-[#111111] bg-[#FFFFFF] shadow-sm flex items-start justify-between gap-4">
+          <div className="space-y-1.5">
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-mono font-black uppercase tracking-wider bg-[#F4C542] px-2 py-0.5 rounded-full border border-[#111111]">
+                Therapeutic Rapport
+              </span>
+            </div>
+            <h3 className="text-lg font-heading font-black text-[#111111] flex items-center gap-2">
+              <span>✍️</span>
+              <span>Share Work with Your Counsellor</span>
+            </h3>
+            <p className="text-xs text-[#111111]/70 leading-relaxed">
+              Share private creative poems, diary entries, or milestones with your counsellor before your session to deepen 1-on-1 rapport.
+            </p>
+          </div>
+          <button
+            onClick={() => setShowShareWorkModal(true)}
+            className="px-4 py-2.5 rounded-xl bg-[#FAFAFA] hover:bg-[#F4C542] text-[#111111] font-black text-xs border border-[#111111] shrink-0 self-center transition-all cursor-pointer shadow-xs active:scale-95"
+          >
+            Share Work
+          </button>
+        </div>
+
+        {/* Give Session Feedback Card (Req 11 & 12) */}
+        <div className="p-5 sm:p-6 rounded-3xl border-2 border-[#111111] bg-[#FFFFFF] shadow-sm flex items-start justify-between gap-4">
+          <div className="space-y-1.5">
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-mono font-black uppercase tracking-wider bg-[#FAFAFA] px-2 py-0.5 rounded-full border border-[#111111]/20">
+                Non-Star Feedback
+              </span>
+            </div>
+            <h3 className="text-lg font-heading font-black text-[#111111] flex items-center gap-2">
+              <span>🌱</span>
+              <span>Session Resonance Feedback</span>
+            </h3>
+            <p className="text-xs text-[#111111]/70 leading-relaxed">
+              Rate your recent counselling experience using our innovative Emotive Resonance Matrix and 10-point Therapeutic Pulse.
+            </p>
+          </div>
+          <button
+            onClick={() => setShowFeedbackModal(true)}
+            className="px-4 py-2.5 rounded-xl bg-[#F4C542] hover:bg-[#e0b435] text-[#111111] font-black text-xs border-2 border-[#111111] shrink-0 self-center transition-all cursor-pointer shadow-xs active:scale-95"
+          >
+            Give Feedback
+          </button>
+        </div>
+      </div>
+
       {/* ── DAILY WELLNESS 5 FLASHCARDS HERO CARD ── */}
       <div className="p-6 sm:p-7 rounded-3xl border-2 border-[#111111] bg-[#FFFFFF] shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         <div className="space-y-2">
@@ -322,37 +436,15 @@ export default function StudentDashboard() {
           </Link>
         </div>
 
-        {/* 7 Counselors Cards Grid */}
+        {/* 7 Counselors Flashcards Grid (Req 1) */}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3">
           {counselors.map((c) => (
-            <div 
+            <CounselorFlashcard 
               key={c.name}
-              onClick={() => setActiveModalCounselor(c)}
-              className="p-3.5 rounded-2xl bg-[#FAFAFA] hover:bg-[#FFFFFF] border border-[#111111]/15 hover:border-[#111111] transition-all cursor-pointer group flex flex-col items-center text-center shadow-xs hover:-translate-y-0.5"
-            >
-              <div className="w-16 h-16 rounded-2xl overflow-hidden border-2 border-[#111111] mb-2.5 bg-[#FFFFFF] shrink-0 relative">
-                <img 
-                  src={c.avatar_url} 
-                  alt={c.name}
-                  className="w-full h-full object-cover object-top"
-                  onError={(e) => { (e.target as HTMLImageElement).src = '/logo.png'; }}
-                />
-                <span className="absolute bottom-1 right-1 w-2.5 h-2.5 rounded-full bg-[#F4C542] border-2 border-[#111111]" />
-              </div>
-              <h4 className="text-xs font-black text-[#111111] line-clamp-1 w-full">
-                {c.name}
-              </h4>
-              <span className="text-[9px] text-[#111111]/70 font-bold line-clamp-1 mt-0.5">
-                {c.institution}
-              </span>
-              <span className="text-[9px] text-[#111111]/50 font-mono mt-0.5">
-                {c.experience}
-              </span>
-              <div className="mt-2 flex items-center gap-1 text-[9px] font-bold px-2 py-0.5 rounded-full bg-[#FFFFFF] text-[#111111] border border-[#111111]/20 w-full justify-center group-hover:bg-[#F4C542] group-hover:border-[#111111] transition-colors">
-                <span>Profile</span>
-                <ChevronRight size={10} />
-              </div>
-            </div>
+              counselor={c}
+              onViewBio={setActiveModalCounselor}
+              isCompact={true}
+            />
           ))}
         </div>
       </div>
@@ -809,6 +901,25 @@ export default function StudentDashboard() {
         isOpen={showFlashcardsModal}
         onClose={() => setShowFlashcardsModal(false)}
         onCompleted={() => setFlashcardsDoneToday(true)}
+      />
+
+      {/* Student Wellbeing Screening Modal (Req 14) */}
+      <StudentScreeningModal
+        isOpen={showScreeningModal}
+        onClose={() => setShowScreeningModal(false)}
+        onCompleted={(sub: ScreeningSubmission) => setLatestScreening(sub)}
+      />
+
+      {/* Session Feedback Modal with Unique Non-Star Rating (Req 11 & 12) */}
+      <SessionFeedbackModal
+        isOpen={showFeedbackModal}
+        onClose={() => setShowFeedbackModal(false)}
+      />
+
+      {/* Share Work with Counsellor Modal (Req 6) */}
+      <ShareWorkModal
+        isOpen={showShareWorkModal}
+        onClose={() => setShowShareWorkModal(false)}
       />
     </div>
   );

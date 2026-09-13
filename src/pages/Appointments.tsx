@@ -5,14 +5,16 @@ import {
   X, Check, MessageSquare, PhoneCall, ChevronRight, Info,
   Globe, UserCheck, Lock, AlertCircle, Sparkle, BookOpen
 } from 'lucide-react';
-import { apiFetch, getAlias } from '../utils/auth';
+import { apiFetch, getAlias, getStudentProfile, type StudentProfileData } from '../utils/auth';
 import { 
   OFFICIAL_COUNSELORS, 
   VISHNU_WELLNESS_CENTRE, 
   type CounselorData 
 } from '../data/counselors';
+import CounselorFlashcard from '../components/flashcards/CounselorFlashcard';
+import SessionFeedbackModal from '../components/clinical/SessionFeedbackModal';
 
-interface Appointment {
+export interface Appointment {
   id: number;
   psychologist_id?: number;
   psychologist_name: string;
@@ -23,6 +25,21 @@ interface Appointment {
   student_alias?: string;
   meeting_link?: string;
   check_in_code?: string;
+  // Student identity & academic details
+  booking_mode?: 'original' | 'anonymous';
+  is_anonymous?: boolean;
+  student_name?: string;
+  original_name?: string;
+  college_name?: string;
+  institution?: string;
+  branch?: string;
+  department?: string;
+  section?: string;
+  year?: string | number;
+  mobile_number?: string;
+  phone?: string;
+  gender?: string;
+  type?: string;
 }
 
 const STATUS_CONFIG: Record<string, { label: string; color: string; icon: string }> = {
@@ -50,6 +67,12 @@ export default function Appointments() {
   const [loadingMine, setLoadingMine] = useState(true);
   const [bookedMsg, setBookedMsg] = useState('');
   const [activeModalCounselor, setActiveModalCounselor] = useState<CounselorData | null>(null);
+  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
+  const [feedbackFacilitator, setFeedbackFacilitator] = useState('Ms. Devika Babu');
+
+  // Student Profile & Consultation Identity Mode (Requirement: Default with Original Name, option for Anonymous)
+  const studentProfile = getStudentProfile();
+  const [bookingIdentityMode, setBookingIdentityMode] = useState<'original' | 'anonymous'>('original');
 
   // Sync with Backend
   useEffect(() => {
@@ -89,13 +112,30 @@ export default function Appointments() {
       });
 
     const loadAppointments = () => {
+      let localBooked: Appointment[] = [];
+      try {
+        const raw = localStorage.getItem('mindbridge_booked_appointments');
+        if (raw) localBooked = JSON.parse(raw);
+      } catch {}
+
       apiFetch('/api/appointments/mine')
         .then(r => r.json())
         .then(parsed => {
-          if (!Array.isArray(parsed)) return;
-          
+          const apiList = Array.isArray(parsed) ? parsed : [];
+          // Merge local enriched appointments with API
+          const combined = [...localBooked];
+          apiList.forEach((apiAppt: any) => {
+            const exists = combined.find(c => c.id === apiAppt.id);
+            if (exists) {
+              exists.status = apiAppt.status;
+              if (apiAppt.slot_time) exists.slot_time = apiAppt.slot_time;
+            } else {
+              combined.push(apiAppt);
+            }
+          });
+
           setMyAppts(prev => {
-            parsed.forEach((newAppt: any) => {
+            combined.forEach((newAppt: any) => {
               const oldAppt = prev.find(p => p.id === newAppt.id);
               if (oldAppt && oldAppt.status === 'pending' && newAppt.status === 'rescheduled') {
                 const dt = new Date(newAppt.slot_time);
@@ -110,8 +150,11 @@ export default function Appointments() {
                 setTimeout(() => setBookedMsg(''), 9000);
               }
             });
-            return parsed;
+            return combined;
           });
+        })
+        .catch(() => {
+          if (localBooked.length > 0) setMyAppts(localBooked);
         })
         .finally(() => setLoadingMine(false));
     };
@@ -150,12 +193,36 @@ export default function Appointments() {
         specialization: doc?.specialization || 'Wellness Counsellor',
         slot_time: dt.toISOString(),
         status: 'pending',
-        notes: 'Audio session booking request',
-        student_alias: getAlias() || 'Anonymous Student'
+        notes: `${selectedMode} consultation request (${bookingIdentityMode === 'anonymous' ? 'Booked Anonymously' : 'Booked with Original Name'})`,
+        booking_mode: bookingIdentityMode,
+        is_anonymous: bookingIdentityMode === 'anonymous',
+        // Original Name and Full Student Details for the Counsellor
+        original_name: studentProfile.original_name,
+        student_name: studentProfile.original_name,
+        student_alias: studentProfile.anonymous_alias,
+        college_name: studentProfile.college_name,
+        institution: studentProfile.college_name,
+        branch: studentProfile.branch,
+        department: studentProfile.branch,
+        section: studentProfile.section,
+        year: studentProfile.year,
+        mobile_number: studentProfile.mobile_number,
+        phone: studentProfile.mobile_number,
+        gender: studentProfile.gender,
+        type: selectedMode,
       };
 
+      // Persist to local storage for instant sync with Counsellor portal
+      try {
+        const stored = localStorage.getItem('mindbridge_booked_appointments');
+        const list = stored ? JSON.parse(stored) : [];
+        localStorage.setItem('mindbridge_booked_appointments', JSON.stringify([newAppt, ...list.filter((a: any) => a.id !== newId)]));
+      } catch (e) {
+        console.warn('Could not save to local storage', e);
+      }
+
       setMyAppts(prev => [newAppt, ...prev.filter(a => a.id !== newId)]);
-      setBookedMsg(`Booking Request Sent — Your appointment request has been sent to the counsellor. You'll be notified once they accept.`);
+      setBookedMsg(`Booking Request Sent — Your appointment request has been sent to ${doc?.name || 'the counsellor'}. You'll be notified once they accept.`);
       setActiveTab('mine');
       setReqDate('');
       setReqTime('');
@@ -339,112 +406,21 @@ export default function Appointments() {
               {psychologists.map((c) => {
                 const confirmedAppt = getConfirmedApptForCounselor(c);
                 return (
-                  <div 
-                    key={c.name} 
-                    className="p-5 sm:p-6 rounded-3xl bg-[#FFFFFF] border-2 border-[#111111]/15 hover:border-[#111111] transition-all duration-300 flex flex-col justify-between group shadow-sm hover:shadow-md relative overflow-hidden h-full"
-                  >
-                    <div className="space-y-4">
-                      {/* Top Row: Photo, Status, Name, Campus */}
-                      <div className="flex items-start gap-4">
-                        <div className="relative shrink-0">
-                          <img 
-                            src={c.avatar_url} 
-                            alt={c.name} 
-                            className="w-16 h-16 rounded-2xl object-cover border-2 border-[#111111] shadow-xs group-hover:scale-105 transition-transform bg-[#FFFFFF]"
-                            onError={(e) => { (e.target as HTMLImageElement).src = '/logo.png'; }}
-                          />
-                          {/* Live Online Badge */}
-                          <span className="absolute -bottom-1 -right-1 flex h-4 w-4">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75" />
-                            <span className="relative inline-flex rounded-full h-4 w-4 bg-emerald-500 border-2 border-[#FFFFFF]" />
-                          </span>
-                        </div>
-
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-1.5 mb-1">
-                            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-700 border border-emerald-500/30 font-bold">
-                              ● Available
-                            </span>
-                          </div>
-                          <h4 className="font-heading font-black text-base text-[#111111] tracking-tight leading-snug truncate">
-                            {c.name}
-                          </h4>
-                          <p className="text-[11px] font-bold text-[#111111]/75 truncate mt-0.5">
-                            {c.specialization}
-                          </p>
-                          <p className="text-[10px] font-mono text-[#111111]/50 truncate mt-1">
-                            📍 {c.institution}
-                          </p>
-                        </div>
-                      </div>
-
-                      {/* Official Quote from PDF with fixed min-height for uniform alignment */}
-                      {c.quote && (
-                        <div className="p-3.5 rounded-2xl bg-[#FAFAFA] border border-[#111111]/10 text-xs text-[#111111]/80 italic font-serif leading-relaxed line-clamp-3 min-h-[68px] flex items-center">
-                          “{c.quote.replace('♡', '').trim()} ♡”
-                        </div>
-                      )}
-
-                      {/* Core Pillars with fixed min-height for uniform alignment */}
-                      {c.pillars && c.pillars.length > 0 && (
-                        <div className="flex flex-wrap gap-1 min-h-[28px]">
-                          {c.pillars.map((p, idx) => (
-                            <span key={idx} className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-[#F4C542]/20 border border-[#F4C542]/40 text-[#111111] font-bold">
-                              {p}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-
-                      {/* Experience & Languages Meta */}
-                      <div className="space-y-1 pt-2 border-t border-[#111111]/10 text-xs text-[#111111]/70">
-                        <div className="flex items-center gap-2 font-mono text-[11px]">
-                          <Award size={14} className="text-[#111111] shrink-0" />
-                          <span>Experience: <strong className="text-[#111111] font-black">{c.experience}</strong></span>
-                        </div>
-                        <div className="flex items-center gap-2 font-mono text-[11px]">
-                          <Globe size={14} className="text-[#111111] shrink-0" />
-                          <span className="truncate">Languages: <strong className="text-[#111111] font-black">{c.languages}</strong></span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Action Buttons pinned to bottom */}
-                    <div className="pt-4 mt-5 border-t border-[#111111]/10 space-y-2">
-                      <div className="grid grid-cols-2 gap-2">
-                        <button 
-                          onClick={() => setActiveModalCounselor(c)}
-                          className="py-2.5 px-3 rounded-xl bg-[#FFFFFF] hover:bg-[#111111]/5 text-[#111111] text-xs font-bold border-2 border-[#111111]/20 hover:border-[#111111] transition-all text-center flex items-center justify-center gap-1.5 cursor-pointer active:scale-95"
-                        >
-                          <BookOpen size={14} className="text-[#111111]" />
-                          <span>View Bio</span>
-                        </button>
-
-                        <button 
-                          onClick={() => handleSelectCounselorForBooking(c.id)}
-                          className="py-2.5 px-3 rounded-xl bg-[#F4C542] hover:bg-[#e0b435] text-[#111111] text-xs font-black border-2 border-[#111111] transition-all shadow-xs text-center flex items-center justify-center gap-1.5 cursor-pointer active:scale-95"
-                        >
-                          <Calendar size={14} />
-                          <span>Book Session</span>
-                        </button>
-                      </div>
-
-                      {/* Audio Call / Gated Indicator */}
-                      {confirmedAppt ? (
-                        <button
-                          onClick={() => navigate(`/call/${confirmedAppt.id}`)}
-                          className="w-full py-2.5 px-3 rounded-xl bg-[#F4C542] hover:bg-[#e0b435] text-[#111111] text-xs font-black border-2 border-[#111111] transition-all flex items-center justify-center gap-2 shadow-xs cursor-pointer active:scale-95"
-                        >
-                          <PhoneCall size={14} />
-                          <span>Start Session</span>
-                        </button>
-                      ) : (
-                        <div className="w-full py-2 px-3 rounded-xl bg-[#111111]/5 border border-[#111111]/10 text-[11px] text-[#111111]/60 flex items-center justify-center gap-1.5 font-mono">
-                          <Lock size={12} />
-                          <span>Audio call unlocks on confirmed booking</span>
-                        </div>
-                      )}
-                    </div>
+                  <div key={c.name} className="flex flex-col h-full space-y-2">
+                    <CounselorFlashcard 
+                      counselor={c}
+                      onSelectBooking={handleSelectCounselorForBooking}
+                      onViewBio={setActiveModalCounselor}
+                    />
+                    {confirmedAppt && (
+                      <button
+                        onClick={() => navigate(`/call/${confirmedAppt.id}`)}
+                        className="w-full py-2.5 px-3 rounded-2xl bg-[#F4C542] hover:bg-[#e0b435] text-[#111111] text-xs font-black border-2 border-[#111111] transition-all flex items-center justify-center gap-2 shadow-xs cursor-pointer active:scale-95"
+                      >
+                        <PhoneCall size={14} />
+                        <span>Start Confirmed Session</span>
+                      </button>
+                    )}
                   </div>
                 );
               })}
@@ -453,7 +429,7 @@ export default function Appointments() {
         )}
 
         {/* ══════════════════════════════════════════════════════════════════════
-            TAB 2: BOOKMYSHOW-STYLE COUNSELLOR BOOKING
+            TAB 2: SCHEDULE A CONSULTATION
         ══════════════════════════════════════════════════════════════════════ */}
         {activeTab === 'book' && (
           <div className="max-w-3xl mx-auto space-y-6 animate-fade-in w-full max-w-full min-w-0">
@@ -464,7 +440,7 @@ export default function Appointments() {
                 <div>
                   <h3 className="font-heading text-lg sm:text-xl font-bold text-[#111111] flex items-center gap-2">
                     <Calendar size={18} className="text-[#111111] shrink-0" />
-                    <span>BookMyShow-Style Counsellor Booking</span>
+                    <span>Schedule a Consultation</span>
                   </h3>
                   <p className="text-xs text-[#111111]/60 mt-0.5">
                     Select counsellor, browse available time slots, and choose your preferred session mode.
@@ -504,7 +480,6 @@ export default function Appointments() {
                         <div className="overflow-hidden flex-1 min-w-0">
                           <div className="flex items-center justify-between gap-1">
                             <h4 className="font-heading font-bold text-xs sm:text-sm text-[#111111] truncate">{doc.name}</h4>
-                            <span className="text-[10px] sm:text-[11px] font-black text-[#111111] shrink-0">⭐ 4.8</span>
                           </div>
                           <p className="text-[10px] sm:text-[11px] text-[#111111]/70 truncate">{doc.specialization}</p>
                           <span className="text-[9px] sm:text-[10px] font-mono text-[#111111]/50 truncate block">{doc.institution}</span>
@@ -554,7 +529,7 @@ export default function Appointments() {
                 </div>
               </div>
 
-              {/* Step 3: BookMyShow-Style Time Slots (Available vs Booked) */}
+              {/* Step 3: Select Time Slots (Available vs Booked) */}
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <label className="text-xs font-bold text-[#111111] uppercase tracking-widest flex items-center gap-1.5">
@@ -638,15 +613,119 @@ export default function Appointments() {
                 </div>
               </div>
 
-              {/* Anonymous Confirmation Notice */}
+              {/* Step 5: Choose Consultation Identity Presentation (Requirement: Original Name default or Anonymous) */}
+              <div className="space-y-3 pt-1 border-t border-[#111111]/10">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-bold text-[#111111] uppercase tracking-widest flex items-center gap-1.5">
+                    <span className="w-5 h-5 rounded-full bg-[#F4C542] text-[#111111] border border-[#111111] flex items-center justify-center text-[11px] font-black shrink-0">5</span>
+                    <span>Consultation Identity Presentation</span>
+                  </label>
+                  <span className="text-[10px] font-mono font-bold text-[#111111]/60">Student Choice</span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {/* Option 1: Book with Original Name (Default) */}
+                  <div
+                    onClick={() => setBookingIdentityMode('original')}
+                    className={`p-4 rounded-2xl border-2 transition-all cursor-pointer flex flex-col justify-between space-y-2.5 ${
+                      bookingIdentityMode === 'original'
+                        ? 'bg-[#F4C542]/15 border-[#111111] shadow-xs ring-1 ring-[#F4C542]'
+                        : 'bg-[#FAFAFA] border-[#111111]/15 hover:border-[#111111]/40'
+                    }`}
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex items-center gap-2">
+                        <div className={`w-8 h-8 rounded-xl flex items-center justify-center border ${
+                          bookingIdentityMode === 'original' ? 'bg-[#111111] text-[#FFFFFF] border-[#111111]' : 'bg-[#FFFFFF] text-[#111111] border-[#111111]/20'
+                        }`}>
+                          <UserCheck size={16} />
+                        </div>
+                        <div>
+                          <h4 className="font-heading font-black text-xs sm:text-sm text-[#111111]">
+                            Book with Original Name
+                          </h4>
+                          <span className="text-[10px] font-mono font-bold text-emerald-800 bg-emerald-100 px-1.5 py-0.2 rounded border border-emerald-300">
+                            Default Recommended
+                          </span>
+                        </div>
+                      </div>
+                      <div className={`w-5 h-5 rounded-full border flex items-center justify-center shrink-0 ${
+                        bookingIdentityMode === 'original' ? 'border-[#111111] bg-[#F4C542]' : 'border-[#111111]/30 bg-[#FFFFFF]'
+                      }`}>
+                        {bookingIdentityMode === 'original' && <Check size={12} className="stroke-[3]" />}
+                      </div>
+                    </div>
+
+                    <div className="p-2.5 rounded-xl bg-[#FFFFFF] border border-[#111111]/10 text-[11px] font-mono space-y-1 text-[#111111]">
+                      <div className="font-bold truncate">👤 {studentProfile.original_name}</div>
+                      <div className="text-[10px] text-[#111111]/60 truncate">🏛️ {studentProfile.college_name}</div>
+                      <div className="text-[10px] text-[#111111]/60 truncate">📚 {studentProfile.branch} · {studentProfile.section} ({studentProfile.year})</div>
+                      <div className="text-[10px] text-[#111111]/60 truncate">📱 {studentProfile.mobile_number} · {studentProfile.gender}</div>
+                    </div>
+
+                    <p className="text-[10px] text-[#111111]/70 leading-relaxed font-medium">
+                      Your counsellor will address you by your real name and review your academic &amp; institutional records.
+                    </p>
+                  </div>
+
+                  {/* Option 2: Book Anonymously */}
+                  <div
+                    onClick={() => setBookingIdentityMode('anonymous')}
+                    className={`p-4 rounded-2xl border-2 transition-all cursor-pointer flex flex-col justify-between space-y-2.5 ${
+                      bookingIdentityMode === 'anonymous'
+                        ? 'bg-[#F4C542]/15 border-[#111111] shadow-xs ring-1 ring-[#F4C542]'
+                        : 'bg-[#FAFAFA] border-[#111111]/15 hover:border-[#111111]/40'
+                    }`}
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex items-center gap-2">
+                        <div className={`w-8 h-8 rounded-xl flex items-center justify-center border ${
+                          bookingIdentityMode === 'anonymous' ? 'bg-[#111111] text-[#FFFFFF] border-[#111111]' : 'bg-[#FFFFFF] text-[#111111] border-[#111111]/20'
+                        }`}>
+                          <span className="material-symbols-outlined text-[18px]">masks</span>
+                        </div>
+                        <div>
+                          <h4 className="font-heading font-black text-xs sm:text-sm text-[#111111]">
+                            Book Anonymously
+                          </h4>
+                          <span className="text-[10px] font-mono font-bold text-purple-800 bg-purple-100 px-1.5 py-0.2 rounded border border-purple-300">
+                            Alias Protected
+                          </span>
+                        </div>
+                      </div>
+                      <div className={`w-5 h-5 rounded-full border flex items-center justify-center shrink-0 ${
+                        bookingIdentityMode === 'anonymous' ? 'border-[#111111] bg-[#F4C542]' : 'border-[#111111]/30 bg-[#FFFFFF]'
+                      }`}>
+                        {bookingIdentityMode === 'anonymous' && <Check size={12} className="stroke-[3]" />}
+                      </div>
+                    </div>
+
+                    <div className="p-2.5 rounded-xl bg-[#FFFFFF] border border-[#111111]/10 text-[11px] font-mono space-y-1 text-[#111111]">
+                      <div className="font-bold truncate text-purple-950">🎭 {studentProfile.anonymous_alias}</div>
+                      <div className="text-[10px] text-[#111111]/60">Encrypted Consultation Alias</div>
+                      <div className="text-[10px] text-[#111111]/60">Academic profile securely linked for counsellor triage</div>
+                    </div>
+
+                    <p className="text-[10px] text-[#111111]/70 leading-relaxed font-medium">
+                      Your counsellor will address you by your anonymous alias. Real details remain confidential for clinical care continuity.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Counsellor Transparency Guarantee */}
               <div className="p-3.5 sm:p-4 rounded-2xl bg-[#F4C542]/10 border border-[#F4C542]/40 flex items-start sm:items-center gap-3">
                 <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#F4C542] text-[#111111] border border-[#111111] flex items-center justify-center shrink-0">
                   <Shield size={18} />
                 </div>
                 <div className="text-xs min-w-0">
-                  <p className="font-bold text-[#111111]">Identity Privacy Guarantee</p>
+                  <p className="font-bold text-[#111111]">Clinical Documentation Transparency</p>
                   <p className="text-[#111111]/75 mt-0.5 text-[11px] sm:text-xs">
-                    The counsellor initially sees only your anonymous alias: <strong className="text-[#111111]">"{getAlias()}"</strong>. Real institutional details remain zero-knowledge encrypted.
+                    {bookingIdentityMode === 'original' ? (
+                      <span>Booking with your verified original identity: <strong>{studentProfile.original_name}</strong>. Counsellors can prepare tailored academic &amp; personal guidance.</span>
+                    ) : (
+                      <span>Booking anonymously as: <strong>{studentProfile.anonymous_alias}</strong>. Your treating counsellor will receive your clinical institutional details to ensure patient safety.</span>
+                    )}
                   </p>
                 </div>
               </div>
@@ -665,7 +744,9 @@ export default function Appointments() {
                 ) : (
                   <>
                     <Calendar size={18} />
-                    <span>Book {selectedMode} Session as {getAlias()}</span>
+                    <span>
+                      Book {selectedMode} Session {bookingIdentityMode === 'original' ? `as ${studentProfile.original_name}` : `Anonymously as ${studentProfile.anonymous_alias}`}
+                    </span>
                   </>
                 )}
               </button>
@@ -774,15 +855,25 @@ export default function Appointments() {
                       </div>
                     )}
 
-                    {/* Anonymous Student Identity Banner */}
-                    <div className="pt-3 border-t border-[#111111]/10 flex items-center justify-between text-xs">
-                      <div className="text-[#111111]/60 flex items-center gap-1.5">
-                        <span>Your identity:</span>
-                        <span className="font-bold text-[#111111] bg-[#F4C542]/20 px-2.5 py-0.5 rounded-full border border-[#F4C542] text-[11px]">
-                          {appt.student_alias || getAlias() || 'Anonymous Student'}
-                        </span>
+                    {/* Student Identity Presentation Banner */}
+                    <div className="pt-3 border-t border-[#111111]/10 flex items-center justify-between text-xs flex-wrap gap-2">
+                      <div className="text-[#111111]/60 flex items-center gap-1.5 flex-wrap">
+                        <span>Consultation Identity:</span>
+                        {appt.booking_mode === 'anonymous' ? (
+                          <span className="font-bold text-purple-900 bg-purple-100 px-2.5 py-0.5 rounded-full border border-purple-300 text-[11px] flex items-center gap-1">
+                            <span>🎭 Anonymous:</span>
+                            <span>{appt.student_alias || getAlias()}</span>
+                          </span>
+                        ) : (
+                          <span className="font-bold text-emerald-900 bg-emerald-100 px-2.5 py-0.5 rounded-full border border-emerald-300 text-[11px] flex items-center gap-1">
+                            <span>👤 Original Name:</span>
+                            <span>{appt.original_name || appt.student_name || studentProfile.original_name}</span>
+                          </span>
+                        )}
                       </div>
-                      <span className="text-[10px] text-[#111111]/40 font-mono">Encrypted 256-Bit</span>
+                      <span className="text-[10px] text-[#111111]/50 font-mono">
+                        {appt.college_name || appt.institution || studentProfile.college_name} · {appt.branch || appt.department || studentProfile.branch}
+                      </span>
                     </div>
                     
                     {/* Action Bar */}
@@ -796,7 +887,19 @@ export default function Appointments() {
                           <span>Cancel Request</span>
                         </button>
 
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+                          <button
+                            onClick={() => {
+                              setFeedbackFacilitator(appt.psychologist_name || 'Ms. Devika Babu');
+                              setShowFeedbackModal(true);
+                            }}
+                            className="text-xs bg-[#FFFFFF] hover:bg-[#F4C542] text-[#111111] border border-[#111111] px-3.5 py-2.5 rounded-xl font-bold transition-all flex items-center justify-center gap-1.5 active:scale-95 cursor-pointer shadow-2xs"
+                            title="Provide feedback on your session"
+                          >
+                            <Heart size={14} className="fill-[#F4C542]" />
+                            <span>Feedback</span>
+                          </button>
+
                           <button
                             onClick={() => navigate(`/student/messages?appointmentId=${appt.id}`)}
                             className="text-xs bg-[#FFFFFF] hover:bg-[#111111]/5 text-[#111111] border-2 border-[#111111]/20 hover:border-[#111111] px-4 py-2.5 rounded-xl font-bold transition-all flex items-center justify-center gap-1.5 active:scale-95 flex-1 sm:flex-initial cursor-pointer"
@@ -984,6 +1087,13 @@ export default function Appointments() {
           </div>
         </div>
       )}
+
+      {/* Session Feedback Modal (Req 11 & 12) */}
+      <SessionFeedbackModal
+        isOpen={showFeedbackModal}
+        onClose={() => setShowFeedbackModal(false)}
+        defaultFacilitator={feedbackFacilitator}
+      />
     </div>
   );
 }

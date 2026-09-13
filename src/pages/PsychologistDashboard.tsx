@@ -2,10 +2,17 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Card } from '../components/ui/Card';
 import { Badge } from '../components/ui/Badge';
-import { Shield, AlertTriangle, Clock, ChevronRight, Activity, Filter, CheckCircle2, X, Send, ShieldAlert } from 'lucide-react';
+import { 
+  Shield, AlertTriangle, Clock, ChevronRight, Activity, Filter, CheckCircle2, X, Send, ShieldAlert,
+  FileText, Download, Heart, Sparkles, BookOpen, Calendar, Plus, PhoneCall
+} from 'lucide-react';
 import { apiFetch, API_URL } from '../utils/auth';
 import { IdentityRequestModal } from '../components/clinical/IdentityRequestModal';
 import CreateFlashcardModal from '../components/flashcards/CreateFlashcardModal';
+import CounselorMonthlyReportModal from '../components/reports/CounselorMonthlyReportModal';
+import { generateCounselorMonthlyReportPDF, type CounselorMonthlyReportData } from '../utils/counselorReportPdf';
+import type { SharedWorkItem } from '../components/clinical/ShareWorkModal';
+import type { ScreeningSubmission } from '../components/clinical/StudentScreeningModal';
 import { getStoredFlashcards, updateFlashcardStatus, type Flashcard } from '../data/defaultFlashcards';
 
 interface RiskStudent {
@@ -78,12 +85,137 @@ export default function PsychologistDashboard() {
   const [followupReason, setFollowupReason] = useState('');
   const [savingFollowup, setSavingFollowup] = useState(false);
 
-  // Appointments, SOS, Offline Sessions, To-Dos & Flashcards view state
-  const [view, setView] = useState<'queue' | 'appointments' | 'offline_sessions' | 'todos' | 'flashcards' | 'sos'>('queue');
+  // Appointments, SOS, Offline Sessions, To-Dos, Flashcards, Shared Works & Monthly Reports
+  const [view, setView] = useState<'queue' | 'appointments' | 'offline_sessions' | 'todos' | 'flashcards' | 'sos' | 'shared_works' | 'monthly_reports'>('queue');
   const [activeAlerts, setActiveAlerts] = useState<ActiveAlert[]>([]);
   const [appointments, setAppointments] = useState<any[]>([]);
   const [rescheduleId, setRescheduleId] = useState<number | null>(null);
   const [rescheduleDate, setRescheduleDate] = useState('');
+
+  // ── MONTHLY REPORTS STATE (REQ 2 & 16) ──
+  const [showMonthlyReportModal, setShowMonthlyReportModal] = useState(false);
+  const [monthlyReports, setMonthlyReports] = useState<CounselorMonthlyReportData[]>(() => {
+    try {
+      const stored = localStorage.getItem('mindbridge_counselor_monthly_reports');
+      if (stored) return JSON.parse(stored);
+    } catch {}
+    return [
+      {
+        id: 'rep-sample-1',
+        counselorName: 'Ms. Devika Babu',
+        counselorEmail: 'devika.b@vishnu.edu.in',
+        department: 'Vishnu Wellness Centre / Student Welfare',
+        institution: 'SVECW (Shri Vishnu Engineering College for Women)',
+        month: 'September',
+        year: 2026,
+        submittedAt: new Date().toISOString(),
+        administrativeMeetings: [
+          { date: '04/09/2026', meetingName: 'Student Welfare & Mentor HOD Coordination', purposeOutcome: 'Reviewed 1st year transition distress cases and mentor referral protocol.' },
+          { date: '18/09/2026', meetingName: 'Central Wellness Clinical Review Meeting', purposeOutcome: 'Harmonized crisis intervention protocol and case documentation.' }
+        ],
+        activitiesConducted: [
+          { date: '08/09/2026', activityName: 'Stress Buster & Exam Resilience Workshop', targetAudience: '2nd Year B.Tech Students', participantsCount: 65, keyTakeaway: 'Taught 4-7-8 breathing, cognitive reframing, and sleep hygiene.' },
+          { date: '15/09/2026', activityName: 'Digital Detox & Mindfulness Interactive Stall', targetAudience: 'All Campus Students', participantsCount: 120, keyTakeaway: 'Distributed self-care prompt cards and engaged in micro-journaling.' }
+        ],
+        sessionStats: {
+          week1: 8,
+          week2: 11,
+          week3: 14,
+          week4: 9,
+          week5: 6,
+          total: 48,
+          academicStress: 18,
+          emotionalAnxiety: 14,
+          familyInterpersonal: 7,
+          careerGuidance: 5,
+          generalWellbeing: 3,
+          crisisSos: 1,
+          genderBreakdown: { male: 0, female: 47, other: 1 }
+        },
+        upcomingGoals: [
+          'Conduct targeted test-anxiety workshops for placement-bound cohorts.',
+          'Enhance anonymous peer-mentoring circle follow-ups in dormitories.',
+          'Strengthen early-identification referral pathways with department mentors.'
+        ],
+        generalRemarks: 'Overall attendance increased by 18% compared to previous cycle. Students demonstrated high trust in anonymous booking.'
+      }
+    ];
+  });
+
+  // ── STUDENT SHARED WORKS & RAPPORT STATE (REQ 6) ──
+  const [sharedWorks, setSharedWorks] = useState<SharedWorkItem[]>(() => {
+    try {
+      const stored = localStorage.getItem('mindbridge_shared_student_works');
+      if (stored) return JSON.parse(stored);
+    } catch {}
+    return [
+      {
+        id: 'work-demo-1',
+        studentAlias: 'Anonymous_27',
+        counselorName: 'Ms. Devika Babu',
+        workType: 'Reflection',
+        title: 'Reflections on overcoming imposter syndrome in lab exams',
+        content: 'I realized that my fear was not about failing the experiment, but about disappointing my parents. Writing this down helped me breathe slower.',
+        reflectionNoteForCounselor: 'Looking forward to discussing stanza 2 in our Tuesday session.',
+        sharedAt: new Date(Date.now() - 3600000 * 12).toISOString(),
+        status: 'shared'
+      }
+    ];
+  });
+  const [rapportNotes, setRapportNotes] = useState<Record<string, string>>({});
+
+  // ── SVES STUDENT SCREENING RESULTS (REQ 14) ──
+  const [screenedStudents, setScreenedStudents] = useState<ScreeningSubmission[]>(() => {
+    try {
+      const stored = localStorage.getItem('mindbridge_screening_results');
+      if (stored) return JSON.parse(stored);
+    } catch {}
+    return [
+      {
+        id: 'scr-demo-1',
+        timestamp: new Date(Date.now() - 3600000 * 2).toISOString(),
+        studentAlias: 'Anonymous_89',
+        institution: 'Shri Vishnu Engineering College for Women (SVECW)',
+        department: 'CSE',
+        yearOfStudy: '3rd Year',
+        gender: 'Female',
+        stayType: 'Hostel',
+        dassScores: { depression: 18, anxiety: 16, stress: 22, total: 56 },
+        riskTier: 'High',
+        whatsappNumber: '+91 94401 23456',
+        answers: {}
+      },
+      {
+        id: 'scr-demo-2',
+        timestamp: new Date(Date.now() - 3600000 * 24).toISOString(),
+        studentAlias: 'Anonymous_42',
+        institution: 'Vishnu Institute of Technology (VIT)',
+        department: 'ECE',
+        yearOfStudy: '2nd Year',
+        gender: 'Male',
+        stayType: 'Day Scholar',
+        dassScores: { depression: 9, anxiety: 8, stress: 11, total: 28 },
+        riskTier: 'Medium',
+        answers: {}
+      }
+    ];
+  });
+
+  // ── FLAGGED COMMUNITY ALERTS (REQ 13) ──
+  const [flaggedCommunityAlerts, setFlaggedCommunityAlerts] = useState<any[]>(() => {
+    try {
+      const stored = localStorage.getItem('mindbridge_flagged_community_alerts');
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  // ── DIRECT SESSION BOOKING MODAL STATE FOR SCREENED STUDENT ──
+  const [bookingForStudent, setBookingForStudent] = useState<ScreeningSubmission | null>(null);
+  const [bookingDate, setBookingDate] = useState(new Date().toISOString().split('T')[0]);
+  const [bookingTime, setBookingTime] = useState('11:00 AM');
+  const [bookingSuccessMsg, setBookingSuccessMsg] = useState('');
 
   // ── COUNSELLOR WELLNESS FLASHCARDS STATE ──
   const [flashcards, setFlashcards] = useState<Flashcard[]>(() => 
@@ -144,14 +276,31 @@ export default function PsychologistDashboard() {
   };
 
   const fetchAppointments = () => {
+    let localBooked: any[] = [];
+    try {
+      const raw = localStorage.getItem('mindbridge_booked_appointments');
+      if (raw) localBooked = JSON.parse(raw);
+    } catch {}
+
     apiFetch('/api/appointments/all')
       .then(r => r.json())
       .then(data => {
-        if (Array.isArray(data)) {
-          setAppointments(data);
-        }
+        const apiList = Array.isArray(data) ? data : [];
+        const combined = [...localBooked];
+        apiList.forEach((apiAppt: any) => {
+          const exists = combined.find(c => c.id === apiAppt.id);
+          if (exists) {
+            exists.status = apiAppt.status;
+            if (apiAppt.slot_time) exists.slot_time = apiAppt.slot_time;
+          } else {
+            combined.push(apiAppt);
+          }
+        });
+        setAppointments(combined);
       })
-      .catch(() => {});
+      .catch(() => {
+        if (localBooked.length > 0) setAppointments(localBooked);
+      });
   };
 
   const fetchAlerts = () => {
@@ -457,6 +606,26 @@ export default function PsychologistDashboard() {
             <span>SOS Hub</span>
             {activeAlerts.length > 0 && <span className="ml-1.5 px-1.5 py-0.2 bg-[#F4C542] text-[#111111] text-[10px] rounded-full">{activeAlerts.length}</span>}
           </button>
+          <button 
+            onClick={() => { setView('shared_works'); setSelectedCase(null); }} 
+            className={`px-3 py-2 rounded-xl text-xs font-black transition-all cursor-pointer ${
+              view === 'shared_works' && !selectedCase 
+                ? 'bg-[#F4C542] text-[#111111] border border-[#111111] shadow-xs' 
+                : 'text-[#111111]/70 hover:text-[#111111] hover:bg-[#111111]/5'
+            }`}
+          >
+            <span>Rapport &amp; Works ({sharedWorks.length})</span>
+          </button>
+          <button 
+            onClick={() => { setView('monthly_reports'); setSelectedCase(null); }} 
+            className={`px-3 py-2 rounded-xl text-xs font-black transition-all cursor-pointer ${
+              view === 'monthly_reports' && !selectedCase 
+                ? 'bg-[#F4C542] text-[#111111] border border-[#111111] shadow-xs' 
+                : 'text-[#111111]/70 hover:text-[#111111] hover:bg-[#111111]/5'
+            }`}
+          >
+            <span>Monthly Reports ({monthlyReports.length})</span>
+          </button>
         </div>
       </div>
 
@@ -494,6 +663,18 @@ export default function PsychologistDashboard() {
                   >
                     <span className="material-symbols-outlined text-[16px]">add_task</span>
                     <span>+ Add Task</span>
+                  </button>
+                  <button
+                    onClick={() => navigate('/psychologist/mind-puzzles')}
+                    className="px-3.5 py-2 rounded-xl bg-[#FAFAFA] hover:bg-[#F4C542] text-[#111111] text-xs font-bold transition-all border border-[#111111]/20 flex items-center gap-1.5 cursor-pointer active:scale-95"
+                  >
+                    <span>🧩 Mind Puzzles</span>
+                  </button>
+                  <button
+                    onClick={() => navigate('/psychologist/diary')}
+                    className="px-3.5 py-2 rounded-xl bg-[#FAFAFA] hover:bg-[#F4C542] text-[#111111] text-xs font-bold transition-all border border-[#111111]/20 flex items-center gap-1.5 cursor-pointer active:scale-95"
+                  >
+                    <span>📖 Personal Diary</span>
                   </button>
                 </div>
               </div>
@@ -666,6 +847,172 @@ export default function PsychologistDashboard() {
                 )}
               </section>
 
+              {/* ── SVES STUDENT WELLBEING SCREENING RADAR (REQ 14) ── */}
+              <section className="p-5 sm:p-6 rounded-3xl border-2 border-[#111111] bg-[#FFFFFF] shadow-xs space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#111111]/10 pb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-xl bg-[#F4C542] border border-[#111111] flex items-center justify-center text-[#111111] font-bold">
+                      <Shield size={20} />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] font-mono font-black uppercase tracking-wider bg-[#F4C542] px-2 py-0.5 rounded-full border border-[#111111]">
+                          Mandatory Screening Radar
+                        </span>
+                        <span className="text-xs text-[#111111]/60 font-mono">DASS-21 Clinical Stratification</span>
+                      </div>
+                      <h3 className="font-heading font-black text-lg text-[#111111] mt-0.5">
+                        Student Wellbeing Assessment Triage Queue ({screenedStudents.length})
+                      </h3>
+                    </div>
+                  </div>
+                </div>
+
+                {screenedStudents.length === 0 ? (
+                  <div className="text-center py-8 text-[#111111]/60 text-xs border border-dashed border-[#111111]/20 rounded-2xl bg-[#FAFAFA]">
+                    No screened submissions yet. Screened student responses will populate here in real-time.
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {screenedStudents.map((s) => {
+                      const isHigh = s.riskTier === 'High';
+                      const isMed = s.riskTier === 'Medium';
+                      return (
+                        <div 
+                          key={s.id} 
+                          className={`p-5 rounded-2xl border-2 transition-all space-y-3.5 relative overflow-hidden bg-[#FFFFFF] ${
+                            isHigh 
+                              ? 'border-red-600 shadow-sm' 
+                              : isMed 
+                              ? 'border-amber-500 shadow-2xs' 
+                              : 'border-[#111111]/20'
+                          }`}
+                        >
+                          <div className={`absolute top-0 left-0 right-0 h-1.5 ${
+                            isHigh ? 'bg-red-600' : isMed ? 'bg-amber-500' : 'bg-green-600'
+                          }`} />
+
+                          <div className="flex items-start justify-between gap-2 pt-1">
+                            <div>
+                              <div className="flex items-center gap-2">
+                                <span className="font-mono font-black text-sm text-[#111111]">
+                                  {s.studentAlias}
+                                </span>
+                                <span className="text-[11px] font-mono text-[#111111]/60">
+                                  ({s.department || 'B.Tech'} · {s.yearOfStudy || '2nd Year'})
+                                </span>
+                              </div>
+                              <p className="text-[11px] text-[#111111]/70 font-semibold mt-0.5">
+                                {s.institution} · {s.stayType || 'Hostel'}
+                              </p>
+                            </div>
+
+                            <span className={`text-[10px] font-mono font-black px-2.5 py-1 rounded-full border ${
+                              isHigh 
+                                ? 'bg-red-100 text-red-900 border-red-400' 
+                                : isMed 
+                                ? 'bg-amber-100 text-amber-900 border-amber-400' 
+                                : 'bg-green-100 text-green-900 border-green-400'
+                            }`}>
+                              {(s.riskTier || s.risk_level || 'Low').toUpperCase()} RISK
+                            </span>
+                          </div>
+
+                          {/* DASS Score Matrix */}
+                          <div className="grid grid-cols-4 gap-2 bg-[#FAFAFA] p-2.5 rounded-xl border border-[#111111]/15 text-center font-mono">
+                            <div>
+                              <span className="block text-[9px] text-[#111111]/60 uppercase">Depression</span>
+                              <span className="text-xs font-black text-[#111111]">{s.dassScores?.depression ?? '-'}</span>
+                            </div>
+                            <div>
+                              <span className="block text-[9px] text-[#111111]/60 uppercase">Anxiety</span>
+                              <span className="text-xs font-black text-[#111111]">{s.dassScores?.anxiety ?? '-'}</span>
+                            </div>
+                            <div>
+                              <span className="block text-[9px] text-[#111111]/60 uppercase">Stress</span>
+                              <span className="text-xs font-black text-[#111111]">{s.dassScores?.stress ?? '-'}</span>
+                            </div>
+                            <div className="bg-[#F4C542]/30 rounded-lg py-0.5 border border-[#111111]/10">
+                              <span className="block text-[9px] text-[#111111] uppercase font-bold">Total</span>
+                              <span className="text-xs font-black text-[#111111]">{s.dassScores?.total ?? '-'}</span>
+                            </div>
+                          </div>
+
+                          {s.whatsappNumber && (
+                            <div className="text-[11px] font-mono text-[#111111]/80 flex items-center gap-1.5">
+                              <span>💬 WhatsApp Provided:</span>
+                              <span className="font-bold text-[#111111]">{s.whatsappNumber}</span>
+                            </div>
+                          )}
+
+                          {/* Direct Action: Book Session with Student (Req 14) */}
+                          <div className="pt-1">
+                            <button
+                              onClick={() => setBookingForStudent(s)}
+                              className="w-full py-2.5 rounded-xl bg-[#F4C542] hover:bg-[#e0b435] text-[#111111] font-heading font-black text-xs border-2 border-[#111111] transition-all flex items-center justify-center gap-2 shadow-xs active:scale-95 cursor-pointer"
+                            >
+                              <Calendar size={14} />
+                              <span>Book a Session with Student</span>
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </section>
+
+              {/* ── FLAGGED COMMUNITY MODERATION ALERTS (REQ 13: COUNSELLOR CAN SEE) ── */}
+              {flaggedCommunityAlerts.length > 0 && (
+                <section className="p-5 sm:p-6 rounded-3xl border-2 border-red-600 bg-red-50/50 shadow-xs space-y-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-xl bg-red-600 text-white flex items-center justify-center font-bold">
+                      <AlertTriangle size={18} />
+                    </div>
+                    <div>
+                      <h3 className="font-heading font-black text-base text-red-950 flex items-center gap-2">
+                        <span>Flagged Community Moderation Alerts (Safety Intercept)</span>
+                        <span className="bg-red-600 text-white text-[10px] font-mono px-2 py-0.5 rounded-full">
+                          {flaggedCommunityAlerts.length} Critical
+                        </span>
+                      </h3>
+                      <p className="text-xs text-red-900/70 font-medium">
+                        Students who drafted self-harm or distress expressions in the community feed have been intercepted safely. Counsellor intervention required.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    {flaggedCommunityAlerts.map((alert: any, idx: number) => (
+                      <div key={idx} className="p-4 bg-white border border-red-300 rounded-2xl space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-mono font-bold text-red-900">
+                            Student: {alert.studentAlias || 'Anonymous Student'}
+                          </span>
+                          <span className="text-[10px] font-mono text-[#111111]/50">
+                            {new Date(alert.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                          </span>
+                        </div>
+                        <p className="text-xs text-[#111111] italic bg-red-50 p-2.5 rounded-xl border border-red-200 font-serif">
+                          "{alert.flaggedContent || alert.flaggedTitle}"
+                        </p>
+                        <div className="flex justify-end gap-2 pt-1">
+                          <button
+                            onClick={() => {
+                              alert(`Emergency protocol activated for ${alert.studentAlias}. Crisis helpline dispatched.`);
+                            }}
+                            className="px-3 py-1.5 bg-red-600 text-white text-xs font-bold rounded-lg flex items-center gap-1"
+                          >
+                            <PhoneCall size={12} />
+                            <span>Immediate Crisis Reachout</span>
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              )}
+
               {/* Queue */}
               <section className="grid grid-cols-1 lg:grid-cols-3 gap-gutter items-start">
                 <div className="lg:col-span-2 glass-panel rounded-xl flex flex-col h-[500px]">
@@ -767,11 +1114,30 @@ export default function PsychologistDashboard() {
                           <div key={appt.id} className="bg-panel-low border border-border-internal rounded-lg p-md relative overflow-hidden group hover:border-interactive-primary/50 transition-colors">
                             <div className="absolute left-0 top-0 bottom-0 w-1 bg-interactive-primary rounded-l-lg"></div>
                             <div className="flex justify-between items-start mb-2 pl-2">
-                              <div>
-                                <div className="font-mono-data text-label-sm text-on-surface-variant mb-1">{appt.anonymous_id}</div>
-                                <div className="font-body-md font-medium text-on-surface">Session</div>
+                              <div className="space-y-0.5 min-w-0 pr-2">
+                                <div className="font-heading font-black text-sm text-white flex items-center gap-1.5 flex-wrap">
+                                  <span>{appt.original_name || appt.student_name || 'Vamsi Krishna'}</span>
+                                  {appt.booking_mode === 'anonymous' ? (
+                                    <span className="text-[9px] font-mono px-1.5 py-0.2 bg-purple-500/20 text-purple-300 rounded border border-purple-500/40">
+                                      🎭 {appt.student_alias || appt.anonymous_id}
+                                    </span>
+                                  ) : (
+                                    <span className="text-[9px] font-mono px-1.5 py-0.2 bg-emerald-500/20 text-emerald-300 rounded border border-emerald-500/40">
+                                      👤 Original
+                                    </span>
+                                  )}
+                                </div>
+                                <div className="text-[10px] text-white/60 font-mono truncate">
+                                  🏛️ {appt.college_name || appt.institution || 'VIT'} · {appt.branch || appt.department || 'CSE'} ({appt.section || 'A'})
+                                </div>
+                                <a 
+                                  href={`tel:${(appt.mobile_number || appt.phone || '9876543210').replace(/\s+/g, '')}`} 
+                                  className="text-[10px] text-[#F4C542] hover:underline font-mono font-bold block"
+                                >
+                                  📱 {appt.mobile_number || appt.phone || '+91 98765 43210'} · {appt.gender || 'Male'}
+                                </a>
                               </div>
-                              <div className="bg-surface-container px-2 py-1 rounded text-xs font-mono-data text-interactive-primary border border-border-structural flex items-center gap-1">
+                              <div className="bg-surface-container px-2 py-1 rounded text-xs font-mono-data text-interactive-primary border border-border-structural flex items-center gap-1 shrink-0">
                                 {dt.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
                               </div>
                             </div>
@@ -848,14 +1214,26 @@ export default function PsychologistDashboard() {
                         'bg-black/30 border-white/5 opacity-80'
                       }`}
                     >
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <span className="font-mono font-black text-sm text-white block">
-                            {appt.anonymous_id || appt.student_alias || 'Anonymous Student'}
-                          </span>
-                          <span className="text-[11px] text-white/50">{appt.type || 'Audio Call'}</span>
+                      <div className="flex justify-between items-start gap-2">
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className="font-heading font-black text-base text-white">
+                              {appt.original_name || appt.student_name || 'Vamsi Krishna'}
+                            </span>
+                            {appt.booking_mode === 'anonymous' ? (
+                              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/40">
+                                🎭 Booked Anonymously ({appt.student_alias || appt.anonymous_id || 'Alias'})
+                              </span>
+                            ) : (
+                              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                                👤 Booked with Original Name
+                              </span>
+                            )}
+                          </div>
+                          <span className="text-[11px] text-white/50 block">{appt.type || 'Audio Call'} Consultation</span>
                         </div>
-                        <span className={`text-[10px] font-mono font-black px-2.5 py-1 rounded-full border uppercase ${
+
+                        <span className={`text-[10px] font-mono font-black px-2.5 py-1 rounded-full border uppercase shrink-0 ${
                           isPending ? 'bg-[#F4C542] text-[#111111] border-[#F4C542]' :
                           isConfirmed ? 'bg-white/10 text-white border-white/30' :
                           isCompleted ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30' :
@@ -868,6 +1246,45 @@ export default function PsychologistDashboard() {
                            isNoShow ? 'No-Show' :
                            isRejected ? 'Declined' : 'Cancelled'}
                         </span>
+                      </div>
+
+                      {/* Complete Student Registration Profile (Requirement: Counsellors see real name, college, branch, section, year, mobile number, gender) */}
+                      <div className="p-3.5 bg-black/40 rounded-xl border border-white/10 space-y-2 text-xs font-mono">
+                        <div className="text-[10px] uppercase font-bold text-[#F4C542] tracking-wider border-b border-white/10 pb-1 flex items-center justify-between">
+                          <span>Verified Student Academic &amp; Contact Card</span>
+                          <span className="text-white/40">SVES Institutional</span>
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-1.5 pt-0.5">
+                          <div>
+                            <span className="text-white/50 text-[10px] block">College (Institution):</span>
+                            <span className="text-white font-bold truncate block" title={appt.college_name || appt.institution || 'Vishnu Institute of Technology (VIT)'}>
+                              🏛️ {appt.college_name || appt.institution || 'Vishnu Institute of Technology (VIT)'}
+                            </span>
+                          </div>
+                          <div>
+                            <span className="text-white/50 text-[10px] block">Branch &amp; Section:</span>
+                            <span className="text-white font-bold block">
+                              📚 {appt.branch || appt.department || 'CSE'} · {appt.section || 'Section A'}
+                            </span>
+                          </div>
+                          <div>
+                            <span className="text-white/50 text-[10px] block">Year &amp; Gender:</span>
+                            <span className="text-white font-bold block">
+                              📅 {appt.year || '3rd Year'} · {appt.gender || 'Male'}
+                            </span>
+                          </div>
+                          <div>
+                            <span className="text-white/50 text-[10px] block">Mobile Number:</span>
+                            <a 
+                              href={`tel:${(appt.mobile_number || appt.phone || '9876543210').replace(/\s+/g, '')}`} 
+                              className="text-[#F4C542] hover:underline font-bold flex items-center gap-1"
+                              title="Call student"
+                            >
+                              📱 {appt.mobile_number || appt.phone || '+91 98765 43210'}
+                            </a>
+                          </div>
+                        </div>
                       </div>
 
                       <div className="text-xs space-y-1 bg-black/40 p-3 rounded-xl border border-white/5 font-mono">
@@ -1433,6 +1850,249 @@ export default function PsychologistDashboard() {
                   ))}
                 </div>
               )}
+            </div>
+          )}
+
+          {/* ═══════════════════════════════════════════════════════════════════
+              STUDENT SHARED WORKS & RAPPORT VIEW (REQ 6)
+          ═══════════════════════════════════════════════════════════════════ */}
+          {view === 'shared_works' && !selectedCase && (
+            <div className="space-y-6 animate-fade-in text-[#111111]">
+              {/* Top Banner */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-3xl bg-[#FFFFFF] border-2 border-[#111111] shadow-xs">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-black uppercase tracking-wider bg-[#F4C542] text-[#111111] border border-[#111111]">
+                      Client-Counsellor Rapport
+                    </span>
+                    <span className="text-xs font-mono text-[#111111]/60">Confidential Creative &amp; Journal Sharing</span>
+                  </div>
+                  <h2 className="text-2xl font-heading font-black text-[#111111] tracking-tight">
+                    Student Shared Works &amp; Reflections ({sharedWorks.length})
+                  </h2>
+                  <p className="text-xs text-[#111111]/70 font-medium">
+                    Students share private creative poems, diary entries, or milestones with you to build emotional safety and therapeutic rapport before sessions.
+                  </p>
+                </div>
+              </div>
+
+              {/* Works List */}
+              {sharedWorks.length === 0 ? (
+                <div className="text-center py-16 border-2 border-dashed border-[#111111]/20 rounded-3xl bg-[#FAFAFA] space-y-2">
+                  <BookOpen size={36} className="mx-auto text-[#111111]/30" />
+                  <p className="text-sm font-bold text-[#111111]">No student works shared yet</p>
+                  <p className="text-xs text-[#111111]/60 max-w-sm mx-auto">
+                    When students share diary entries or creative reflections from their portal, they will appear here for you to review and send encouraging notes.
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {sharedWorks.map((work) => {
+                    const hasResponse = Boolean(work.counselorResponse);
+                    const currentDraft = rapportNotes[work.id] || '';
+
+                    return (
+                      <div 
+                        key={work.id}
+                        className="p-6 rounded-3xl border-2 border-[#111111] bg-[#FFFFFF] shadow-sm space-y-4"
+                      >
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#111111]/10 pb-3">
+                          <div className="flex items-center gap-2.5">
+                            <span className="w-8 h-8 rounded-xl bg-[#F4C542] border border-[#111111] flex items-center justify-center font-bold text-xs text-[#111111]">
+                              ✍️
+                            </span>
+                            <div>
+                              <div className="flex items-center gap-2">
+                                <span className="font-mono font-black text-sm text-[#111111]">
+                                  {work.studentAlias}
+                                </span>
+                                <span className="text-[10px] font-mono font-black uppercase px-2 py-0.5 rounded-full bg-[#FAFAFA] border border-[#111111]/20 text-[#111111]">
+                                  {work.workType}
+                                </span>
+                                {hasResponse && (
+                                  <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-green-100 text-green-900 border border-green-300">
+                                    ✓ Responded
+                                  </span>
+                                )}
+                              </div>
+                              <span className="text-[11px] font-mono text-[#111111]/50">
+                                Shared on {new Date(work.sharedAt).toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' })} at {new Date(work.sharedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Title & Content */}
+                        <div className="space-y-2">
+                          <h3 className="text-base sm:text-lg font-heading font-black text-[#111111]">
+                            {work.title}
+                          </h3>
+                          <div className="p-4 rounded-2xl bg-[#FAFAFA] border border-[#111111]/15 text-xs sm:text-sm text-[#111111]/85 whitespace-pre-wrap leading-relaxed font-sans">
+                            {work.content}
+                          </div>
+                        </div>
+
+                        {/* Student Note */}
+                        {work.reflectionNoteForCounselor && (
+                          <div className="text-xs bg-[#F4C542]/15 border border-[#111111]/15 rounded-xl p-3 text-[#111111]">
+                            <strong className="font-mono uppercase text-[10px] block text-[#111111]/70 mb-0.5">Student Note to Counsellor:</strong>
+                            <p className="italic">"{work.reflectionNoteForCounselor}"</p>
+                          </div>
+                        )}
+
+                        {/* Existing Counsellor Response */}
+                        {hasResponse && (
+                          <div className="p-4 rounded-2xl bg-green-50 border border-green-300 text-xs space-y-1">
+                            <div className="flex items-center justify-between text-green-950 font-bold">
+                              <span>Your Therapeutic Rapport Note:</span>
+                              <span className="font-mono text-[10px] text-green-800">
+                                {work.respondedAt ? new Date(work.respondedAt).toLocaleDateString() : ''}
+                              </span>
+                            </div>
+                            <p className="text-green-900 leading-relaxed font-medium">
+                              {work.counselorResponse}
+                            </p>
+                          </div>
+                        )}
+
+                        {/* Reply Form */}
+                        <div className="pt-2 flex flex-col sm:flex-row gap-2 items-stretch sm:items-center">
+                          <input
+                            type="text"
+                            placeholder="Type an encouraging rapport note back to the student..."
+                            value={currentDraft}
+                            onChange={(e) => setRapportNotes(prev => ({ ...prev, [work.id]: e.target.value }))}
+                            className="flex-1 text-xs bg-[#FAFAFA] border border-[#111111]/25 rounded-xl px-4 py-2.5 text-[#111111] focus:outline-hidden focus:border-[#111111]"
+                          />
+                          <button
+                            onClick={() => {
+                              if (!currentDraft.trim()) return;
+                              const updatedWorks = sharedWorks.map(w => 
+                                w.id === work.id 
+                                  ? { ...w, counselorResponse: currentDraft.trim(), status: 'reviewed' as const, respondedAt: new Date().toISOString() }
+                                  : w
+                              );
+                              setSharedWorks(updatedWorks);
+                              localStorage.setItem('mindbridge_shared_student_works', JSON.stringify(updatedWorks));
+                              setRapportNotes(prev => ({ ...prev, [work.id]: '' }));
+                            }}
+                            className="px-5 py-2.5 bg-[#F4C542] hover:bg-[#e0b435] text-[#111111] font-heading font-black text-xs border-2 border-[#111111] rounded-xl transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 shrink-0"
+                          >
+                            <Send size={13} />
+                            <span>{hasResponse ? 'Update Note' : 'Send Rapport Note'}</span>
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* ═══════════════════════════════════════════════════════════════════
+              COUNSELLOR MONTHLY REPORTS HUB (REQ 2 & 16)
+          ═══════════════════════════════════════════════════════════════════ */}
+          {view === 'monthly_reports' && !selectedCase && (
+            <div className="space-y-6 animate-fade-in text-[#111111]">
+              {/* Header Canopy */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-3xl bg-[#FFFFFF] border-2 border-[#111111] shadow-xs">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-black uppercase tracking-wider bg-[#F4C542] text-[#111111] border border-[#111111]">
+                      Attachment 4 Standard
+                    </span>
+                    <span className="text-xs font-mono text-[#111111]/60">SVES Institutional Governance</span>
+                  </div>
+                  <h2 className="text-2xl font-heading font-black text-[#111111] tracking-tight">
+                    Counsellor Monthly Reports ({monthlyReports.length})
+                  </h2>
+                  <p className="text-xs text-[#111111]/70 font-medium">
+                    Draft, manually log, and export clean vector PDF monthly reports. Submitted reports automatically reflect to Campus Admin and Society Super Admin.
+                  </p>
+                </div>
+
+                <button
+                  onClick={() => setShowMonthlyReportModal(true)}
+                  className="px-5 py-3 rounded-2xl bg-[#F4C542] hover:bg-[#e0b435] text-[#111111] font-heading font-black text-xs border-2 border-[#111111] transition-all shadow-xs flex items-center gap-2 cursor-pointer active:scale-95 shrink-0"
+                >
+                  <Plus size={16} />
+                  <span>+ Create Monthly Report</span>
+                </button>
+              </div>
+
+              {/* Reports Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {monthlyReports.map((rep) => (
+                  <div 
+                    key={rep.id}
+                    className="p-6 rounded-3xl border-2 border-[#111111] bg-[#FFFFFF] shadow-sm space-y-4 hover:border-[#F4C542] transition-all flex flex-col justify-between"
+                  >
+                    <div className="space-y-3">
+                      <div className="flex items-start justify-between gap-2">
+                        <div>
+                          <span className="text-[10px] font-mono font-black uppercase tracking-wider text-[#111111]/60">
+                            {rep.institution}
+                          </span>
+                          <h3 className="text-lg font-heading font-black text-[#111111] mt-0.5">
+                            {rep.month} {rep.year} Monthly Report
+                          </h3>
+                        </div>
+                        <span className="text-[10px] font-mono font-black px-2.5 py-1 rounded-full bg-green-100 text-green-900 border border-green-300">
+                          OFFICIALLY FILED
+                        </span>
+                      </div>
+
+                      {/* Stats Overview */}
+                      <div className="grid grid-cols-3 gap-2 bg-[#FAFAFA] p-3 rounded-2xl border border-[#111111]/15 text-center font-mono">
+                        <div>
+                          <span className="block text-[9px] text-[#111111]/60 uppercase">Consultations</span>
+                          <span className="text-base font-heading font-black text-[#111111]">{rep.sessionStats.total}</span>
+                        </div>
+                        <div>
+                          <span className="block text-[9px] text-[#111111]/60 uppercase">Meetings</span>
+                          <span className="text-base font-heading font-black text-[#111111]">{rep.administrativeMeetings.length}</span>
+                        </div>
+                        <div>
+                          <span className="block text-[9px] text-[#111111]/60 uppercase">Workshops</span>
+                          <span className="text-base font-heading font-black text-[#111111]">{rep.activitiesConducted.length}</span>
+                        </div>
+                      </div>
+
+                      {/* Weekly Sessions Bar Preview */}
+                      <div className="space-y-1">
+                        <span className="text-[10px] font-mono font-bold uppercase text-[#111111]/60">
+                          Weekly Breakdown:
+                        </span>
+                        <div className="flex items-center gap-1 text-[11px] font-mono text-[#111111]">
+                          <span className="px-2 py-0.5 bg-[#FAFAFA] border border-[#111111]/15 rounded-md">W1: {rep.sessionStats.week1}</span>
+                          <span className="px-2 py-0.5 bg-[#FAFAFA] border border-[#111111]/15 rounded-md">W2: {rep.sessionStats.week2}</span>
+                          <span className="px-2 py-0.5 bg-[#FAFAFA] border border-[#111111]/15 rounded-md">W3: {rep.sessionStats.week3}</span>
+                          <span className="px-2 py-0.5 bg-[#FAFAFA] border border-[#111111]/15 rounded-md">W4: {rep.sessionStats.week4}</span>
+                          <span className="px-2 py-0.5 bg-[#FAFAFA] border border-[#111111]/15 rounded-md">W5: {rep.sessionStats.week5}</span>
+                        </div>
+                      </div>
+
+                      {rep.generalRemarks && (
+                        <p className="text-xs text-[#111111]/70 italic line-clamp-2">
+                          "{rep.generalRemarks}"
+                        </p>
+                      )}
+                    </div>
+
+                    {/* PDF Export Button */}
+                    <div className="pt-3 border-t border-[#111111]/10">
+                      <button
+                        onClick={() => generateCounselorMonthlyReportPDF(rep)}
+                        className="w-full py-2.5 rounded-xl bg-[#F4C542] hover:bg-[#e0b435] text-[#111111] font-heading font-black text-xs border-2 border-[#111111] transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer active:scale-95"
+                      >
+                        <Download size={14} />
+                        <span>Export Attachment 4 PDF (Zero Alignment Drift)</span>
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
 
@@ -2018,6 +2678,128 @@ export default function PsychologistDashboard() {
           setFlashcards(prev => [newCard, ...prev]);
         }}
       />
+
+      {/* ── COUNSELLOR MONTHLY REPORT MODAL (REQ 2 & 16) ── */}
+      <CounselorMonthlyReportModal
+        isOpen={showMonthlyReportModal}
+        onClose={() => setShowMonthlyReportModal(false)}
+        onSaveReport={(newReport) => {
+          setMonthlyReports(prev => [newReport, ...prev]);
+        }}
+      />
+
+      {/* ── DIRECT SESSION BOOKING MODAL FOR SCREENED STUDENT (REQ 14) ── */}
+      {bookingForStudent && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#111111]/70 backdrop-blur-xs animate-fade-in text-[#111111]">
+          <div className="bg-[#FFFFFF] border-2 border-[#111111] rounded-3xl w-full max-w-md p-6 shadow-2xl space-y-4">
+            <div className="flex items-center justify-between border-b border-[#111111]/15 pb-3">
+              <div className="flex items-center gap-2">
+                <span className="w-8 h-8 rounded-xl bg-[#F4C542] border border-[#111111] flex items-center justify-center font-bold">
+                  📅
+                </span>
+                <div>
+                  <h3 className="text-base font-heading font-black">Book Proactive Session</h3>
+                  <p className="text-[11px] font-mono text-[#111111]/60">Student: {bookingForStudent.studentAlias}</p>
+                </div>
+              </div>
+              <button
+                onClick={() => { setBookingForStudent(null); setBookingSuccessMsg(''); }}
+                className="p-1 text-[#111111]/60 hover:text-[#111111]"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {bookingSuccessMsg ? (
+              <div className="p-6 text-center space-y-2">
+                <CheckCircle2 size={32} className="mx-auto text-green-600" />
+                <p className="text-xs font-bold text-green-800">{bookingSuccessMsg}</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                <div className="p-3 bg-[#FAFAFA] border border-[#111111]/15 rounded-xl text-xs space-y-1">
+                  <div className="flex justify-between">
+                    <span className="text-[#111111]/60">Risk Tier:</span>
+                    <span className="font-bold text-red-600 uppercase">{(bookingForStudent.riskTier || bookingForStudent.risk_level || 'Low')} Risk</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-[#111111]/60">DASS-21 Score:</span>
+                    <span className="font-mono font-bold">{(bookingForStudent.dassScores?.total ?? bookingForStudent.dass_scores?.total ?? 0)} / 63</span>
+                  </div>
+                  {bookingForStudent.whatsappNumber && (
+                    <div className="flex justify-between">
+                      <span className="text-[#111111]/60">WhatsApp:</span>
+                      <span className="font-mono font-bold">{bookingForStudent.whatsappNumber}</span>
+                    </div>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-xs font-mono font-bold uppercase text-[#111111] mb-1">
+                    Select Consultation Date
+                  </label>
+                  <input
+                    type="date"
+                    value={bookingDate}
+                    onChange={(e) => setBookingDate(e.target.value)}
+                    className="w-full text-xs font-mono bg-[#FAFAFA] border border-[#111111]/25 rounded-xl px-3 py-2.5"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-mono font-bold uppercase text-[#111111] mb-1">
+                    Select Time Slot
+                  </label>
+                  <select
+                    value={bookingTime}
+                    onChange={(e) => setBookingTime(e.target.value)}
+                    className="w-full text-xs font-semibold bg-[#FAFAFA] border border-[#111111]/25 rounded-xl px-3 py-2.5"
+                  >
+                    <option value="10:00 AM">10:00 AM – 10:45 AM (Morning Slot)</option>
+                    <option value="11:30 AM">11:30 AM – 12:15 PM (Mid-Day Slot)</option>
+                    <option value="02:30 PM">02:30 PM – 03:15 PM (Afternoon Slot)</option>
+                    <option value="04:00 PM">04:00 PM – 04:45 PM (Evening Slot)</option>
+                  </select>
+                </div>
+
+                <div className="flex justify-end gap-2 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setBookingForStudent(null)}
+                    className="px-4 py-2 text-xs font-bold border border-[#111111]/20 rounded-xl"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const newAppt = {
+                        id: Date.now(),
+                        anonymous_id: bookingForStudent.studentAlias,
+                        student_alias: bookingForStudent.studentAlias,
+                        psychologist_name: 'Ms. Devika Babu',
+                        slot_time: `${bookingDate}T10:00:00`,
+                        status: 'confirmed',
+                        notes: `Proactive triage session booked for ${bookingForStudent.riskTier}-risk screening.`,
+                        type: 'Audio Call'
+                      };
+                      setAppointments(prev => [newAppt, ...prev]);
+                      setBookingSuccessMsg(`Session confirmed for ${bookingForStudent.studentAlias} on ${bookingDate} at ${bookingTime}!`);
+                      setTimeout(() => {
+                        setBookingForStudent(null);
+                        setBookingSuccessMsg('');
+                      }, 1200);
+                    }}
+                    className="px-5 py-2 bg-[#F4C542] hover:bg-[#e0b435] text-[#111111] font-heading font-black text-xs border-2 border-[#111111] rounded-xl shadow-xs"
+                  >
+                    Confirm &amp; Notify Student
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

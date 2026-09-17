@@ -19,6 +19,7 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { apiFetch, getRole, getWsBaseUrl } from '../utils/auth';
+import SessionFeedbackModal from '../components/clinical/SessionFeedbackModal';
 
 interface CallTokenResponse {
   call_token: string;
@@ -31,22 +32,6 @@ interface CallTokenResponse {
   counselor_name: string;
   student_identity: string;
 }
-
-const FEELING_OPTIONS = [
-  'Relieved 😌',
-  'Calmer 🌿',
-  'Truly Heard 👂',
-  'Hopeful ✨',
-  'Need Time ⏳',
-];
-
-const FEEDBACK_TAGS = [
-  'Empathetic & Warm',
-  '100% Safe & Anonymous',
-  'Helpful Coping Tools',
-  'Zero Judgment',
-  'Clear Next Steps',
-];
 
 export default function AnonymousAudioCall() {
   const { appointmentId } = useParams<{ appointmentId: string }>();
@@ -65,14 +50,9 @@ export default function AnonymousAudioCall() {
   const [peerMuted, setPeerMuted] = useState(false);
   const [micAllowed, setMicAllowed] = useState(true);
 
-  // Session Completed / Feedback State
+  // Session Completed / Official Feedback State
   const [sessionCompleted, setSessionCompleted] = useState(false);
-  const [feedbackRating, setFeedbackRating] = useState(5);
-  const [hoverRating, setHoverRating] = useState(0);
-  const [selectedFeeling, setSelectedFeeling] = useState('Relieved 😌');
-  const [selectedTags, setSelectedTags] = useState<string[]>(['100% Safe & Anonymous']);
-  const [feedbackComment, setFeedbackComment] = useState('');
-  const [submittingFeedback, setSubmittingFeedback] = useState(false);
+  const [showFeedbackModal, setShowFeedbackModal] = useState(true);
 
   // WebRTC & WebSocket references
   const wsRef = useRef<WebSocket | null>(null);
@@ -273,6 +253,22 @@ export default function AnonymousAudioCall() {
   const finishSession = () => {
     cleanupCall();
     setSessionCompleted(true);
+    setShowFeedbackModal(true);
+
+    if (!isPsychologist && callData) {
+      try {
+        localStorage.setItem(
+          'mindbridge_pending_feedback_session',
+          JSON.stringify({
+            appointmentId: callData.appointment_id || (appointmentId ? Number(appointmentId) : undefined),
+            facilitator: callData.counselor_name,
+            studentName: callData.student_identity,
+            programName: 'Individual Audio Counselling & Emotional Wellness Session',
+            timestamp: Date.now(),
+          })
+        );
+      } catch {}
+    }
 
     // Auto mark completed if psychologist
     if (isPsychologist && appointmentId) {
@@ -309,33 +305,6 @@ export default function AnonymousAudioCall() {
     }
   };
 
-  const toggleTag = (tag: string) => {
-    setSelectedTags((prev) =>
-      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
-    );
-  };
-
-  const handleSubmitFeedback = async () => {
-    setSubmittingFeedback(true);
-    try {
-      if (appointmentId) {
-        await apiFetch(`/api/appointments/${appointmentId}/feedback`, {
-          method: 'POST',
-          body: JSON.stringify({
-            rating: feedbackRating,
-            tags: `${selectedFeeling}, ${selectedTags.join(', ')}`,
-            comment: feedbackComment.trim() || undefined,
-          }),
-        });
-      }
-    } catch (e) {
-      console.warn('Feedback submit error:', e);
-    } finally {
-      setSubmittingFeedback(false);
-      navigate('/student/appointments');
-    }
-  };
-
   // ── Render Error State ──
   if (error) {
     return (
@@ -348,9 +317,9 @@ export default function AnonymousAudioCall() {
           <p className="text-on-surface-variant text-sm mb-6 leading-relaxed">{error}</p>
           <button
             onClick={() => navigate(-1)}
-            className="w-full py-3 px-4 bg-surface-container-high hover:bg-surface-container border border-border-internal rounded-xl font-semibold text-sm transition-all flex items-center justify-center gap-2"
+            className="btn-primary w-full py-2.5 rounded-xl font-semibold flex items-center justify-center gap-2"
           >
-            <ArrowLeft size={16} /> Return to Appointments
+            <ArrowLeft size={16} /> Return Back
           </button>
         </div>
       </div>
@@ -370,7 +339,7 @@ export default function AnonymousAudioCall() {
 
   const peerDisplayName = isPsychologist ? callData.peer_alias : callData.counselor_name;
 
-  // ── Render Step: Session Completed & Anonymous Feedback Flow ──
+  // ── Render Step: Session Completed & Official Non-Star Feedback Flow ──
   if (sessionCompleted) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-[#0b0c10] via-[#08090d] to-[#040405] text-white flex flex-col items-center justify-center px-4 py-8 relative overflow-y-auto">
@@ -434,123 +403,69 @@ export default function AnonymousAudioCall() {
               </div>
             </div>
           ) : (
-            /* Student Post-Session Feedback View */
-            <div className="space-y-6">
-              <div className="text-center">
-                <div className="w-14 h-14 rounded-2xl bg-primary/15 border border-primary/25 text-primary flex items-center justify-center mx-auto mb-3">
-                  <Sparkles size={28} />
-                </div>
+            /* Student Post-Session Official Feedback Trigger View */
+            <div className="space-y-6 text-center">
+              <div className="w-16 h-16 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 flex items-center justify-center mx-auto">
+                <Check size={32} />
+              </div>
+
+              <div>
                 <h2 className="text-2xl font-bold font-heading text-white">Session Completed 🎉</h2>
-                <p className="text-on-surface-variant text-xs mt-1">
-                  How are you feeling after talking with {callData.counselor_name}?
+                <p className="text-on-surface-variant text-sm mt-1">
+                  Audio counselling with <span className="text-[#F4C542] font-semibold">{callData.counselor_name}</span> has finished.
                 </p>
-                <span className="inline-block mt-2 font-mono text-[11px] text-white/60 bg-white/5 px-2.5 py-0.5 rounded-full">
-                  Duration: {formatTime(callDuration)}
-                </span>
-              </div>
-
-              {/* Feelings Selector */}
-              <div className="space-y-2">
-                <label className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">Current Mood</label>
-                <div className="flex flex-wrap gap-2">
-                  {FEELING_OPTIONS.map((f) => (
-                    <button
-                      key={f}
-                      type="button"
-                      onClick={() => setSelectedFeeling(f)}
-                      className={`text-xs px-3 py-1.5 rounded-xl border transition-all ${
-                        selectedFeeling === f
-                          ? 'bg-primary/25 text-primary border-primary font-bold shadow-md shadow-primary/20'
-                          : 'bg-surface-container-low border-border-internal text-on-surface-variant hover:text-white'
-                      }`}
-                    >
-                      {f}
-                    </button>
-                  ))}
+                <div className="inline-block mt-2 font-mono text-xs text-white/70 bg-white/5 px-3 py-1 rounded-full border border-white/10">
+                  Total Duration: {formatTime(callDuration)}
                 </div>
               </div>
 
-              {/* Star Rating */}
-              <div className="space-y-2">
-                <label className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">Session Rating</label>
-                <div className="flex items-center justify-center gap-2 py-1">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <button
-                      key={star}
-                      type="button"
-                      onMouseEnter={() => setHoverRating(star)}
-                      onMouseLeave={() => setHoverRating(0)}
-                      onClick={() => setFeedbackRating(star)}
-                      className="p-1 transition-transform hover:scale-125 focus:outline-none"
-                    >
-                      <Star
-                        size={28}
-                        className={
-                          (hoverRating || feedbackRating) >= star
-                            ? 'text-amber-400 fill-amber-400'
-                            : 'text-white/20'
-                        }
-                      />
-                    </button>
-                  ))}
+              <div className="p-4 rounded-2xl bg-white/[0.04] border border-white/10 text-left space-y-2">
+                <div className="flex items-center gap-2 text-xs font-bold text-white">
+                  <Sparkles size={14} className="text-[#F4C542]" />
+                  <span>Official Session Feedback</span>
                 </div>
+                <p className="text-xs text-white/70 leading-relaxed">
+                  Your reflections help us maintain compassionate, ethical psychological care across Sri Vishnu campuses.
+                </p>
               </div>
 
-              {/* Anonymous Tags */}
-              <div className="space-y-2">
-                <label className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">Session Highlights (Anonymous)</label>
-                <div className="flex flex-wrap gap-1.5">
-                  {FEEDBACK_TAGS.map((tag) => {
-                    const active = selectedTags.includes(tag);
-                    return (
-                      <button
-                        key={tag}
-                        type="button"
-                        onClick={() => toggleTag(tag)}
-                        className={`text-[11px] px-2.5 py-1 rounded-lg border transition-all ${
-                          active
-                            ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40 font-semibold'
-                            : 'bg-white/5 border-white/10 text-white/60 hover:text-white'
-                        }`}
-                      >
-                        {tag}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Optional Comment */}
-              <div className="space-y-1.5">
-                <label className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">Private Reflection / Feedback (Optional)</label>
-                <textarea
-                  value={feedbackComment}
-                  onChange={(e) => setFeedbackComment(e.target.value)}
-                  placeholder="Share any thoughts... (Counselor only sees: Blue Sparrow)"
-                  rows={2}
-                  className="w-full bg-surface-container-low border border-border-internal rounded-xl p-3 text-xs text-white placeholder-on-surface-variant focus:outline-none focus:border-interactive-primary resize-none"
-                />
-              </div>
-
-              {/* Submit & Skip Actions */}
-              <div className="space-y-2 pt-2">
+              <div className="space-y-2.5 pt-2">
                 <button
-                  onClick={handleSubmitFeedback}
-                  disabled={submittingFeedback}
-                  className="w-full py-3 bg-interactive-primary hover:brightness-110 text-white font-bold rounded-xl text-sm transition-all shadow-lg shadow-interactive-primary/20 disabled:opacity-50"
+                  onClick={() => setShowFeedbackModal(true)}
+                  className="w-full py-3.5 bg-[#F4C542] hover:bg-[#e0b435] text-[#111111] font-black rounded-xl text-sm border-2 border-[#111111] transition-all shadow-lg shadow-[#F4C542]/20 flex items-center justify-center gap-2 cursor-pointer active:scale-95"
                 >
-                  {submittingFeedback ? 'Submitting...' : 'Submit Anonymous Feedback & Finish'}
+                  <span>Open Session Feedback Form →</span>
                 </button>
+
                 <button
                   onClick={() => navigate('/student/appointments')}
-                  className="w-full py-2.5 text-xs text-on-surface-variant hover:text-white transition-colors text-center"
+                  className="w-full py-2.5 text-xs text-white/60 hover:text-white transition-colors text-center cursor-pointer"
                 >
-                  Skip & Return to Appointments
+                  Return to Appointments
                 </button>
               </div>
             </div>
           )}
         </div>
+
+        {/* ── Official Vishnu Wellness Centre Session Feedback Modal ── */}
+        {!isPsychologist && (
+          <SessionFeedbackModal
+            isOpen={showFeedbackModal}
+            onClose={() => {
+              setShowFeedbackModal(false);
+              navigate('/student/appointments');
+            }}
+            appointmentId={callData.appointment_id || (appointmentId ? Number(appointmentId) : undefined)}
+            defaultFacilitator={callData.counselor_name || 'Ms. Devika Babu'}
+            defaultName={callData.student_identity}
+            defaultProgram="Individual Audio Counselling & Emotional Wellness Session"
+            onSubmitSuccess={() => {
+              setShowFeedbackModal(false);
+              navigate('/student/appointments?feedbackSuccess=true');
+            }}
+          />
+        )}
       </div>
     );
   }

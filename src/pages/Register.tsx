@@ -63,6 +63,9 @@ export default function Register() {
 
     try {
       let data: any = {};
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 3000); // 3s maximum wait
+
       try {
         const res = await fetch(`${API_URL}/api/auth/register`, {
           method: 'POST',
@@ -79,7 +82,9 @@ export default function Register() {
             section,
             gender
           }),
+          signal: controller.signal,
         });
+        clearTimeout(timeoutId);
 
         if (res.ok) {
           data = await res.json().catch(() => ({}));
@@ -87,7 +92,8 @@ export default function Register() {
           console.warn('Backend register status non-200, generating local verified profile.');
         }
       } catch (backendErr) {
-        console.warn('Backend connection offline, proceeding with verified local credentials:', backendErr);
+        clearTimeout(timeoutId);
+        console.warn('Backend connection offline or warming up, proceeding with verified local credentials:', backendErr);
       }
 
       // Consolidate full student profile
@@ -126,25 +132,31 @@ export default function Register() {
         primary_color: '#F4C542',
       }, email.trim().toLowerCase());
       
-      // Request Push Notification Permission
-      try {
-        const { requestFirebaseNotificationPermission } = await import('../utils/firebase');
-        const token = await requestFirebaseNotificationPermission();
-        if (token && data.access_token) {
-          await fetch(`${API_URL}/api/auth/fcm-token`, {
-            method: 'POST',
-            headers: { 
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${data.access_token}`
-            },
-            body: JSON.stringify({ token }),
-          }).catch(() => {});
-        }
-      } catch (fcmErr) {
-        console.warn("FCM setup ignored:", fcmErr);
-      }
-
+      // Instantly reveal alias to user without delay
       setStep('reveal');
+
+      // Request Push Notification Permission asynchronously in background (detached from UI)
+      setTimeout(async () => {
+        try {
+          const { requestFirebaseNotificationPermission } = await import('../utils/firebase');
+          const token = await requestFirebaseNotificationPermission();
+          if (token && (data.access_token || studentProfile)) {
+            const fcmController = new AbortController();
+            setTimeout(() => fcmController.abort(), 3000);
+            await fetch(`${API_URL}/api/auth/fcm-token`, {
+              method: 'POST',
+              headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${data.access_token || 'local-token'}`
+              },
+              body: JSON.stringify({ token }),
+              signal: fcmController.signal,
+            }).catch(() => {});
+          }
+        } catch (fcmErr) {
+          console.warn("FCM background setup ignored:", fcmErr);
+        }
+      }, 50);
     } catch (err: any) {
       setError(err.message || 'An unexpected error occurred during institutional registration.');
     } finally {

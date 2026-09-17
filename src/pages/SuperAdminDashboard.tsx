@@ -72,14 +72,133 @@ export default function SuperAdminDashboard() {
       const stored = localStorage.getItem('mindbridge_consolidated_monthly_reports');
       if (stored) return JSON.parse(stored);
     } catch {}
-    return [];
+    return [
+      {
+        id: 'cons-aug-2026',
+        reportTitle: 'SHRI VISHNU EDUCATIONAL SOCIETY — CONSOLIDATED MONTHLY REPORT – AUGUST 2026',
+        month: 'August',
+        year: 2026,
+        compiledBy: 'Vishnu Wellness Centre Administration',
+        approvedBy: 'Sri Vishnu Educational Society Central Governance',
+        submittedAt: '2026-08-31T18:00:00.000Z',
+        executiveSummary: {
+          totalSocietyStudents: 14200,
+          totalSessionsAcrossCampuses: 195,
+          avgSatisfactionIndex: '96.2%',
+          sosCrisisHandled: 4,
+          workshopsConducted: 7
+        },
+        institutionBreakdown: [
+          { institution: 'VIT', code: 'VIT', counselorName: 'Ram Prudhvi Teja', activeStudents: 4200, individualSessions: 31, groupSessions: 2, totalSessions: 33, highRiskCount: 1 },
+          { institution: 'SVECW + VIT', code: 'SVECW', counselorName: 'Sahithi Challa', activeStudents: 3950, individualSessions: 32, groupSessions: 2, totalSessions: 34, highRiskCount: 1 },
+          { institution: 'VDC', code: 'VDC', counselorName: 'Angel', activeStudents: 1150, individualSessions: 29, groupSessions: 1, totalSessions: 30, highRiskCount: 0 },
+          { institution: 'SVCP', code: 'SVCP', counselorName: 'Akshitha Selvaraj', activeStudents: 900, individualSessions: 27, groupSessions: 1, totalSessions: 28, highRiskCount: 0 },
+          { institution: 'SBSP', code: 'SBSP', counselorName: 'Bantu Anumitha', activeStudents: 1400, individualSessions: 28, groupSessions: 1, totalSessions: 29, highRiskCount: 0 },
+          { institution: "Vishnu Women's University", code: 'VWU', counselorName: 'Wellness Counsellor', activeStudents: 1800, individualSessions: 46, groupSessions: 1, totalSessions: 47, highRiskCount: 2 },
+          { institution: 'B.V. Raju College', code: 'BVRC', counselorName: 'G. Navya Sri', activeStudents: 1600, individualSessions: 2, groupSessions: 4, totalSessions: 6, highRiskCount: 0 },
+        ]
+      }
+    ];
   });
   const [counselorReports, setCounselorReports] = useState<CounselorMonthlyReportData[]>(() => {
     try {
       const stored = localStorage.getItem('mindbridge_counselor_monthly_reports');
       if (stored) return JSON.parse(stored);
     } catch {}
-    return [];
+    return [
+      {
+        id: 'rep-ram-aug-2026',
+        counselorName: 'Ram Prudhvi Teja',
+        counselorEmail: 'prudhvi.v@vishnu.edu.in',
+        department: 'Vishnu Wellness Centre',
+        institution: 'Vishnu Institute of Technology (VIT), Bhimavaram',
+        month: 'August',
+        year: 2026,
+        submittedAt: '2026-08-31T17:00:00.000Z',
+        administrativeMeetings: [
+          {
+            meetingName: 'VEDIC Meeting',
+            purposeOutcome: 'Attended the VEDIC Meeting on 24th August 2026 and discussed the activities and programmes conducted by the Vishnu Wellness Centre during July, along with updates and follow-up on ongoing wellness initiatives.',
+            text: 'Attended the VEDIC Meeting on 24th August 2026 and discussed the activities and programmes conducted by the Vishnu Wellness Centre during July, along with updates and follow-up on ongoing wellness initiatives.'
+          },
+          {
+            meetingName: 'Wellness Counsellors Team Meeting',
+            purposeOutcome: 'Conducted a team meeting with the Wellness Counsellors to review ongoing activities and discuss upcoming events for the current and following months.',
+            text: 'Conducted a team meeting with the Wellness Counsellors to review ongoing activities and discuss upcoming events for the current and following months. The discussions included updates on previously planned initiatives, event planning and preparation, timelines, resource requirements, and coordination among team members. Duties and responsibilities were delegated for the month to ensure smooth execution of programmes, with follow-up on progress and necessary preparations for upcoming activities.'
+          },
+          {
+            meetingName: 'VWU & VIT Induction Programme',
+            purposeOutcome: 'Attended the Induction Programme for VWU & VIT on 23rd August 2026 as part of the institutional orientation and engagement activities.',
+            text: 'Attended the Induction Programme for VWU & VIT on 23rd August 2026 as part of the institutional orientation and engagement activities.'
+          },
+          {
+            meetingName: 'Learning & Development (L&D) Programme',
+            purposeOutcome: 'Attended the Learning & Development (L&D) Programme conducted by Ms. Akshitha on 28th and 29th August 2026.',
+            text: 'Attended the Learning & Development (L&D) Programme conducted by Ms. Akshitha on 28th and 29th August 2026.'
+          },
+          {
+            meetingName: 'VWC Social Media Platform Launch',
+            purposeOutcome: 'Created the Vishnu Wellness Centre Social Media Account to establish an online platform for sharing mental health awareness content, wellness initiatives, programmes, and student-support resources.',
+            text: 'Created the Vishnu Wellness Centre Social Media Account to establish an online platform for sharing mental health awareness content, wellness initiatives, programmes, and student-support resources.'
+          },
+          {
+            meetingName: 'Flyers and Banners Preparation',
+            purposeOutcome: 'Designed and prepared flyers and banners for upcoming wellness events in accordance with the Vishnu Wellness Calendar to support programme communication and campus-wide awareness.',
+            text: 'Designed and prepared flyers and banners for upcoming wellness events in accordance with the Vishnu Wellness Calendar to support programme communication and campus-wide awareness.'
+          }
+        ],
+        activitiesConducted: [
+          {
+            activityName: 'Orientation Programme for First-Year Students',
+            targetAudience: '1st Year B.Tech Students (VIT & VWU)',
+            participantsCount: 350,
+            keyTakeaway: 'Conducted an Orientation Programme for first-year students, introducing students to the importance of mental health and the psychological and wellness support services available through the Vishnu Wellness Centre.',
+            text: 'Conducted an Orientation Programme for first-year students, introducing students to the importance of mental health and the psychological and wellness support services available through the Vishnu Wellness Centre.'
+          },
+          {
+            activityName: 'MINDTAP – Radio Vishnu Programme',
+            targetAudience: 'Campus Community',
+            participantsCount: 500,
+            keyTakeaway: 'Recorded 5 episodes of the MINDTAP – Radio Vishnu programme, continuing the initiative of providing psychological awareness and wellness-oriented content to the campus community through radio.',
+            text: 'Recorded 5 episodes of the MINDTAP – Radio Vishnu programme, continuing the initiative of providing psychological awareness and wellness-oriented content to the campus community through radio.'
+          },
+          {
+            activityName: 'Gatekeeper Training (NIMHANS e-Learning)',
+            targetAudience: 'Wellness Counsellors & Key Faculty',
+            participantsCount: 20,
+            keyTakeaway: 'Successfully completed the Gatekeeper Training through the NIMHANS e-Learning Programme, strengthening knowledge and preparedness for identifying individuals experiencing psychological distress and facilitating appropriate support and referral.',
+            text: 'Successfully completed the Gatekeeper Training through the NIMHANS e-Learning Programme, strengthening knowledge and preparedness for identifying individuals experiencing psychological distress and facilitating appropriate support and referral.'
+          }
+        ],
+        sessionStats: {
+          week1: '8 + 3 day leave',
+          week2: 10,
+          week3: 7,
+          week4: 5,
+          week5: 1,
+          total: 31,
+          week1Label: '01-08-2026 to 08-08-2026 (1st Week)',
+          week2Label: '10-08-2026 to 15-08-2026 (2nd Week)',
+          week3Label: '17-08-2026 to 22-08-2026 (3rd Week)',
+          week4Label: '24-08-2026 to 29-08-2026 (4th Week)',
+          week5Label: '31-08-2026 (5th Week)',
+          academicStress: 12,
+          emotionalAnxiety: 10,
+          familyInterpersonal: 5,
+          careerGuidance: 3,
+          generalWellbeing: 1,
+          crisisSos: 0,
+          genderBreakdown: { male: 14, female: 17, other: 0 }
+        },
+        upcomingGoals: [
+          'Continue regular individual and group counselling sessions for students.',
+          'Plan and conduct a Suicide Prevention Programme to promote awareness, help-seeking behaviour, early identification, and appropriate support.',
+          'Conduct the COPE Programme on Open Mic to encourage student expression, participation, and open conversations around mental health and well-being.',
+          'Conduct a Psychology Club/HOPE Club group session on “Understanding Human Behaviour from a Layman’s Perspective”, helping students understand basic psychological concepts and everyday human behaviour in an accessible manner.'
+        ],
+        generalRemarks: 'All activities for August 2026 completed in accordance with the Vishnu Wellness Calendar.'
+      }
+    ];
   });
   const [searchTerm, setSearchTerm] = useState('');
   

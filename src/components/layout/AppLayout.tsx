@@ -1,11 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
   Shield, Home, Sparkles, Brain, Wind, Activity, Edit3, 
   Calendar, Users, Moon, AlertTriangle, Settings, LogOut, 
-  Menu, X, Bell, UserCheck, PieChart, FileText, ChevronRight
+  Menu, X, Bell, UserCheck, PieChart, FileText, ChevronRight, Clock
 } from 'lucide-react';
-import { getAuth, clearAuth, getAlias, getUserName, getRole, getHomeRoute, type UserRole } from '../../utils/auth';
+import { 
+  getAuth, clearAuth, getAlias, getUserName, getRole, getHomeRoute, 
+  type UserRole, loginAsPsychologistDemo, loginAsAdminDemo, loginAsStudentDemo 
+} from '../../utils/auth';
+import { screenTimeTracker, type ScreenTimeState } from '../../utils/screenTimeTracker';
 
 interface NavItem {
   path: string;
@@ -39,6 +43,8 @@ const STUDENT_NAV: NavItem[] = [
 
 const PSYCHOLOGIST_NAV: NavItem[] = [
   { path: '/psychologist/dashboard', icon: 'dashboard', label: 'Triage & Risk Radar', badge: 'LIVE' },
+  { path: '/psychologist/campus-feed', icon: 'dynamic_feed', label: 'Campus Feed', badge: 'POST' },
+  { path: '/psychologist/events', icon: 'event', label: 'Campus Wellness Events', badge: 'VWC' },
   { path: '/psychologist/patients', icon: 'groups', label: 'Patient Roster' },
   { path: '/psychologist/soap-notes', icon: 'clinical_notes', label: 'SOAP Clinical Notes' },
   { path: '/psychologist/calendar', icon: 'calendar_month', label: 'Session Schedule' },
@@ -69,24 +75,89 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const auth = getAuth();
-  const role: UserRole = getRole() || 'student';
+  const [auth, setLocalAuth] = useState(() => getAuth());
+
+  useEffect(() => {
+    setLocalAuth(getAuth());
+  }, [location.pathname]);
+
+  const isPsychRoute = location.pathname.startsWith('/psychologist');
+  const isAdminRoute = location.pathname.startsWith('/admin');
+  const isSuperAdminRoute = location.pathname.startsWith('/superadmin') || location.pathname.startsWith('/super-admin');
+
+  // Derive effective role from current route path
+  const effectiveRole: UserRole = isSuperAdminRoute
+    ? 'super_admin'
+    : isPsychRoute
+    ? 'psychologist'
+    : isAdminRoute
+    ? 'admin'
+    : (auth?.role || 'student');
 
   let navItems: NavItem[] = STUDENT_NAV;
-  if (role === 'super_admin' || location.pathname.startsWith('/superadmin')) {
+  if (effectiveRole === 'super_admin') {
     navItems = SUPERADMIN_NAV;
-  } else if (role === 'psychologist' || location.pathname.startsWith('/psychologist')) {
+  } else if (effectiveRole === 'psychologist') {
     navItems = PSYCHOLOGIST_NAV;
-  } else if (role === 'admin' || location.pathname.startsWith('/admin')) {
+  } else if (effectiveRole === 'admin') {
     navItems = ADMIN_NAV;
   }
+
+  // Auto-sync authenticated session if user visits a staff portal with mismatched session
+  useEffect(() => {
+    let cancelled = false;
+    async function alignSession() {
+      if (isPsychRoute && auth?.role !== 'psychologist') {
+        const synced = await loginAsPsychologistDemo();
+        if (!cancelled) setLocalAuth(synced);
+      } else if (isAdminRoute && auth?.role !== 'admin' && auth?.role !== 'super_admin') {
+        const synced = await loginAsAdminDemo();
+        if (!cancelled) setLocalAuth(synced);
+      }
+    }
+    alignSession();
+    return () => { cancelled = true; };
+  }, [isPsychRoute, isAdminRoute, auth?.role]);
 
   const handleLogout = () => {
     clearAuth();
     navigate('/login');
   };
 
-  const displayName = auth?.role === 'student' ? getAlias() : getUserName();
+  let displayName = 'User';
+  let roleLabel = 'Student Account';
+
+  if (effectiveRole === 'psychologist') {
+    displayName = (auth?.role === 'psychologist' && auth?.name) ? auth.name : 'Dr. Ram Prudhvi Teja';
+    roleLabel = 'Counsellor Account';
+  } else if (effectiveRole === 'admin') {
+    displayName = (auth?.role === 'admin' && auth?.name) ? auth.name : 'SVES Administrator';
+    roleLabel = 'Admin Account';
+  } else if (effectiveRole === 'super_admin') {
+    displayName = (auth?.role === 'super_admin' && auth?.name) ? auth.name : 'Society Super Admin';
+    roleLabel = 'Super Admin';
+  } else {
+    displayName = auth?.role === 'student' ? (auth?.anonymous_alias || getAlias()) : (auth?.name || 'StarlightSeeker');
+    roleLabel = 'Student Account';
+  }
+
+  const [screenState, setScreenState] = useState<ScreenTimeState | null>(null);
+  const [dismissedBreakBanner, setDismissedBreakBanner] = useState(false);
+
+  useEffect(() => {
+    if (effectiveRole === 'student') {
+      const unsub = screenTimeTracker.subscribe((state) => {
+        setScreenState(state);
+      });
+      const unsubModal = screenTimeTracker.onAlertModal(() => {
+        setDismissedBreakBanner(false);
+      });
+      return () => {
+        unsub();
+        unsubModal();
+      };
+    }
+  }, [effectiveRole]);
 
   return (
     <div className="min-h-screen bg-[#FFFFFF] flex text-[#111111] overflow-x-hidden selection:bg-[#F4C542] selection:text-[#111111]">
@@ -100,7 +171,11 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
           <div className="relative w-80 max-w-[85vw] h-full bg-[#FFFFFF] border-r-2 border-[#111111] flex flex-col shadow-2xl z-10 animate-slide-right">
             {/* Drawer Header */}
             <div className="h-20 flex items-center justify-between px-6 border-b border-[#111111]/10 shrink-0">
-              <div className="flex items-center gap-3">
+              <Link 
+                to={getHomeRoute(effectiveRole)} 
+                onClick={() => setMobileMenuOpen(false)} 
+                className="flex items-center gap-3 cursor-pointer"
+              >
                 <img 
                   src="/logo.png" 
                   alt="Vishnu Wellness Centre" 
@@ -110,7 +185,7 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
                   <span className="font-heading font-black text-base text-[#111111] tracking-tight leading-tight block">MindBridge</span>
                   <span className="block text-[10px] uppercase font-mono tracking-wider text-[#111111]/60 font-semibold">SVES Wellness</span>
                 </div>
-              </div>
+              </Link>
               <button 
                 onClick={() => setMobileMenuOpen(false)} 
                 className="text-[#111111]/70 hover:text-[#111111] p-1.5 rounded-xl hover:bg-[#111111]/5 transition-colors cursor-pointer"
@@ -129,7 +204,7 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
                 <div className="font-heading font-black text-sm text-[#111111] truncate">{displayName}</div>
                 <div className="flex items-center gap-1.5 mt-0.5">
                   <span className="w-2 h-2 rounded-full bg-[#F4C542] border border-[#111111]"></span>
-                  <span className="text-[11px] font-mono capitalize text-[#111111]/60 font-bold">{role} Account</span>
+                  <span className="text-[11px] font-mono capitalize text-[#111111]/60 font-bold">{roleLabel}</span>
                 </div>
               </div>
             </div>
@@ -196,7 +271,7 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
         {/* Sidebar Brand Header */}
         <div className="h-20 flex items-center justify-between px-5 border-b border-[#111111]/10">
           {!isCollapsed ? (
-            <Link to={getHomeRoute(role)} className="flex items-center gap-3 group overflow-hidden">
+            <Link to={getHomeRoute(effectiveRole)} className="flex items-center gap-3 group overflow-hidden">
               <img 
                 src="/logo.png" 
                 alt="Vishnu Wellness Centre" 
@@ -208,13 +283,17 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
               </div>
             </Link>
           ) : (
-            <div className="w-10 h-10 mx-auto flex items-center justify-center">
+            <Link 
+              to={getHomeRoute(effectiveRole)} 
+              title="MindBridge Home"
+              className="w-10 h-10 mx-auto flex items-center justify-center hover:scale-105 transition-transform"
+            >
               <img 
                 src="/logo.png" 
                 alt="Vishnu Wellness Centre" 
                 className="w-10 h-10 rounded-full object-cover border border-[#111111]/15 bg-[#FFFFFF]" 
               />
-            </div>
+            </Link>
           )}
           <button 
             onClick={() => setIsCollapsed(!isCollapsed)} 
@@ -237,7 +316,7 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
               <div className="font-heading font-black text-sm text-[#111111] truncate">{displayName}</div>
               <div className="flex items-center gap-1.5 mt-0.5">
                 <span className="w-2 h-2 rounded-full bg-[#F4C542] border border-[#111111]"></span>
-                <span className="text-[11px] font-mono capitalize text-[#111111]/60 font-semibold">{role} Account</span>
+                <span className="text-[11px] font-mono capitalize text-[#111111]/60 font-semibold">{roleLabel}</span>
               </div>
             </div>
           </div>
@@ -311,7 +390,7 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
               >
                 <Menu size={20} />
               </button>
-              <Link to={getHomeRoute(role)} className="flex items-center gap-2 min-w-0">
+              <Link to={getHomeRoute(effectiveRole)} className="flex items-center gap-2 min-w-0">
                 <img src="/logo.png" alt="Vishnu Wellness Centre" className="w-7 h-7 rounded-full object-cover shrink-0 border border-[#111111]/20" />
                 <span className="font-heading font-black text-sm text-[#111111] truncate">MindBridge</span>
               </Link>
@@ -323,7 +402,32 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
           </div>
 
           <div className="flex items-center gap-2.5 sm:gap-3 shrink-0">
-            {role === 'student' && (
+            {effectiveRole === 'student' && screenState && (
+              <Link
+                to="/student/digital-detox"
+                className={`hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border-2 text-xs font-black transition-all shadow-2xs active:scale-95 cursor-pointer ${
+                  screenState.hasExceededLimit
+                    ? 'bg-rose-50 border-rose-500 text-rose-700 animate-pulse'
+                    : 'bg-[#FAFAFA] border-[#111111]/20 text-[#111111] hover:bg-[#F4C542]/20'
+                }`}
+                title="Active Screen Time Tracker & Limit Status"
+              >
+                <Clock size={13} className={screenState.hasExceededLimit ? 'text-rose-600' : 'text-[#111111]'} />
+                <span className="font-mono">
+                  {Math.floor(screenState.activeSeconds / 3600) > 0 ? `${Math.floor(screenState.activeSeconds / 3600)}h ` : ''}
+                  {Math.floor((screenState.activeSeconds % 3600) / 60)}m
+                </span>
+                {screenState.hasExceededLimit ? (
+                  <span className="text-[10px] font-black bg-rose-600 text-white px-1.5 py-0.5 rounded-full">
+                    Exceeded
+                  </span>
+                ) : (
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse" />
+                )}
+              </Link>
+            )}
+
+            {effectiveRole === 'student' && (
               <Link
                 to="/student/emergency"
                 className="flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-xl bg-[#F4C542] hover:bg-[#e0b435] text-[#111111] text-xs font-black tracking-wide border-2 border-[#111111] shadow-xs transition-all shrink-0 active:scale-95"
@@ -347,7 +451,7 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
             </div>
 
             <Link
-              to={role === 'student' ? '/student/notifications' : '#'}
+              to={effectiveRole === 'student' ? '/student/notifications' : '#'}
               className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#FAFAFA] hover:bg-[#111111]/5 flex items-center justify-center text-[#111111] transition-colors relative border border-[#111111]/15 shrink-0"
               title="Notifications"
             >
@@ -356,7 +460,7 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
             </Link>
 
             <Link
-              to={role === 'psychologist' ? '/psychologist/profile' : role === 'admin' ? '/admin/settings' : '/student/profile'}
+              to={effectiveRole === 'psychologist' ? '/psychologist/profile' : effectiveRole === 'admin' ? '/admin/settings' : '/student/profile'}
               className="shrink-0 group"
               title={`Logged in as ${displayName}`}
             >
@@ -414,24 +518,94 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
                 <span className="text-[10px] font-mono text-[#111111]/50 group-hover:text-pink-600 font-normal">@vishnu_wellness_centre</span>
               </a>
 
-              <Link 
-                to="/student/events"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#FFFFFF] hover:bg-[#F4C542]/20 border border-[#111111]/20 text-xs font-bold text-[#111111] transition-all shadow-2xs"
-              >
-                <Calendar size={13} />
-                <span>VWC Events</span>
-              </Link>
-
-              <Link
-                to="/student/emergency"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#FFFFFF] hover:bg-rose-50 border border-[#111111]/20 text-xs font-bold text-rose-600 transition-all shadow-2xs"
-              >
-                <AlertTriangle size={13} />
-                <span>Crisis Helpline</span>
-              </Link>
+              {(effectiveRole === 'admin' || effectiveRole === 'super_admin') ? (
+                <>
+                  <Link 
+                    to="/admin/settings"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#FFFFFF] hover:bg-[#F4C542]/20 border border-[#111111]/20 text-xs font-bold text-[#111111] transition-all shadow-2xs"
+                  >
+                    <Shield size={13} />
+                    <span>Platform Security</span>
+                  </Link>
+                  <Link 
+                    to="/admin/reports"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#FFFFFF] hover:bg-[#F4C542]/20 border border-[#111111]/20 text-xs font-bold text-[#111111] transition-all shadow-2xs"
+                  >
+                    <FileText size={13} />
+                    <span>Reports</span>
+                  </Link>
+                </>
+              ) : effectiveRole === 'psychologist' ? (
+                <>
+                  <Link 
+                    to="/psychologist/dashboard"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#FFFFFF] hover:bg-[#F4C542]/20 border border-[#111111]/20 text-xs font-bold text-[#111111] transition-all shadow-2xs"
+                  >
+                    <Activity size={13} />
+                    <span>Triage Radar</span>
+                  </Link>
+                  <Link
+                    to="/student/emergency"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#FFFFFF] hover:bg-rose-50 border border-[#111111]/20 text-xs font-bold text-rose-600 transition-all shadow-2xs"
+                  >
+                    <AlertTriangle size={13} />
+                    <span>Crisis Helpline</span>
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link 
+                    to="/student/events"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#FFFFFF] hover:bg-[#F4C542]/20 border border-[#111111]/20 text-xs font-bold text-[#111111] transition-all shadow-2xs"
+                  >
+                    <Calendar size={13} />
+                    <span>VWC Events</span>
+                  </Link>
+                  <Link
+                    to="/student/emergency"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#FFFFFF] hover:bg-rose-50 border border-[#111111]/20 text-xs font-bold text-rose-600 transition-all shadow-2xs"
+                  >
+                    <AlertTriangle size={13} />
+                    <span>Crisis Helpline</span>
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </footer>
+
+        {/* ── Floating Screen Time Break Reminder (Sender: 9100972237) ── */}
+        {effectiveRole === 'student' && screenState?.hasExceededLimit && !dismissedBreakBanner && location.pathname !== '/student/digital-detox' && (
+          <div className="fixed bottom-20 right-4 z-40 max-w-xs sm:max-w-sm p-4 rounded-2xl bg-[#FFFFFF] border-2 border-rose-500 shadow-xl flex items-start gap-3 animate-fade-in">
+            <div className="w-8 h-8 rounded-xl bg-rose-500 text-white flex items-center justify-center shrink-0 mt-0.5">
+              <Moon size={16} />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center justify-between">
+                <h4 className="text-xs font-black text-rose-950">Daily Screen Limit Reached</h4>
+                <button
+                  onClick={() => setDismissedBreakBanner(true)}
+                  className="text-xs text-rose-800 hover:text-rose-950 font-bold p-0.5 cursor-pointer ml-2"
+                  title="Dismiss notification"
+                >
+                  ✕
+                </button>
+              </div>
+              <p className="text-[11px] text-rose-800 mt-0.5 leading-snug">
+                Take a gentle 5–10 min rest. WhatsApp reminder prepared from 9100972237.
+              </p>
+              <div className="flex items-center gap-2 mt-2">
+                <Link
+                  to="/student/digital-detox"
+                  className="inline-flex items-center gap-1 text-[11px] font-black text-[#111111] bg-[#F4C542] px-2.5 py-1 rounded-xl border border-[#111111] shadow-2xs hover:bg-[#e0b435]"
+                >
+                  <span>Open Digital Detox</span>
+                  <ChevronRight size={12} />
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
       </main>
     </div>
   );

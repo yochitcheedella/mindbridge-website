@@ -14,13 +14,13 @@ const MONTH_NAMES = [
 ];
 
 const DEFAULT_INSTITUTIONS: InstitutionStat[] = [
-  { institution: 'Vishnu Institute of Technology (VIT)', code: 'VIT', activeStudents: 4250, individualSessions: 52, groupSessions: 4, totalSessions: 56, highRiskCount: 3 },
-  { institution: 'Shri Vishnu Engineering College for Women (SVECW)', code: 'SVECW', activeStudents: 3900, individualSessions: 48, groupSessions: 6, totalSessions: 54, highRiskCount: 2 },
-  { institution: 'Vishnu Dental College (VDC)', code: 'VDC', activeStudents: 1100, individualSessions: 22, groupSessions: 2, totalSessions: 24, highRiskCount: 1 },
-  { institution: 'Shri Vishnu College of Pharmacy (SVCP)', code: 'SVCP', activeStudents: 850, individualSessions: 18, groupSessions: 2, totalSessions: 20, highRiskCount: 1 },
-  { institution: 'Smt. B. Seetha Polytechnic College (SBSP)', code: 'SBSP', activeStudents: 1400, individualSessions: 16, groupSessions: 1, totalSessions: 17, highRiskCount: 0 },
-  { institution: 'B V Raju Degree and PG College (BVRC)', code: 'BVRC', activeStudents: 1650, individualSessions: 19, groupSessions: 2, totalSessions: 21, highRiskCount: 1 },
-  { institution: 'Shri Vishnu School (SVS)', code: 'SVS', activeStudents: 600, individualSessions: 3, groupSessions: 0, totalSessions: 3, highRiskCount: 0 },
+  { institution: 'VIT', code: 'VIT', counselorName: 'Ram Prudhvi Teja', activeStudents: 4250, individualSessions: 31, groupSessions: 0, totalSessions: 31, highRiskCount: 1 },
+  { institution: 'SVECW + VIT', code: 'SVECW', counselorName: 'Sahithi Challa', activeStudents: 3900, individualSessions: 32, groupSessions: 0, totalSessions: 32, highRiskCount: 1 },
+  { institution: 'VDC', code: 'VDC', counselorName: 'Angel', activeStudents: 1100, individualSessions: 29, groupSessions: 0, totalSessions: 29, highRiskCount: 1 },
+  { institution: 'SVCP', code: 'SVCP', counselorName: 'Akshitha Selvaraj', activeStudents: 850, individualSessions: 27, groupSessions: 0, totalSessions: 27, highRiskCount: 1 },
+  { institution: 'SBSP', code: 'SBSP', counselorName: 'Bantu Anumitha', activeStudents: 1400, individualSessions: 28, groupSessions: 0, totalSessions: 28, highRiskCount: 0 },
+  { institution: "Vishnu Women's University", code: 'VWU', counselorName: 'Wellness Counsellor', activeStudents: 1650, individualSessions: 46, groupSessions: 0, totalSessions: 46, highRiskCount: 2 },
+  { institution: 'B.V. Raju College', code: 'BVRC', counselorName: 'G. Navya Sri', activeStudents: 950, individualSessions: 2, groupSessions: 0, totalSessions: 2, highRiskCount: 0 },
 ];
 
 export default function ConsolidatedReportModal({

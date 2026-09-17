@@ -12,9 +12,9 @@ import { OFFICIAL_COUNSELORS, VISHNU_WELLNESS_CENTRE, type CounselorData } from 
 import DailyFlashcardsModal from '../components/flashcards/DailyFlashcardsModal';
 import CounselorFlashcard from '../components/flashcards/CounselorFlashcard';
 import StudentScreeningModal, { type ScreeningSubmission } from '../components/clinical/StudentScreeningModal';
-import SessionFeedbackModal from '../components/clinical/SessionFeedbackModal';
 import ShareWorkModal from '../components/clinical/ShareWorkModal';
 import { isTodayFlashcardsCompleted } from '../data/defaultFlashcards';
+import { screenTimeTracker, type ScreenTimeState } from '../utils/screenTimeTracker';
 
 const MOOD_CONFIG = [
   { score: 5, icon: 'sentiment_very_satisfied', label: 'Thriving' },
@@ -34,7 +34,6 @@ export default function StudentDashboard() {
   const [showFlashcardsModal, setShowFlashcardsModal] = useState(false);
   const [flashcardsDoneToday, setFlashcardsDoneToday] = useState(() => isTodayFlashcardsCompleted());
   const [showScreeningModal, setShowScreeningModal] = useState(false);
-  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const [showShareWorkModal, setShowShareWorkModal] = useState(false);
   const [latestScreening, setLatestScreening] = useState<ScreeningSubmission | null>(() => {
     try {
@@ -56,7 +55,16 @@ export default function StudentDashboard() {
   const [upcomingAppt, setUpcomingAppt] = useState<any | null>(null);
   const [counselors, setCounselors] = useState<CounselorData[]>(OFFICIAL_COUNSELORS);
   const [activeModalCounselor, setActiveModalCounselor] = useState<CounselorData | null>(null);
+  const [toastMessage, setToastMessage] = useState('');
+  const [screenState, setScreenState] = useState<ScreenTimeState>(() => screenTimeTracker.getState());
   const alias = getAlias();
+
+  useEffect(() => {
+    const unsub = screenTimeTracker.subscribe((state) => {
+      setScreenState(state);
+    });
+    return () => unsub();
+  }, []);
 
   useEffect(() => {
     if (isLoggedIn()) {
@@ -169,6 +177,14 @@ export default function StudentDashboard() {
 
   return (
     <div className="space-y-6 sm:space-y-8 animate-fade-in max-w-7xl mx-auto pb-20 text-[#111111]">
+      {/* ── Toast Alert ── */}
+      {toastMessage && (
+        <div className="fixed top-20 right-6 z-50 p-4 rounded-2xl bg-[#F4C542] border-2 border-[#111111] shadow-xl text-[#111111] font-black text-xs sm:text-sm flex items-center gap-3 animate-slide-up">
+          <Sparkles size={18} />
+          <span>{toastMessage}</span>
+        </div>
+      )}
+
       {/* ── Top Welcome Canopy ── */}
       <div className="rounded-3xl bg-[#FFFFFF] border-2 border-[#111111] p-6 sm:p-8 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="space-y-2">
@@ -316,11 +332,11 @@ export default function StudentDashboard() {
         </div>
       </div>
 
-      {/* ── QUICK ACTION DOCK: RAPPORT SHARING (REQ 6) & SESSION FEEDBACK (REQ 11, 12) ── */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {/* ── QUICK ACTION DOCK: RAPPORT SHARING (REQ 6) ── */}
+      <div>
         {/* Share Work Card (Req 6) */}
-        <div className="p-5 sm:p-6 rounded-3xl border-2 border-[#111111] bg-[#FFFFFF] shadow-sm flex items-start justify-between gap-4">
-          <div className="space-y-1.5">
+        <div className="p-5 sm:p-6 rounded-3xl border-2 border-[#111111] bg-[#FFFFFF] shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="space-y-1.5 max-w-2xl">
             <div className="flex items-center gap-2">
               <span className="text-[10px] font-mono font-black uppercase tracking-wider bg-[#F4C542] px-2 py-0.5 rounded-full border border-[#111111]">
                 Therapeutic Rapport
@@ -336,33 +352,10 @@ export default function StudentDashboard() {
           </div>
           <button
             onClick={() => setShowShareWorkModal(true)}
-            className="px-4 py-2.5 rounded-xl bg-[#FAFAFA] hover:bg-[#F4C542] text-[#111111] font-black text-xs border border-[#111111] shrink-0 self-center transition-all cursor-pointer shadow-xs active:scale-95"
+            className="w-full sm:w-auto px-7 py-3.5 rounded-2xl bg-[#F4C542] hover:bg-[#e0b435] text-[#111111] font-heading font-black text-sm border-2 border-[#111111] shadow-xs active:scale-95 transition-all shrink-0 cursor-pointer flex items-center justify-center gap-2"
           >
-            Share Work
-          </button>
-        </div>
-
-        {/* Give Session Feedback Card (Req 11 & 12) */}
-        <div className="p-5 sm:p-6 rounded-3xl border-2 border-[#111111] bg-[#FFFFFF] shadow-sm flex items-start justify-between gap-4">
-          <div className="space-y-1.5">
-            <div className="flex items-center gap-2">
-              <span className="text-[10px] font-mono font-black uppercase tracking-wider bg-[#FAFAFA] px-2 py-0.5 rounded-full border border-[#111111]/20">
-                Non-Star Feedback
-              </span>
-            </div>
-            <h3 className="text-lg font-heading font-black text-[#111111] flex items-center gap-2">
-              <span>🌱</span>
-              <span>Session Resonance Feedback</span>
-            </h3>
-            <p className="text-xs text-[#111111]/70 leading-relaxed">
-              Rate your recent counselling experience using our innovative Emotive Resonance Matrix and 10-point Therapeutic Pulse.
-            </p>
-          </div>
-          <button
-            onClick={() => setShowFeedbackModal(true)}
-            className="px-4 py-2.5 rounded-xl bg-[#F4C542] hover:bg-[#e0b435] text-[#111111] font-black text-xs border-2 border-[#111111] shrink-0 self-center transition-all cursor-pointer shadow-xs active:scale-95"
-          >
-            Give Feedback
+            <span>Share Work</span>
+            <ArrowRight size={16} />
           </button>
         </div>
       </div>
@@ -550,9 +543,17 @@ export default function StudentDashboard() {
                 <h3 className="font-heading font-black text-sm text-[#111111]">
                   Digital Detox
                 </h3>
-                <p className="text-[11px] text-[#111111]/60 mt-1 leading-snug">
-                  Screen: 4h 32m · Take 10m break
-                </p>
+                <div className="flex items-center gap-1.5 mt-1">
+                  <span className="text-[11px] font-mono font-bold text-[#111111]">
+                    Screen: {Math.floor(screenState.activeSeconds / 3600) > 0 ? `${Math.floor(screenState.activeSeconds / 3600)}h ` : ''}
+                    {Math.floor((screenState.activeSeconds % 3600) / 60)}m
+                  </span>
+                  <span className="text-[#111111]/30">·</span>
+                  <span className={`text-[11px] font-bold flex items-center gap-1 ${screenState.hasExceededLimit ? 'text-rose-600 font-black' : 'text-emerald-700'}`}>
+                    <span className={`w-1.5 h-1.5 rounded-full ${screenState.hasExceededLimit ? 'bg-rose-500 animate-ping' : 'bg-emerald-500'}`} />
+                    <span>{screenState.hasExceededLimit ? 'Limit Exceeded' : `${Math.max(0, screenState.limitMinutes - Math.floor(screenState.activeSeconds / 60))}m left`}</span>
+                  </span>
+                </div>
               </div>
               <button className="mt-3 px-3 py-1.5 rounded-xl bg-[#F4C542] text-[#111111] font-black text-[11px] border border-[#111111] flex items-center justify-center gap-1">
                 <span>Begin Digital Detox</span>
@@ -908,12 +909,6 @@ export default function StudentDashboard() {
         isOpen={showScreeningModal}
         onClose={() => setShowScreeningModal(false)}
         onCompleted={(sub: ScreeningSubmission) => setLatestScreening(sub)}
-      />
-
-      {/* Session Feedback Modal with Unique Non-Star Rating (Req 11 & 12) */}
-      <SessionFeedbackModal
-        isOpen={showFeedbackModal}
-        onClose={() => setShowFeedbackModal(false)}
       />
 
       {/* Share Work with Counsellor Modal (Req 6) */}

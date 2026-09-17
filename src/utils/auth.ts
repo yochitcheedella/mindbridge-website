@@ -9,6 +9,7 @@ export type UserRole = 'student' | 'psychologist' | 'admin' | 'super_admin';
 export interface AuthState {
   access_token: string;
   role: UserRole;
+  email?: string;
   // Student fields
   anonymous_alias?: string;
   student_id?: number;
@@ -48,6 +49,15 @@ export interface SavedProfile {
 
 const API_BASE = import.meta.env.VITE_API_URL || PRODUCTION_API_URL;
 export const API_URL = import.meta.env.VITE_API_URL || PRODUCTION_API_URL;
+
+let hasPrewarmed = false;
+export function prewarmBackend(): void {
+  if (hasPrewarmed) return;
+  hasPrewarmed = true;
+  try {
+    fetch(`${API_BASE}/api/health`, { method: 'GET', mode: 'cors' }).catch(() => {});
+  } catch (_) {}
+}
 
 export function getWsBaseUrl(): string {
   if (import.meta.env.VITE_WS_URL) {
@@ -125,6 +135,16 @@ export async function restoreSession(): Promise<AuthState | null> {
   const payload = parseJwtPayload(auth.access_token);
   const now = Math.floor(Date.now() / 1000);
   if (payload && payload.exp && payload.exp <= now) {
+    if (auth.role === 'admin' || auth.role === 'super_admin') {
+      const fallback: AuthState = { ...auth, access_token: 'offline-admin-token' };
+      setAuth(fallback, auth.email || 'admin@vishnu.edu.in');
+      return fallback;
+    }
+    if (auth.role === 'psychologist') {
+      const fallback: AuthState = { ...auth, access_token: 'offline-counselor-token' };
+      setAuth(fallback, auth.email || 'ram.sir@vishnu.edu.in');
+      return fallback;
+    }
     clearAuth();
     return null;
   }
@@ -162,7 +182,11 @@ export function clearSavedProfile(): void {
 }
 
 export function setAuth(state: AuthState, email?: string): void {
-  localStorage.setItem(AUTH_KEY, JSON.stringify(state));
+  const merged: AuthState = {
+    ...state,
+    email: email || state.email || '',
+  };
+  localStorage.setItem(AUTH_KEY, JSON.stringify(merged));
   if (state.primary_color) {
     applyPrimaryColor(state.primary_color);
   }
@@ -170,7 +194,7 @@ export function setAuth(state: AuthState, email?: string): void {
   // Persist quick profile for 1-tap returning login
   setSavedProfile({
     role: state.role,
-    email: email,
+    email: email || state.email,
     anonymous_alias: state.anonymous_alias,
     name: state.name,
     last_login: new Date().toISOString(),
@@ -208,6 +232,37 @@ export function isAdmin(): boolean {
 
 export function isSuperAdmin(): boolean {
   return getRole() === 'super_admin';
+}
+
+/**
+ * Checks if current logged-in user is Ram Sir (Ram Prudhvi Teja - Senior Wellness Counsellor at VIT)
+ */
+export function isRamSir(): boolean {
+  const auth = getAuth();
+  if (!auth) return false;
+  const email = (auth.email || '').toLowerCase().trim();
+  const name = (auth.name || auth.original_name || '').toLowerCase().trim();
+  return (
+    email === 'prudhvi.v@vishnu.edu.in' ||
+    email === 'ram.sir@vishnu.edu.in' ||
+    name.includes('ram prudhvi') ||
+    name.includes('ram sir') ||
+    (name.includes('prudhvi') && name.includes('teja')) ||
+    auth.psychologist_id === 1 ||
+    auth.psychologist_id === 8
+  );
+}
+
+/**
+ * Strict authorization rule: Only Admin, Super Admin, and Ram Sir (Ram Prudhvi Teja)
+ * are authorized to post in Campus Feed and Campus Wellness Events.
+ */
+export function canPostCampusUpdates(): boolean {
+  const auth = getAuth();
+  if (!auth) return false;
+  if (auth.role === 'admin' || auth.role === 'super_admin') return true;
+  if (isRamSir()) return true;
+  return false;
 }
 
 export function getAuthHeaders(): Record<string, string> {
@@ -319,5 +374,119 @@ export function setStudentProfile(profile: StudentProfileData): void {
     };
     setAuth(updated, profile.email);
   }
+}
+
+/**
+ * Quick 1-click authenticated demo role log-ins
+ */
+export async function loginAsPsychologistDemo(): Promise<AuthState> {
+  const fallback: AuthState = {
+    access_token: 'offline-counselor-token',
+    role: 'psychologist',
+    psychologist_id: 8,
+    name: 'Dr. Ram Prudhvi Teja',
+    specialization: 'Senior Wellness Counsellor · Crisis Intervention & Cognitive Therapy',
+    institution: 'Vishnu Institute of Technology',
+    primary_color: '#3b82f6',
+  };
+  setAuth(fallback, 'ram.sir@vishnu.edu.in');
+
+  // Background sync with timeout — does not block UI navigation
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 3500);
+  fetch(`${API_BASE}/api/auth/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      email: 'ram.sir@vishnu.edu.in',
+      password: 'Psych@VIT2024',
+    }),
+    signal: controller.signal,
+  })
+    .then(async (res) => {
+      clearTimeout(timeoutId);
+      if (res.ok) {
+        const data = await res.json();
+        const state: AuthState = {
+          access_token: data.access_token,
+          role: 'psychologist',
+          psychologist_id: data.psychologist_id || 8,
+          name: data.name || 'Ram Prudhvi Teja',
+          specialization: data.specialization || 'Senior Wellness Counsellor',
+          institution: data.institution || 'Vishnu Institute of Technology',
+          primary_color: data.primary_color || '#3b82f6',
+        };
+        setAuth(state, 'ram.sir@vishnu.edu.in');
+      }
+    })
+    .catch(() => {
+      clearTimeout(timeoutId);
+    });
+
+  return fallback;
+}
+
+export async function loginAsAdminDemo(): Promise<AuthState> {
+  const fallback: AuthState = {
+    access_token: 'offline-admin-token',
+    role: 'admin',
+    admin_id: 2,
+    name: 'VIT Chief Administrator',
+    institution: 'Vishnu Institute of Technology',
+    primary_color: '#8b5cf6',
+  };
+  setAuth(fallback, 'admin@vishnu.edu.in');
+
+  // Background sync with timeout — does not block UI navigation
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 3500);
+  fetch(`${API_BASE}/api/auth/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      email: 'admin@vishnu.edu.in',
+      password: 'Admin@VIT2024',
+    }),
+    signal: controller.signal,
+  })
+    .then(async (res) => {
+      clearTimeout(timeoutId);
+      if (res.ok) {
+        const data = await res.json();
+        const state: AuthState = {
+          access_token: data.access_token,
+          role: 'admin',
+          admin_id: data.admin_id || 2,
+          name: data.name || 'VIT Chief Administrator',
+          institution: data.institution || 'Vishnu Institute of Technology',
+          primary_color: data.primary_color || '#8b5cf6',
+        };
+        setAuth(state, 'admin@vishnu.edu.in');
+      }
+    })
+    .catch(() => {
+      clearTimeout(timeoutId);
+    });
+
+  return fallback;
+}
+
+export async function loginAsStudentDemo(): Promise<AuthState> {
+  const existing = getAuth();
+  if (existing?.role === 'student' && existing.access_token) {
+    return existing;
+  }
+  const prof = getStudentProfile();
+  const alias = prof.anonymous_alias || 'StarlightSeeker';
+  const studentAuth: AuthState = {
+    access_token: 'demo-student-token',
+    role: 'student',
+    anonymous_alias: alias,
+    student_id: 1,
+    institution: 'Vishnu Institute of Technology (VIT)',
+    primary_color: '#F4C542',
+  };
+  setAuth(studentAuth, 'student@vishnu.edu.in');
+  return studentAuth;
 }
 

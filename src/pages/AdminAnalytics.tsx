@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { apiFetch } from '../utils/auth';
 import { getStoredFlashcards, updateFlashcardStatus, type Flashcard } from '../data/defaultFlashcards';
+import { OFFICIAL_COUNSELORS } from '../data/counselors';
 
 interface Analytics {
   institution?: string;
@@ -158,12 +159,25 @@ export default function AdminAnalytics() {
 
   useEffect(() => {
     apiFetch('/api/admin/analytics')
-      .then(r => r.json())
-      .then(data => { setAnalytics(data); setLoading(false); })
+      .then(r => {
+        if (!r.ok) throw new Error('Admin API unavailable');
+        return r.json();
+      })
+      .then(data => {
+        if (!data || typeof data.total_students !== 'number') throw new Error('Invalid analytics response');
+        setAnalytics(data);
+        setLoading(false);
+      })
       .catch(() => {
         apiFetch('/api/risk/analytics')
-          .then(r => r.json())
-          .then(data => setAnalytics(data))
+          .then(r => {
+            if (!r.ok) throw new Error('Risk API unavailable');
+            return r.json();
+          })
+          .then(data => {
+            if (!data || typeof data.total_students !== 'number') throw new Error('Invalid risk response');
+            setAnalytics(data);
+          })
           .catch(() => setAnalytics({
             total_students: 4250,
             average_risk_score: 0.28,
@@ -186,11 +200,23 @@ export default function AdminAnalytics() {
       });
 
     apiFetch('/api/appointments/psychologists')
-      .then(r => r.json())
-      .then(data => {
-        if (Array.isArray(data)) setPsychologists(data);
+      .then(r => {
+        if (!r.ok) throw new Error('Psychologists API unavailable');
+        return r.json();
       })
-      .catch(() => {});
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) setPsychologists(data);
+        else throw new Error('Empty');
+      })
+      .catch(() => {
+        setPsychologists(OFFICIAL_COUNSELORS.map(c => ({
+          id: c.id,
+          name: c.name,
+          specialization: c.specialization,
+          email: `${c.name.toLowerCase().replace(/[^a-z]/g, '.')}@vishnu.edu.in`,
+          is_active: true
+        })));
+      });
   }, []);
 
   const handleAddPsychologist = async () => {

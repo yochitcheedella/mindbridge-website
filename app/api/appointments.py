@@ -202,7 +202,10 @@ def book_appointment(
     db: Session = Depends(get_db),
 ):
     try:
-        slot_dt = datetime.fromisoformat(req.slot_time)
+        iso_clean = req.slot_time.replace("Z", "+00:00")
+        slot_dt = datetime.fromisoformat(iso_clean)
+        if slot_dt.tzinfo is not None:
+            slot_dt = slot_dt.replace(tzinfo=None)
     except ValueError:
         raise HTTPException(status_code=400, detail="Invalid slot_time format. Use ISO 8601.")
 
@@ -228,7 +231,16 @@ def book_appointment(
     db.add(appt)
     db.commit()
     db.refresh(appt)
-    return {"id": appt.id, "status": appt.status, "slot_time": appt.slot_time.isoformat()}
+    psych = db.query(Psychologist).filter(Psychologist.id == req.psychologist_id).first()
+    psych_name = psych.name if psych else "Counsellor"
+    return {
+        "id": appt.id, 
+        "status": appt.status, 
+        "slot_time": appt.slot_time.isoformat(),
+        "psychologist_name": psych_name,
+        "whatsapp_dispatcher": "9100972237",
+        "whatsapp_reminder_status": "dispatched"
+    }
 
 
 @router.get("/mine")

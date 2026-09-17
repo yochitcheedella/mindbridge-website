@@ -11,8 +11,10 @@ import {
   AlertCircle,
   RefreshCw,
   Calendar,
+  Heart,
 } from 'lucide-react';
 import { apiFetch, getAlias } from '../utils/auth';
+import SessionFeedbackModal from '../components/clinical/SessionFeedbackModal';
 
 interface Message {
   id: string;
@@ -47,6 +49,7 @@ export default function CounselorChat() {
   const [inputText, setInputText] = useState('');
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
+  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const activeAppointmentId = counselor.appointment_id || (queryApptId ? parseInt(queryApptId, 10) : null);
@@ -173,15 +176,26 @@ export default function CounselorChat() {
           </div>
         </div>
 
-        {/* Action: Instant Audio Call Launcher */}
-        <button
-          onClick={handleStartAudioCall}
-          className="p-2 sm:px-3 sm:py-1.5 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 border border-emerald-500/35 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-lg shadow-emerald-500/10 active:scale-95 shrink-0"
-          title={activeAppointmentId ? 'Start Private Audio Call' : 'Book Session to Call'}
-        >
-          <Phone size={14} />
-          <span className="hidden xs:inline text-[11px]">Audio Call</span>
-        </button>
+        {/* Actions: End Session & Audio Call */}
+        <div className="flex items-center gap-2 shrink-0">
+          <button
+            onClick={() => setShowFeedbackModal(true)}
+            className="px-2.5 py-1.5 bg-[#F4C542] hover:bg-[#e0b435] text-[#111111] border-2 border-[#111111] rounded-xl text-xs font-black transition-all flex items-center gap-1.5 shadow-xs active:scale-95 cursor-pointer"
+            title="End Session & Provide Feedback"
+          >
+            <Heart size={13} className="fill-[#111111]" />
+            <span className="text-[11px]">End Session</span>
+          </button>
+
+          <button
+            onClick={handleStartAudioCall}
+            className="p-2 sm:px-3 sm:py-1.5 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 border border-emerald-500/35 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-lg shadow-emerald-500/10 active:scale-95 cursor-pointer"
+            title={activeAppointmentId ? 'Start Private Audio Call' : 'Book Session to Call'}
+          >
+            <Phone size={14} />
+            <span className="hidden xs:inline text-[11px]">Audio Call</span>
+          </button>
+        </div>
       </header>
 
       {/* ── Privacy Shield & Identity Banner ── */}
@@ -303,6 +317,20 @@ export default function CounselorChat() {
           </button>
         </form>
       </div>
+
+      {/* ── Official Session Feedback Modal ── */}
+      <SessionFeedbackModal
+        isOpen={showFeedbackModal}
+        onClose={() => setShowFeedbackModal(false)}
+        appointmentId={activeAppointmentId || undefined}
+        defaultFacilitator={counselor.name}
+        defaultProgram="Individual Chat Counselling & Support Session"
+        defaultName={studentAlias}
+        onSubmitSuccess={() => {
+          setShowFeedbackModal(false);
+          navigate('/student/appointments?feedbackSuccess=true');
+        }}
+      />
     </div>
   );
 }

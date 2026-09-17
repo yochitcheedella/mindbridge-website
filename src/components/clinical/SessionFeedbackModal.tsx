@@ -1,14 +1,18 @@
 import React, { useState } from 'react';
 import { X, Heart, Shield, CheckCircle2, Sparkles, Send, MessageSquare, PhoneCall, HelpCircle } from 'lucide-react';
 import { OFFICIAL_COUNSELORS } from '../../data/counselors';
-import { getAlias } from '../../utils/auth';
+import { apiFetch, getAlias, getStudentProfile } from '../../utils/auth';
 
 interface SessionFeedbackModalProps {
   isOpen: boolean;
   onClose: () => void;
+  appointmentId?: number | string;
   defaultFacilitator?: string;
   defaultProgram?: string;
-  onSubmitSuccess?: () => void;
+  defaultInstitution?: string;
+  defaultName?: string;
+  defaultAttendeeRole?: 'Student' | 'Faculty' | 'Staff';
+  onSubmitSuccess?: (feedbackData?: any) => void;
 }
 
 const INSTITUTIONS = [
@@ -18,7 +22,8 @@ const INSTITUTIONS = [
   'Smt.B.Seetha Polytechnic College (SBSP)',
   'SHRI VISHNU COLLEGE OF PHARMACY (SVCP)',
   'Shri Vishnu School (SVS)',
-  'B V Raju Degree and PG College (BVRC)'
+  'B V Raju Degree and PG College (BVRC)',
+  'Sri Vishnu Educational Society (All Campuses)'
 ];
 
 const COUNSELOR_NAMES = [
@@ -27,7 +32,8 @@ const COUNSELOR_NAMES = [
   'Ms. Angel Benny',
   'Ms. Akshitha',
   'Ms. Anumitha',
-  'Ms. Sahithi'
+  'Ms. Sahithi',
+  'Ms. Navya Sri'
 ];
 
 // Innovative Non-Star 5-Tier Resonance Scale
@@ -55,18 +61,34 @@ const PULSE_MILESTONES: Record<number, string> = {
 export default function SessionFeedbackModal({
   isOpen,
   onClose,
+  appointmentId,
   defaultFacilitator = 'Ms. Devika Babu',
   defaultProgram = 'Individual Counselling & Emotional Wellness Session',
+  defaultInstitution,
+  defaultName,
+  defaultAttendeeRole = 'Student',
   onSubmitSuccess
 }: SessionFeedbackModalProps) {
   const currentAlias = getAlias() || '';
+  const studentProfile = getStudentProfile();
 
   // Form State
-  const [name, setName] = useState(currentAlias);
-  const [attendeeRole, setAttendeeRole] = useState<'Student' | 'Faculty' | 'Staff'>('Student');
-  const [institution, setInstitution] = useState(INSTITUTIONS[1]); // SVECW default
+  const [name, setName] = useState(defaultName || currentAlias || studentProfile.original_name || 'Anonymous');
+  const [attendeeRole, setAttendeeRole] = useState<'Student' | 'Faculty' | 'Staff'>(defaultAttendeeRole);
+  const [institution, setInstitution] = useState(defaultInstitution || INSTITUTIONS[1]); // SVECW default
   const [facilitator, setFacilitator] = useState(defaultFacilitator);
   const [programName, setProgramName] = useState(defaultProgram);
+
+  // Sync state when modal opens or session props change
+  React.useEffect(() => {
+    if (isOpen) {
+      if (defaultFacilitator) setFacilitator(defaultFacilitator);
+      if (defaultProgram) setProgramName(defaultProgram);
+      if (defaultInstitution) setInstitution(defaultInstitution);
+      if (defaultName) setName(defaultName);
+      if (defaultAttendeeRole) setAttendeeRole(defaultAttendeeRole);
+    }
+  }, [isOpen, defaultFacilitator, defaultProgram, defaultInstitution, defaultName, defaultAttendeeRole]);
 
   // 5-stage non-star emotive ratings
   const [q7Objectives, setQ7Objectives] = useState<number>(4);
@@ -90,12 +112,13 @@ export default function SessionFeedbackModal({
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
     const feedbackPayload = {
       id: `fb-${Date.now()}`,
+      appointmentId: appointmentId ? Number(appointmentId) : undefined,
       submittedAt: new Date().toISOString(),
       name: name.trim() || 'Anonymous Student',
       attendeeRole,
@@ -115,6 +138,7 @@ export default function SessionFeedbackModal({
       topicsRequested: topicsRequested.trim(),
     };
 
+    // 1. Record in mindbridge_session_feedbacks list
     try {
       const stored = localStorage.getItem('mindbridge_session_feedbacks');
       const existing = stored ? JSON.parse(stored) : [];
@@ -123,10 +147,71 @@ export default function SessionFeedbackModal({
       console.warn('Could not save feedback to localStorage', err);
     }
 
+    // 2. Record explicit mapping for this appointmentId in mindbridge_completed_session_feedbacks
+    if (appointmentId) {
+      try {
+        const storedMap = localStorage.getItem('mindbridge_completed_session_feedbacks');
+        const compMap = storedMap ? JSON.parse(storedMap) : {};
+        compMap[String(appointmentId)] = {
+          feedbackId: feedbackPayload.id,
+          submittedAt: feedbackPayload.submittedAt,
+          facilitator,
+          therapeuticPulse: q11OverallPulse,
+          objectivesScore: q7Objectives,
+        };
+        localStorage.setItem('mindbridge_completed_session_feedbacks', JSON.stringify(compMap));
+
+        // Update local booked appointments status to 'completed' with feedback
+        const apptsRaw = localStorage.getItem('mindbridge_booked_appointments');
+        if (apptsRaw) {
+          const appts = JSON.parse(apptsRaw);
+          const found = appts.find((a: any) => String(a.id) === String(appointmentId));
+          if (found) {
+            found.status = 'completed';
+            found.has_feedback = true;
+            found.feedback_id = feedbackPayload.id;
+            localStorage.setItem('mindbridge_booked_appointments', JSON.stringify(appts));
+          }
+        }
+
+        // Remove pending feedback flag for this session
+        const pendingRaw = localStorage.getItem('mindbridge_pending_feedback_session');
+        if (pendingRaw) {
+          const pending = JSON.parse(pendingRaw);
+          if (String(pending.appointmentId) === String(appointmentId)) {
+            localStorage.removeItem('mindbridge_pending_feedback_session');
+          }
+        }
+      } catch (err) {
+        console.warn('Error recording feedback status for appointment:', err);
+      }
+
+      // 3. Sync to backend API endpoint
+      try {
+        await apiFetch(`/api/appointments/${appointmentId}/feedback`, {
+          method: 'POST',
+          body: JSON.stringify({
+            rating: q7Objectives,
+            tags: `${facilitator}, Pulse: ${q11OverallPulse}/10, Role: ${attendeeRole}`,
+            comment: topicsRequested.trim() || `Therapeutic pulse: ${q11OverallPulse}/10. ${approachCounsellor}`,
+          }),
+        });
+      } catch (apiErr) {
+        console.warn('Backend feedback submission notice:', apiErr);
+      }
+    }
+
+    // 4. Dispatch browser event for real-time reactivity across components
+    window.dispatchEvent(
+      new CustomEvent('mindbridge_session_feedback_recorded', {
+        detail: feedbackPayload,
+      })
+    );
+
     setTimeout(() => {
       setIsSubmitting(false);
       setSubmitted(true);
-      if (onSubmitSuccess) onSubmitSuccess();
+      if (onSubmitSuccess) onSubmitSuccess(feedbackPayload);
       setTimeout(() => {
         setSubmitted(false);
         onClose();

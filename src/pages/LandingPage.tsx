@@ -129,6 +129,12 @@ export default function LandingPage() {
             <a href="#counselors" className="hover:text-[#111111] transition-colors">Counselors</a>
             <a href="#anonymity" className="hover:text-[#111111] transition-colors">Anonymity Vault</a>
             <a href="#breathwork" className="hover:text-[#111111] transition-colors">Quick Calm</a>
+            <Link 
+              to="/admin/dashboard" 
+              className="text-xs font-mono font-black uppercase px-2.5 py-1 rounded-lg bg-[#FAFAFA] border border-[#111111]/30 hover:border-[#111111] hover:bg-[#F4C542] text-[#111111] transition-all"
+            >
+              Admin Portal
+            </Link>
             <a href="#download" className="hover:text-[#111111] transition-colors flex items-center gap-1.5 text-[#111111]">
               <Download size={15} className="text-[#111111]" />
               Download APK <span className="bg-[#111111] text-[#FFFFFF] text-[10px] font-mono px-1.5 py-0.2 rounded-md">v1.7</span>
@@ -438,7 +444,7 @@ export default function LandingPage() {
                   </div>
                   <div className="mt-6 pt-4 border-t border-[#111111]/10 flex items-center justify-between text-xs font-bold text-[#111111]">
                     <span>Zero False Alarm Engine</span>
-                    <Link to="/login" className="flex items-center gap-1 hover:text-[#F4C542]">Staff Login <ArrowRight size={14} /></Link>
+                    <Link to="/psychologist/dashboard" className="flex items-center gap-1 hover:text-[#F4C542]">Staff Triage <ArrowRight size={14} /></Link>
                   </div>
                 </div>
 
@@ -455,7 +461,7 @@ export default function LandingPage() {
                   </div>
                   <div className="mt-6 pt-4 border-t border-[#111111]/10 flex items-center justify-between text-xs font-bold text-[#111111]">
                     <span>Clinical Compliance</span>
-                    <Link to="/login" className="flex items-center gap-1 hover:text-[#F4C542]">SOAP Editor <ArrowRight size={14} /></Link>
+                    <Link to="/psychologist/soap-notes" className="flex items-center gap-1 hover:text-[#F4C542]">SOAP Editor <ArrowRight size={14} /></Link>
                   </div>
                 </div>
 
@@ -472,7 +478,7 @@ export default function LandingPage() {
                   </div>
                   <div className="mt-6 pt-4 border-t border-[#111111]/10 flex items-center justify-between text-xs font-bold text-[#111111]">
                     <span>Multi-Key Protocol</span>
-                    <Link to="/login" className="flex items-center gap-1 hover:text-[#F4C542]">Learn Protocol <ArrowRight size={14} /></Link>
+                    <Link to="/psychologist/dashboard" className="flex items-center gap-1 hover:text-[#F4C542]">Clinical Radar <ArrowRight size={14} /></Link>
                   </div>
                 </div>
 
@@ -495,7 +501,7 @@ export default function LandingPage() {
                   </div>
                   <div className="mt-6 pt-4 border-t border-[#111111]/10 flex items-center justify-between text-xs font-bold text-[#111111]">
                     <span>Institutional Oversight</span>
-                    <Link to="/login" className="flex items-center gap-1 hover:text-[#F4C542]">Admin Suite <ArrowRight size={14} /></Link>
+                    <Link to="/admin/dashboard" className="flex items-center gap-1 hover:text-[#F4C542]">Admin Suite <ArrowRight size={14} /></Link>
                   </div>
                 </div>
 
@@ -512,7 +518,7 @@ export default function LandingPage() {
                   </div>
                   <div className="mt-6 pt-4 border-t border-[#111111]/10 flex items-center justify-between text-xs font-bold text-[#111111]">
                     <span>Staff Rostering</span>
-                    <Link to="/login" className="flex items-center gap-1 hover:text-[#F4C542]">Manage Staff <ArrowRight size={14} /></Link>
+                    <Link to="/admin/users" className="flex items-center gap-1 hover:text-[#F4C542]">Manage Staff <ArrowRight size={14} /></Link>
                   </div>
                 </div>
 
@@ -529,7 +535,7 @@ export default function LandingPage() {
                   </div>
                   <div className="mt-6 pt-4 border-t border-[#111111]/10 flex items-center justify-between text-xs font-bold text-[#111111]">
                     <span>Accreditation Ready</span>
-                    <Link to="/login" className="flex items-center gap-1 hover:text-[#F4C542]">Generate Reports <ArrowRight size={14} /></Link>
+                    <Link to="/admin/reports" className="flex items-center gap-1 hover:text-[#F4C542]">Generate Reports <ArrowRight size={14} /></Link>
                   </div>
                 </div>
 

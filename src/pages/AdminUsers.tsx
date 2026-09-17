@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 import { Card } from '../components/ui/Card';
 import { apiFetch } from '../utils/auth';
+import { OFFICIAL_COUNSELORS } from '../data/counselors';
 
 interface Psychologist {
   id: number;
@@ -15,8 +16,16 @@ interface Psychologist {
 }
 
 export default function AdminUsers() {
-  const [psychologists, setPsychologists] = useState<Psychologist[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [psychologists, setPsychologists] = useState<Psychologist[]>(() => 
+    OFFICIAL_COUNSELORS.map(c => ({
+      id: c.id,
+      name: c.name,
+      specialization: c.specialization,
+      email: `${c.name.toLowerCase().replace(/[^a-z]/g, '.')}@vishnu.edu.in`,
+      is_active: true
+    }))
+  );
+  const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState('');
   const [showAddForm, setShowAddForm] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -33,10 +42,12 @@ export default function AdminUsers() {
       const res = await apiFetch('/api/admin/psychologists');
       if (res.ok) {
         const data = await res.json();
-        setPsychologists(Array.isArray(data) ? data : []);
+        if (Array.isArray(data) && data.length > 0) {
+          setPsychologists(data);
+        }
       }
     } catch (e) {
-      console.error(e);
+      console.warn('API fetch failed, retaining official counselors:', e);
     } finally {
       setLoading(false);
     }

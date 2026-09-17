@@ -190,6 +190,14 @@ def test_student_complete_dashboard_and_features():
     assert my_appts_res.status_code == 200
     assert any(a["id"] == appt_id for a in my_appts_res.json())
 
+    # Confirm appointment (as done in production workflow before call unlocks)
+    db = SessionLocal()
+    booked_appt = db.query(Appointment).filter(Appointment.id == appt_id).first()
+    if booked_appt:
+        booked_appt.status = "confirmed"
+        db.commit()
+    db.close()
+
     # Call token generation for student
     call_token_res = client.post(f"/api/appointments/{appt_id}/call-token", headers=student_headers)
     assert call_token_res.status_code == 200

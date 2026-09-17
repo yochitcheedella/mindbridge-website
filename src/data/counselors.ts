@@ -270,3 +270,16 @@ export const OFFICIAL_COUNSELORS: CounselorData[] = [
     is_online: true
   }
 ];
+
+export function findCounselorById(id: number | string): CounselorData | undefined {
+  const numId = typeof id === 'string' ? parseInt(id, 10) : id;
+  return OFFICIAL_COUNSELORS.find((c) => c.id === numId);
+}
+
+export function findCounselorByName(name: string): CounselorData | undefined {
+  if (!name) return undefined;
+  const target = name.toLowerCase().trim();
+  return OFFICIAL_COUNSELORS.find(
+    (c) => c.name.toLowerCase().trim() === target || target.includes(c.name.toLowerCase().trim())
+  );
+}

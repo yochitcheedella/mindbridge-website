@@ -3,6 +3,10 @@ import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import './index.css'
 import App from './App.tsx'
+import { prewarmBackend } from './utils/auth.ts'
+
+// Wake up Render free-tier instance silently as early as possible
+prewarmBackend();
 
 // ── AUTOMATIC WEBVIEW CACHE-BUSTING ──
 // Mobile WebViews aggressively cache old assets via CacheStorage and ServiceWorkers.

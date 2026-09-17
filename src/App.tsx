@@ -102,38 +102,11 @@ function App() {
       )}
       <Routes>
         {/* ── Public Institutional Website Landing Page ── */}
-        <Route
-          path="/"
-          element={
-            hasValidSession ? (
-              <Navigate to={getHomeRoute(activeAuth!.role)} replace />
-            ) : (
-              <LandingPage />
-            )
-          }
-        />
+        <Route path="/" element={<LandingPage />} />
 
         {/* ── Auth (No Sidebar / Layout) ── */}
-        <Route 
-          path="/login"          
-          element={
-            hasValidSession && !isExplicitLogout ? (
-              <Navigate to={getHomeRoute(activeAuth!.role)} replace />
-            ) : (
-              <Login />
-            )
-          } 
-        />
-        <Route 
-          path="/register"       
-          element={
-            hasValidSession && !isExplicitLogout ? (
-              <Navigate to={getHomeRoute(activeAuth!.role)} replace />
-            ) : (
-              <Register />
-            )
-          } 
-        />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password"  element={<ResetPassword />} />
 
@@ -164,6 +137,8 @@ function App() {
 
         {/* ── Psychologist Routes ── */}
         <Route path="/psychologist/dashboard"    element={withLayout(<PsychologistDashboard />)} />
+        <Route path="/psychologist/campus-feed"  element={withLayout(<CampusFeed />)} />
+        <Route path="/psychologist/events"       element={withLayout(<StudentEvents />)} />
         <Route path="/psychologist/patients"     element={withLayout(<PsychologistPatients />)} />
         <Route path="/psychologist/soap-notes"   element={withLayout(<ClinicalSOAPNotes />)} />
         <Route path="/psychologist/calendar"     element={withLayout(<PsychologistCalendar />)} />
@@ -172,6 +147,8 @@ function App() {
         <Route path="/psychologist/profile"      element={withLayout(<ProfileSettings />)} />
 
         {/* ── Admin Routes ── */}
+        <Route path="/admin"            element={<Navigate to="/admin/dashboard" replace />} />
+        <Route path="/admin/"           element={<Navigate to="/admin/dashboard" replace />} />
         <Route path="/admin/dashboard"  element={withLayout(<AdminAnalytics />)} />
         <Route path="/admin/users"      element={withLayout(<AdminUsers />)} />
         <Route path="/admin/reports"    element={withLayout(<AdminReports />)} />
@@ -179,7 +156,17 @@ function App() {
         <Route path="/admin/manage-feed" element={withLayout(<AdminFeedManager />)} />
 
         {/* ── Super Admin Routes ── */}
+        <Route path="/superadmin"           element={<Navigate to="/superadmin/dashboard" replace />} />
+        <Route path="/superadmin/"          element={<Navigate to="/superadmin/dashboard" replace />} />
         <Route path="/superadmin/dashboard" element={withLayout(<SuperAdminDashboard />)} />
+        <Route path="/super-admin"          element={<Navigate to="/superadmin/dashboard" replace />} />
+        <Route path="/super-admin/dashboard" element={<Navigate to="/superadmin/dashboard" replace />} />
+
+        {/* ── Role Base Fallbacks ── */}
+        <Route path="/student"      element={<Navigate to="/student/home" replace />} />
+        <Route path="/student/"     element={<Navigate to="/student/home" replace />} />
+        <Route path="/psychologist" element={<Navigate to="/psychologist/dashboard" replace />} />
+        <Route path="/psychologist/" element={<Navigate to="/psychologist/dashboard" replace />} />
 
         {/* ── Anonymous Audio Call (Full screen distraction-free) ── */}
         <Route path="/call/:appointmentId" element={<AnonymousAudioCall />} />

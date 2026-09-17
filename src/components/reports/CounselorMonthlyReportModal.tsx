@@ -19,8 +19,8 @@ const MONTH_NAMES = [
 export default function CounselorMonthlyReportModal({
   isOpen,
   onClose,
-  defaultCounselorName = 'Ms. Devika Babu',
-  defaultInstitution = 'SVECW (Shri Vishnu Engineering College for Women)',
+  defaultCounselorName = 'Ram Prudhvi Teja',
+  defaultInstitution = 'Vishnu Institute of Technology (VIT), Bhimavaram',
   onSaveReport,
 }: CounselorMonthlyReportModalProps) {
   const currentMonthIdx = new Date().getMonth();
@@ -28,46 +28,52 @@ export default function CounselorMonthlyReportModal({
 
   const [counselorName, setCounselorName] = useState(defaultCounselorName);
   const [institution, setInstitution] = useState(defaultInstitution);
-  const [department, setDepartment] = useState('Vishnu Wellness Centre / Student Welfare');
-  const [month, setMonth] = useState(MONTH_NAMES[currentMonthIdx]);
-  const [year, setYear] = useState(currentYear);
+  const [department, setDepartment] = useState('Vishnu Wellness Centre');
+  const [month, setMonth] = useState('August');
+  const [year, setYear] = useState(2026);
 
-  // Section 1: Meetings
+  // Section 1: Meetings & Administrative Activities
   const [meetings, setMeetings] = useState([
-    { date: '04/09/2026', meetingName: 'Student Welfare & Mentor HOD Coordination', purposeOutcome: 'Reviewed first-year transition distress cases and mentor referral protocol.' },
-    { date: '18/09/2026', meetingName: 'Central Wellness Clinical Review Meeting', purposeOutcome: 'Harmonized crisis intervention protocol and case management documentation.' }
+    { date: '24/08/2026', meetingName: 'VEDIC Meeting', purposeOutcome: 'Discussed July wellness centre activities & programmes, with updates and follow-up on ongoing wellness initiatives.' },
+    { date: '10/08/2026', meetingName: 'Wellness Counsellors Team Coordination Meeting', purposeOutcome: 'Reviewed ongoing activities and delegated responsibilities for smooth execution of monthly programmes.' },
+    { date: '23/08/2026', meetingName: 'Induction Programme for VWU & VIT', purposeOutcome: 'Participated in institutional orientation and student-parent wellness engagement.' },
+    { date: '28-29/08/2026', meetingName: 'Learning & Development (L&D) Programme', purposeOutcome: 'Attended session conducted by Ms. Akshitha on Psychosomatic Conditions: A Holistic Approach.' },
+    { date: '15/08/2026', meetingName: 'Vishnu Wellness Centre Social Media Account', purposeOutcome: 'Established official digital platform for mental health awareness content and student-support resources.' },
+    { date: '20/08/2026', meetingName: 'Wellness Campaign Event Flyers & Banners', purposeOutcome: 'Designed promotional assets in accordance with the Vishnu Wellness Calendar for campus-wide reach.' },
   ]);
 
-  // Section 2: Activities Conducted
+  // Section 2: Summary of Activities Conducted
   const [activities, setActivities] = useState([
-    { date: '08/09/2026', activityName: 'Stress Buster & Exam Resilience Workshop', targetAudience: '2nd Year B.Tech Students', participantsCount: 65, keyTakeaway: 'Taught 4-7-8 breathing, cognitive reframing, and sleep hygiene.' },
-    { date: '15/09/2026', activityName: 'Digital Detox & Mindfulness Interactive Stall', targetAudience: 'All Campus Students', participantsCount: 120, keyTakeaway: 'Distributed self-care prompt cards and engaged in micro-journaling.' }
+    { date: '12/08/2026', activityName: 'First-Year Student Mental Health Orientation', targetAudience: '1st Year Students', participantsCount: 420, keyTakeaway: 'Introduced mental health importance and psychological wellness support services.' },
+    { date: '18/08/2026', activityName: 'MINDTAP – Radio Vishnu Series', targetAudience: 'Campus Community', participantsCount: 1500, keyTakeaway: 'Recorded 5 radio awareness episodes on stress resilience and emotional wellness.' },
+    { date: '25/08/2026', activityName: 'NIMHANS Gatekeeper Suicide Prevention Training', targetAudience: 'Wellness Counsellors', participantsCount: 8, keyTakeaway: 'Strengthened preparedness for early identification, distress referral, and safety support.' },
   ]);
 
   // Section 3: Counselling Sessions
   const [week1, setWeek1] = useState(8);
-  const [week2, setWeek2] = useState(11);
-  const [week3, setWeek3] = useState(14);
-  const [week4, setWeek4] = useState(9);
-  const [week5, setWeek5] = useState(6);
+  const [week2, setWeek2] = useState(10);
+  const [week3, setWeek3] = useState(7);
+  const [week4, setWeek4] = useState(5);
+  const [week5, setWeek5] = useState(1);
 
   // Concerns
-  const [academicStress, setAcademicStress] = useState(18);
-  const [emotionalAnxiety, setEmotionalAnxiety] = useState(14);
-  const [familyInterpersonal, setFamilyInterpersonal] = useState(7);
-  const [careerGuidance, setCareerGuidance] = useState(5);
-  const [generalWellbeing, setGeneralWellbeing] = useState(3);
-  const [crisisSos, setCrisisSos] = useState(1);
+  const [academicStress, setAcademicStress] = useState(14);
+  const [emotionalAnxiety, setEmotionalAnxiety] = useState(9);
+  const [familyInterpersonal, setFamilyInterpersonal] = useState(4);
+  const [careerGuidance, setCareerGuidance] = useState(3);
+  const [generalWellbeing, setGeneralWellbeing] = useState(1);
+  const [crisisSos, setCrisisSos] = useState(0);
 
   // Section 4: Upcoming Goals
   const [goals, setGoals] = useState([
-    'Conduct targeted mindfulness and test-anxiety workshops for placement-bound cohorts.',
-    'Enhance anonymous peer-mentoring circle follow-ups in dormitories.',
-    'Strengthen early-identification referral pathways with department mentors.'
+    'Continue regular individual and group counselling sessions for students.',
+    'Plan and conduct a Suicide Prevention Programme to promote awareness, help-seeking behaviour, early identification, and appropriate support.',
+    'Conduct the COPE Programme on Open Mic to encourage student expression, participation, and open conversations around mental health and well-being.',
+    'Conduct a Psychology Club/HOPE Club group session on “Understanding Human Behaviour from a Layman’s Perspective”, helping students understand basic psychological concepts and everyday human behaviour in an accessible manner.'
   ]);
 
   const [remarks, setRemarks] = useState(
-    'Overall attendance has increased by 18% compared to the previous cycle. Students showed remarkable receptivity towards confidential anonymous booking.'
+    'Individual counselling sessions reported reached 31 for the month. Orientation for first years and NIMHANS Gatekeeper training completed successfully.'
   );
 
   const [isSubmitting, setIsSubmitting] = useState(false);

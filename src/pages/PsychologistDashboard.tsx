@@ -14,6 +14,13 @@ import { generateCounselorMonthlyReportPDF, type CounselorMonthlyReportData } fr
 import type { SharedWorkItem } from '../components/clinical/ShareWorkModal';
 import type { ScreeningSubmission } from '../components/clinical/StudentScreeningModal';
 import { getStoredFlashcards, updateFlashcardStatus, type Flashcard } from '../data/defaultFlashcards';
+import {
+  buildStudentConfirmationMessage,
+  buildStudentBookingMessage,
+  buildCounselorBookingMessage,
+  dispatchWhatsAppMessage,
+  VWC_DISPATCHER_DISPLAY,
+} from '../utils/whatsapp';
 
 interface RiskStudent {
   anonymous_id: string;
@@ -100,6 +107,107 @@ export default function PsychologistDashboard() {
       if (stored) return JSON.parse(stored);
     } catch {}
     return [
+      {
+        id: 'rep-ram-aug-2026',
+        counselorName: 'Ram Prudhvi Teja',
+        counselorEmail: 'prudhvi.v@vishnu.edu.in',
+        department: 'Vishnu Wellness Centre',
+        institution: 'Vishnu Institute of Technology (VIT), Bhimavaram',
+        month: 'August',
+        year: 2026,
+        submittedAt: '2026-08-31T17:00:00.000Z',
+        administrativeMeetings: [
+          {
+            date: '24-08-2026',
+            meetingName: 'VEDIC Meeting',
+            purposeOutcome: 'Discussed the activities and programmes conducted by the Vishnu Wellness Centre during July, along with updates and follow-up on ongoing wellness initiatives.',
+            text: 'Attended the VEDIC Meeting on 24th August 2026 and discussed the activities and programmes conducted by the Vishnu Wellness Centre during July, along with updates and follow-up on ongoing wellness initiatives.'
+          },
+          {
+            date: '10-08-2026',
+            meetingName: 'Wellness Counsellors Team Coordination Meeting',
+            purposeOutcome: 'Reviewed ongoing activities and discussed upcoming events for current and following months including resource requirements, delegation of duties, and timelines.',
+            text: 'Conducted a team meeting with the Wellness Counsellors to review ongoing activities and discuss upcoming events for the current and following months. The discussions included updates on previously planned initiatives, event planning and preparation, timelines, resource requirements, and coordination among team members. Duties and responsibilities were delegated for the month to ensure smooth execution of programmes, with follow-up on progress and necessary preparations for upcoming activities.'
+          },
+          {
+            date: '23-08-2026',
+            meetingName: 'VWU & VIT Induction Programme',
+            purposeOutcome: 'Institutional orientation and engagement activities introducing campus wellness.',
+            text: 'Attended the Induction Programme for VWU & VIT on 23rd August 2026 as part of the institutional orientation and engagement activities.'
+          },
+          {
+            date: '28-08-2026',
+            meetingName: 'Learning & Development (L&D) Programme',
+            purposeOutcome: 'Two-day clinical enrichment programme conducted by Ms. Akshitha on Psychosomatic Conditions.',
+            text: 'Attended the Learning & Development (L&D) Programme conducted by Ms. Akshitha on 28th and 29th August 2026.'
+          },
+          {
+            date: '15-08-2026',
+            meetingName: 'VWC Social Media Platform Launch',
+            purposeOutcome: 'Established online presence for mental health content dissemination.',
+            text: 'Created the Vishnu Wellness Centre Social Media Account to establish an online platform for sharing mental health awareness content, wellness initiatives, programmes, and student-support resources.'
+          },
+          {
+            date: '20-08-2026',
+            meetingName: 'Flyers and Banners Design',
+            purposeOutcome: 'Prepared materials for upcoming wellness events per wellness calendar.',
+            text: 'Designed and prepared flyers and banners for upcoming wellness events in accordance with the Vishnu Wellness Calendar to support programme communication and campus-wide awareness.'
+          }
+        ],
+        activitiesConducted: [
+          {
+            date: '23-08-2026',
+            activityName: 'Orientation Programme for First-Year Students',
+            targetAudience: '1st Year B.Tech Students (VIT & VWU)',
+            participantsCount: 350,
+            keyTakeaway: 'Introduced students to the importance of mental health and psychological wellness support services available through VWC.',
+            text: 'Conducted an Orientation Programme for first-year students, introducing students to the importance of mental health and the psychological and wellness support services available through the Vishnu Wellness Centre.'
+          },
+          {
+            date: '18-08-2026',
+            activityName: 'MINDTAP – Radio Vishnu Programme',
+            targetAudience: 'Campus Community',
+            participantsCount: 500,
+            keyTakeaway: 'Recorded 5 episodes providing psychological awareness and wellness content through Radio Vishnu.',
+            text: 'Recorded 5 episodes of the MINDTAP – Radio Vishnu programme, continuing the initiative of providing psychological awareness and wellness-oriented content to the campus community through radio.'
+          },
+          {
+            date: '25-08-2026',
+            activityName: 'NIMHANS Gatekeeper Training',
+            targetAudience: 'Wellness Counsellors & Key Faculty',
+            participantsCount: 20,
+            keyTakeaway: 'Strengthened knowledge and preparedness for identifying individuals experiencing distress.',
+            text: 'Successfully completed the Gatekeeper Training through the NIMHANS e-Learning Programme, strengthening knowledge and preparedness for identifying individuals experiencing psychological distress and facilitating appropriate support and referral.'
+          }
+        ],
+        sessionStats: {
+          week1: '8 + 3 day leave',
+          week2: 10,
+          week3: 7,
+          week4: 5,
+          week5: 1,
+          total: 31,
+          week1Label: '01-08-2026 to 08-08-2026 (1st Week)',
+          week2Label: '10-08-2026 to 15-08-2026 (2nd Week)',
+          week3Label: '17-08-2026 to 22-08-2026 (3rd Week)',
+          week4Label: '24-08-2026 to 29-08-2026 (4th Week)',
+          week5Label: '31-08-2026 (5th Week)',
+          academicStress: 12,
+          emotionalAnxiety: 10,
+          familyInterpersonal: 5,
+          careerGuidance: 3,
+          generalWellbeing: 1,
+          crisisSos: 0,
+          genderBreakdown: { male: 14, female: 17, other: 0 }
+        },
+        upcomingGoals: [
+          'Continue regular individual and group counselling sessions for students.',
+          'Plan and conduct a Suicide Prevention Programme to promote awareness, help-seeking behaviour, early identification, and appropriate support.',
+          'Conduct the COPE Programme on Open Mic to encourage student expression, participation, and open conversations around mental health and well-being.',
+          'Conduct a Psychology Club/HOPE Club group session on “Understanding Human Behaviour from a Layman’s Perspective”, helping students understand basic psychological concepts and everyday human behaviour in an accessible manner.'
+        ],
+        generalRemarks: 'All activities for August 2026 completed in accordance with the Vishnu Wellness Calendar.'
+      },
       {
         id: 'rep-sample-1',
         counselorName: 'Ms. Devika Babu',
@@ -476,6 +584,31 @@ export default function PsychologistDashboard() {
       if (res.ok) {
         fetchAppointments();
       }
+
+      // ⚡ AUTOMATIC WHATSAPP NOTIFICATION TO STUDENT UPON ACCEPTANCE
+      if (targetStatus === 'confirmed') {
+        const appt = appointments.find(a => a.id === id);
+        if (appt) {
+          const studentPhone = appt.mobile_number || appt.phone || appt.whatsappNumber || '+91 98765 43210';
+          const studentName = appt.student_name || appt.original_name || appt.anonymous_id || appt.student_alias || 'Student';
+          const confirmMsg = buildStudentConfirmationMessage({
+            studentName,
+            counselorName: appt.psychologist_name || 'Ram Prudhvi Teja',
+            collegeName: appt.college_name || appt.institution || 'Vishnu Institute of Technology (VIT)',
+            department: appt.department || appt.branch || 'General',
+            year: appt.year || 'N/A',
+            slotTime: newTime || appt.slot_time,
+            mode: appt.type || 'Audio Call',
+          });
+          dispatchWhatsAppMessage({
+            toPhone: studentPhone,
+            message: confirmMsg,
+            recipientName: studentName,
+            type: 'appointment_student_reminder',
+            openInWindow: true,
+          });
+        }
+      }
     } catch (e) {
       console.error(e);
     }
@@ -625,6 +758,20 @@ export default function PsychologistDashboard() {
             }`}
           >
             <span>Monthly Reports ({monthlyReports.length})</span>
+          </button>
+          <button 
+            onClick={() => navigate('/psychologist/campus-feed')} 
+            className="px-3 py-2 rounded-xl text-xs font-black transition-all cursor-pointer bg-[#FAFAFA] text-[#111111] border border-[#111111]/20 hover:bg-[#F4C542]/20 flex items-center gap-1 shadow-2xs"
+            title="Open and post in Campus Feed"
+          >
+            <span>📸 Campus Feed</span>
+          </button>
+          <button 
+            onClick={() => navigate('/psychologist/events')} 
+            className="px-3 py-2 rounded-xl text-xs font-black transition-all cursor-pointer bg-[#FAFAFA] text-[#111111] border border-[#111111]/20 hover:bg-[#F4C542]/20 flex items-center gap-1 shadow-2xs"
+            title="Create & manage Campus Wellness Events"
+          >
+            <span>🗓️ Wellness Events</span>
           </button>
         </div>
       </div>
@@ -2784,11 +2931,55 @@ export default function PsychologistDashboard() {
                         type: 'Audio Call'
                       };
                       setAppointments(prev => [newAppt, ...prev]);
-                      setBookingSuccessMsg(`Session confirmed for ${bookingForStudent.studentAlias} on ${bookingDate} at ${bookingTime}!`);
+
+                      // ⚡ Trigger automatic WhatsApp message to student
+                      const studentAlias = bookingForStudent.studentAlias || 'Anonymous Student';
+                      const studentPhone = bookingForStudent.whatsappNumber || '+91 98765 43210';
+                      const studentMsg = buildStudentConfirmationMessage({
+                        studentName: studentAlias,
+                        counselorName: 'Ms. Devika Babu',
+                        collegeName: 'Vishnu Institute of Technology (VIT)',
+                        department: 'B.Tech',
+                        year: '3rd Year',
+                        slotTime: `${bookingDate}T${bookingTime}:00`,
+                        mode: 'Audio Call',
+                      });
+                      dispatchWhatsAppMessage({
+                        toPhone: studentPhone,
+                        message: studentMsg,
+                        recipientName: studentAlias,
+                        type: 'appointment_student_reminder',
+                        openInWindow: true,
+                      });
+
+                      // ⚡ Trigger automatic WhatsApp message to counsellor
+                      setTimeout(() => {
+                        const counselorMsg = buildCounselorBookingMessage({
+                          counselorName: 'Ms. Devika Babu',
+                          studentName: studentAlias,
+                          studentPhone,
+                          collegeName: 'Vishnu Institute of Technology (VIT)',
+                          institution: 'Vishnu Institute of Technology (VIT)',
+                          department: 'B.Tech',
+                          year: '3rd Year',
+                          slotTime: `${bookingDate}T${bookingTime}:00`,
+                          mode: 'Audio Call',
+                          bookingMode: 'anonymous',
+                        });
+                        dispatchWhatsAppMessage({
+                          toPhone: '9949433433', // Ms. Devika Babu
+                          message: counselorMsg,
+                          recipientName: 'Ms. Devika Babu',
+                          type: 'appointment_counselor_notification',
+                          openInWindow: true,
+                        });
+                      }, 400);
+
+                      setBookingSuccessMsg(`Session confirmed & WhatsApp notifications automatically sent for ${bookingForStudent.studentAlias} on ${bookingDate}!`);
                       setTimeout(() => {
                         setBookingForStudent(null);
                         setBookingSuccessMsg('');
-                      }, 1200);
+                      }, 1800);
                     }}
                     className="px-5 py-2 bg-[#F4C542] hover:bg-[#e0b435] text-[#111111] font-heading font-black text-xs border-2 border-[#111111] rounded-xl shadow-xs"
                   >

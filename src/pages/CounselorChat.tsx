@@ -261,14 +261,14 @@ export default function CounselorChat() {
                 <div
                   className={`max-w-[85%] sm:max-w-[70%] rounded-2xl px-4 py-3 text-sm leading-relaxed shadow-md ${
                     isStudent
-                      ? 'bg-gradient-to-r from-interactive-primary to-indigo-600 text-white rounded-tr-none border border-interactive-primary/40'
-                      : 'bg-surface-container-high border border-border-internal text-white rounded-tl-none'
+                      ? 'bg-[#F4C542] text-[#111111] font-semibold rounded-tr-none border-2 border-[#e0b435]'
+                      : 'bg-[#181926] border border-white/15 text-slate-100 rounded-tl-none'
                   }`}
                 >
                   <p className="whitespace-pre-wrap break-words">{msg.text}</p>
                   <div
                     className={`text-[10px] mt-1.5 text-right font-mono ${
-                      isStudent ? 'text-white/70' : 'text-on-surface-variant'
+                      isStudent ? 'text-[#111111]/70' : 'text-slate-400'
                     }`}
                   >
                     {formatTime(msg.timestamp)}
@@ -305,12 +305,12 @@ export default function CounselorChat() {
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
             placeholder={`Message ${counselor.name}... (as ${studentAlias})`}
-            className="flex-1 bg-surface-container-lowest border border-border-internal rounded-xl px-4 py-3 text-sm text-white placeholder-on-surface-variant focus:outline-none focus:border-interactive-primary transition-all"
+            className="flex-1 bg-[#141522] border border-white/20 rounded-xl px-4 py-3 text-sm text-white placeholder:text-slate-400 focus:outline-none focus:border-[#F4C542] transition-all"
           />
           <button
             type="submit"
             disabled={!inputText.trim() || sending}
-            className="p-3 bg-interactive-primary hover:brightness-110 text-white rounded-xl transition-all disabled:opacity-40 disabled:cursor-not-allowed shrink-0 shadow-lg shadow-interactive-primary/20 active:scale-95"
+            className="p-3 bg-[#F4C542] hover:bg-[#e0b435] text-[#111111] font-bold rounded-xl transition-all disabled:opacity-40 disabled:cursor-not-allowed shrink-0 shadow-lg shadow-[#F4C542]/20 active:scale-95"
             title="Send Message"
           >
             <Send size={18} />

@@ -310,7 +310,7 @@ export default function AIChat() {
                   <span className="material-symbols-outlined text-on-surface-variant text-[18px]">person</span>
                 </div>
                 <div className="space-y-sm text-right">
-                  <div className="bg-interactive-primary text-white p-3 rounded-xl rounded-tr-none border border-primary/20 shadow-lg shadow-interactive-primary/10 text-sm text-left">
+                  <div className="bg-[#F4C542] text-[#111111] font-medium p-3 rounded-xl rounded-tr-none border border-[#111111]/20 shadow-md text-sm text-left">
                     {msg.text}
                   </div>
                   <span className="text-[10px] text-on-surface-variant opacity-60 px-1">Student • {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>

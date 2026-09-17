@@ -2510,9 +2510,9 @@ export default function PsychologistDashboard() {
                         onChange={e => setCounselorMessage(e.target.value)}
                         onKeyDown={e => e.key === 'Enter' && handleSendMessage()}
                         placeholder="Send message to student as Counselor..."
-                        className="flex-1 bg-transparent border-none text-sm px-2 focus:outline-none"
+                        className="flex-1 bg-transparent border-none text-sm px-2 focus:outline-none text-on-surface placeholder:text-on-surface-variant/50"
                       />
-                      <button onClick={handleSendMessage} className="bg-primary hover:bg-primary-hover text-white p-2 rounded-md">
+                      <button onClick={handleSendMessage} className="bg-[#F4C542] hover:bg-[#e0b435] text-[#111111] font-bold p-2 rounded-md transition-colors" title="Send">
                         <span className="material-symbols-outlined text-[18px]">send</span>
                       </button>
                     </div>

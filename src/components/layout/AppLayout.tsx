@@ -9,6 +9,7 @@ import {
   getAuth, clearAuth, getAlias, getUserName, getRole, getHomeRoute, 
   type UserRole 
 } from '../../utils/auth';
+import { signOutSupabase } from '../../utils/supabaseAuth';
 import { screenTimeTracker, type ScreenTimeState } from '../../utils/screenTimeTracker';
 
 interface NavItem {
@@ -84,15 +85,29 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
   const isPsychRoute = location.pathname.startsWith('/psychologist');
   const isAdminRoute = location.pathname.startsWith('/admin');
   const isSuperAdminRoute = location.pathname.startsWith('/superadmin') || location.pathname.startsWith('/super-admin');
+  const isStudentRoute = location.pathname.startsWith('/student');
 
-  // Derive effective role from current route path
-  const effectiveRole: UserRole = isSuperAdminRoute
+  // Derive effective role from current route path - NEVER let student route act as super_admin
+  const effectiveRole: UserRole = isStudentRoute
+    ? 'student'
+    : isSuperAdminRoute
     ? 'super_admin'
     : isPsychRoute
     ? 'psychologist'
     : isAdminRoute
     ? 'admin'
-    : (auth?.role || 'student');
+    : (auth?.role === 'super_admin' ? 'student' : (auth?.role || 'student'));
+
+  // MindBridge brand logo destination: on student pages, it ALWAYS navigates to /student/home
+  const brandHomeRoute = isStudentRoute
+    ? '/student/home'
+    : isPsychRoute
+    ? '/psychologist/dashboard'
+    : isAdminRoute
+    ? '/admin/dashboard'
+    : isSuperAdminRoute
+    ? '/superadmin/dashboard'
+    : '/student/home';
 
   let navItems: NavItem[] = STUDENT_NAV;
   if (effectiveRole === 'super_admin') {
@@ -127,7 +142,8 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
     );
   }
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await signOutSupabase();
     clearAuth();
     navigate('/login');
   };
@@ -180,7 +196,7 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
             {/* Drawer Header */}
             <div className="h-20 flex items-center justify-between px-6 border-b border-[#111111]/10 shrink-0">
               <Link 
-                to={getHomeRoute(effectiveRole)} 
+                to={brandHomeRoute} 
                 onClick={() => setMobileMenuOpen(false)} 
                 className="flex items-center gap-3 cursor-pointer"
               >
@@ -279,7 +295,7 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
         {/* Sidebar Brand Header */}
         <div className="h-20 flex items-center justify-between px-5 border-b border-[#111111]/10">
           {!isCollapsed ? (
-            <Link to={getHomeRoute(effectiveRole)} className="flex items-center gap-3 group overflow-hidden">
+            <Link to={brandHomeRoute} className="flex items-center gap-3 group overflow-hidden">
               <img 
                 src="/logo.png" 
                 alt="Vishnu Wellness Centre" 
@@ -292,7 +308,7 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
             </Link>
           ) : (
             <Link 
-              to={getHomeRoute(effectiveRole)} 
+              to={brandHomeRoute} 
               title="MindBridge Home"
               className="w-10 h-10 mx-auto flex items-center justify-center hover:scale-105 transition-transform"
             >
@@ -398,7 +414,7 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
               >
                 <Menu size={20} />
               </button>
-              <Link to={getHomeRoute(effectiveRole)} className="flex items-center gap-2 min-w-0">
+              <Link to={brandHomeRoute} className="flex items-center gap-2 min-w-0">
                 <img src="/logo.png" alt="Vishnu Wellness Centre" className="w-7 h-7 rounded-full object-cover shrink-0 border border-[#111111]/20" />
                 <span className="font-heading font-black text-sm text-[#111111] truncate">MindBridge</span>
               </Link>

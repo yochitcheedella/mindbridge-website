@@ -152,8 +152,9 @@ export default function LandingPage() {
             {auth?.access_token ? (
               <button
                 onClick={() => {
-                  if (auth.role === 'psychologist') navigate('/psychologist/dashboard');
+                  if (auth.role === 'super_admin') navigate('/superadmin/dashboard');
                   else if (auth.role === 'admin') navigate('/admin/dashboard');
+                  else if (auth.role === 'psychologist') navigate('/psychologist/dashboard');
                   else navigate('/student/home');
                 }}
                 className="bg-[#F4C542] text-[#111111] font-black text-sm px-5 py-2.5 rounded-xl border-2 border-[#111111] shadow-[2px_2px_0px_#111111] hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5 transition-all flex items-center gap-2"

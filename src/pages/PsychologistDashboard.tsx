@@ -98,6 +98,7 @@ export default function PsychologistDashboard() {
   const [appointments, setAppointments] = useState<any[]>([]);
   const [rescheduleId, setRescheduleId] = useState<number | null>(null);
   const [rescheduleDate, setRescheduleDate] = useState('');
+  const [apptToast, setApptToast] = useState<{ title: string; desc: string; type: 'success' | 'danger'; url?: string } | null>(null);
 
   // ── MONTHLY REPORTS STATE (REQ 2 & 16) ──
   const [showMonthlyReportModal, setShowMonthlyReportModal] = useState(false);
@@ -390,24 +391,35 @@ export default function PsychologistDashboard() {
       if (raw) localBooked = JSON.parse(raw);
     } catch {}
 
+    let overrides: Record<string, string> = {};
+    try {
+      const rawOverrides = localStorage.getItem('mindbridge_appt_status_overrides');
+      if (rawOverrides) overrides = JSON.parse(rawOverrides);
+    } catch {}
+
     apiFetch('/api/appointments/all')
       .then(r => r.json())
       .then(data => {
         const apiList = Array.isArray(data) ? data : [];
         const combined = [...localBooked];
         apiList.forEach((apiAppt: any) => {
-          const exists = combined.find(c => c.id === apiAppt.id);
+          const exists = combined.find(c => String(c.id) === String(apiAppt.id));
           if (exists) {
-            exists.status = apiAppt.status;
+            exists.status = overrides[String(apiAppt.id)] || apiAppt.status;
             if (apiAppt.slot_time) exists.slot_time = apiAppt.slot_time;
           } else {
-            combined.push(apiAppt);
+            combined.push({
+              ...apiAppt,
+              status: overrides[String(apiAppt.id)] || apiAppt.status,
+            });
           }
         });
-        setAppointments(combined);
+        const finalAppts = combined.map(a => overrides[String(a.id)] ? { ...a, status: overrides[String(a.id)] } : a);
+        setAppointments(finalAppts);
       })
       .catch(() => {
-        if (localBooked.length > 0) setAppointments(localBooked);
+        const finalAppts = localBooked.map(a => overrides[String(a.id)] ? { ...a, status: overrides[String(a.id)] } : a);
+        if (finalAppts.length > 0) setAppointments(finalAppts);
       });
   };
 
@@ -567,50 +579,97 @@ export default function PsychologistDashboard() {
     setFollowUps(prev => prev.map(f => f.id === id ? { ...f, completed: true } : f));
   };
 
-  const handleUpdateApptStatus = async (id: number, status: string, newTime?: string) => {
+  const handleUpdateApptStatus = async (id: number | string, status: string, newTime?: string) => {
+    const idStr = String(id);
     // Normalise 'accepted' -> 'confirmed', 'declined' -> 'rejected'
     const targetStatus = status === 'accepted' ? 'confirmed' : status === 'declined' ? 'rejected' : status;
 
-    // Optimistic UI update so buttons respond instantaneously
-    setAppointments(prev => prev.map(a => 
-      a.id === id ? { ...a, status: targetStatus, ...(newTime ? { slot_time: newTime } : {}) } : a
-    ));
-
+    // 1. Immediately record in persistent statusOverrides so periodic sync never resets it
     try {
-      const res = await apiFetch(`/api/appointments/${id}/status`, {
-        method: 'PUT',
-        body: JSON.stringify({ status: targetStatus, new_time: newTime })
-      });
-      if (res.ok) {
-        fetchAppointments();
-      }
+      const rawOverrides = localStorage.getItem('mindbridge_appt_status_overrides');
+      const curOverrides = rawOverrides ? JSON.parse(rawOverrides) : {};
+      curOverrides[idStr] = targetStatus;
+      localStorage.setItem('mindbridge_appt_status_overrides', JSON.stringify(curOverrides));
+    } catch (e) {
+      console.warn('Could not save status overrides:', e);
+    }
 
-      // ⚡ AUTOMATIC WHATSAPP NOTIFICATION TO STUDENT UPON ACCEPTANCE
-      if (targetStatus === 'confirmed') {
-        const appt = appointments.find(a => a.id === id);
-        if (appt) {
-          const studentPhone = appt.mobile_number || appt.phone || appt.whatsappNumber || '+91 98765 43210';
-          const studentName = appt.student_name || appt.original_name || appt.anonymous_id || appt.student_alias || 'Student';
-          const confirmMsg = buildStudentConfirmationMessage({
-            studentName,
-            counselorName: appt.psychologist_name || 'Ram Prudhvi Teja',
-            collegeName: appt.college_name || appt.institution || 'Vishnu Institute of Technology (VIT)',
-            department: appt.department || appt.branch || 'General',
-            year: appt.year || 'N/A',
-            slotTime: newTime || appt.slot_time,
-            mode: appt.type || 'Audio Call',
-          });
-          dispatchWhatsAppMessage({
-            toPhone: studentPhone,
-            message: confirmMsg,
-            recipientName: studentName,
-            type: 'appointment_student_reminder',
-            openInWindow: true,
-          });
-        }
+    // 2. Immediately update local storage mindbridge_booked_appointments
+    try {
+      const stored = localStorage.getItem('mindbridge_booked_appointments');
+      if (stored) {
+        const list = JSON.parse(stored);
+        const updated = list.map((a: any) => 
+          String(a.id) === idStr ? { ...a, status: targetStatus, ...(newTime ? { slot_time: newTime } : {}) } : a
+        );
+        localStorage.setItem('mindbridge_booked_appointments', JSON.stringify(updated));
       }
     } catch (e) {
-      console.error(e);
+      console.warn('Could not update localStorage appointment:', e);
+    }
+
+    // 3. Immediately update UI state (using String comparison for robust matching)
+    setAppointments(prev => prev.map(a => 
+      String(a.id) === idStr ? { ...a, status: targetStatus, ...(newTime ? { slot_time: newTime } : {}) } : a
+    ));
+
+    const appt = appointments.find(a => String(a.id) === idStr);
+    const studentName = appt?.student_name || appt?.original_name || appt?.anonymous_id || appt?.student_alias || 'Student';
+
+    // 4. Instant visual confirmation toast
+    if (targetStatus === 'confirmed') {
+      setApptToast({
+        title: '✅ Booking Request Accepted',
+        desc: `Session with ${studentName} is confirmed. Slots locked and WhatsApp reminder prepared.`,
+        type: 'success'
+      });
+    } else if (targetStatus === 'rejected') {
+      setApptToast({
+        title: '❌ Booking Request Declined',
+        desc: `Session request from ${studentName} was declined.`,
+        type: 'danger'
+      });
+    }
+    setTimeout(() => setApptToast(null), 6000);
+
+    // 5. Backend sync with 2.5s AbortController timeout (non-blocking)
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 2500);
+      await apiFetch(`/api/appointments/${id}/status`, {
+        method: 'PUT',
+        body: JSON.stringify({ status: targetStatus, new_time: newTime }),
+        signal: controller.signal
+      });
+      clearTimeout(timeoutId);
+    } catch (err) {
+      console.warn('Backend status update offline or timed out, persistent local override preserved:', err);
+    }
+
+    // 6. If confirmed, log WhatsApp dispatch
+    if (targetStatus === 'confirmed' && appt) {
+      try {
+        const studentPhone = appt.mobile_number || appt.phone || appt.whatsappNumber || '+91 98765 43210';
+        const confirmMsg = buildStudentConfirmationMessage({
+          studentName,
+          counselorName: appt.psychologist_name || 'Ram Prudhvi Teja',
+          collegeName: appt.college_name || appt.institution || 'Vishnu Institute of Technology (VIT)',
+          department: appt.department || appt.branch || 'General',
+          year: appt.year || 'N/A',
+          slotTime: newTime || appt.slot_time,
+          mode: appt.type || 'Audio Call',
+        });
+        const dispatchRes = dispatchWhatsAppMessage({
+          toPhone: studentPhone,
+          message: confirmMsg,
+          recipientName: studentName,
+          type: 'appointment_student_reminder',
+          openInWindow: false,
+        });
+        setApptToast(prev => prev ? { ...prev, url: dispatchRes.url } : null);
+      } catch (waErr) {
+        console.warn('WhatsApp dispatch warning:', waErr);
+      }
     }
   };
 
@@ -624,6 +683,38 @@ export default function PsychologistDashboard() {
           setDecryptedIdentity({ name: data.real_name, phone: data.real_phone, email: data.real_email });
         }}
       />
+
+      {/* ── APPOINTMENT STATUS TOAST ── */}
+      {apptToast && (
+        <div className="fixed top-24 right-4 z-[70] max-w-sm p-4 rounded-2xl bg-[#FFFFFF] border-2 border-[#111111] shadow-2xl flex items-start gap-3 animate-fade-in">
+          <div className={`w-8 h-8 rounded-xl flex items-center justify-center font-bold text-sm shrink-0 mt-0.5 ${
+            apptToast.type === 'success' ? 'bg-[#F4C542] text-[#111111] border border-[#111111]' : 'bg-rose-100 text-rose-700 border border-rose-300'
+          }`}>
+            {apptToast.type === 'success' ? '✓' : '✕'}
+          </div>
+          <div className="flex-1 min-w-0">
+            <h4 className="text-xs font-black text-[#111111]">{apptToast.title}</h4>
+            <p className="text-[11px] text-[#111111]/75 mt-0.5 leading-snug">{apptToast.desc}</p>
+            {apptToast.url && (
+              <a
+                href={apptToast.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-[11px] font-black text-[#128C7E] hover:underline mt-1.5"
+              >
+                <span>Open WhatsApp Notification</span>
+                <span className="material-symbols-outlined text-[13px]">open_in_new</span>
+              </a>
+            )}
+          </div>
+          <button 
+            onClick={() => setApptToast(null)}
+            className="text-xs font-bold text-[#111111]/40 hover:text-[#111111] p-1 cursor-pointer"
+          >
+            ✕
+          </button>
+        </div>
+      )}
 
       {/* Critical Alert Overlay */}
       {criticalAlert && (

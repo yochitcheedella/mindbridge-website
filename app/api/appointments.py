@@ -339,7 +339,10 @@ def update_appointment_status(appointment_id: int, req: AppointmentStatusUpdate,
     appt.status = target_status
     if target_status == "rescheduled" and req.new_time:
         try:
-            slot_dt = datetime.fromisoformat(req.new_time)
+            iso_clean = req.new_time.replace("Z", "+00:00")
+            slot_dt = datetime.fromisoformat(iso_clean)
+            if slot_dt.tzinfo is not None:
+                slot_dt = slot_dt.replace(tzinfo=None)
             appt.slot_time = slot_dt
         except ValueError:
             pass

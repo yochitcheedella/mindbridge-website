@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 import { 
   getAuth, clearAuth, getAlias, getUserName, getRole, getHomeRoute, 
-  type UserRole, loginAsPsychologistDemo, loginAsAdminDemo, loginAsStudentDemo, loginAsSuperAdminDemo 
+  type UserRole 
 } from '../../utils/auth';
 import { screenTimeTracker, type ScreenTimeState } from '../../utils/screenTimeTracker';
 
@@ -103,24 +103,29 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
     navItems = ADMIN_NAV;
   }
 
-  // Auto-sync authenticated session if user visits a staff portal with mismatched session
+  // Enforce role-based access control (RBAC) - Redirect unauthorized visitors to login
+  const isSuperAdminAuthorized = isSuperAdminRoute && auth?.role === 'super_admin';
+  const isAdminAuthorized = isAdminRoute && (auth?.role === 'admin' || auth?.role === 'super_admin');
+  const isPsychAuthorized = isPsychRoute && auth?.role === 'psychologist';
+
   useEffect(() => {
-    let cancelled = false;
-    async function alignSession() {
-      if (isSuperAdminRoute && auth?.role !== 'super_admin') {
-        const synced = await loginAsSuperAdminDemo();
-        if (!cancelled) setLocalAuth(synced);
-      } else if (isPsychRoute && auth?.role !== 'psychologist') {
-        const synced = await loginAsPsychologistDemo();
-        if (!cancelled) setLocalAuth(synced);
-      } else if (isAdminRoute && auth?.role !== 'admin' && auth?.role !== 'super_admin') {
-        const synced = await loginAsAdminDemo();
-        if (!cancelled) setLocalAuth(synced);
-      }
+    if (isSuperAdminRoute && !isSuperAdminAuthorized) {
+      navigate(`/login?role=super_admin&redirect=${encodeURIComponent(location.pathname)}`, { replace: true });
+    } else if (isAdminRoute && !isAdminAuthorized) {
+      navigate(`/login?role=admin&redirect=${encodeURIComponent(location.pathname)}`, { replace: true });
+    } else if (isPsychRoute && !isPsychAuthorized) {
+      navigate(`/login?role=psychologist&redirect=${encodeURIComponent(location.pathname)}`, { replace: true });
     }
-    alignSession();
-    return () => { cancelled = true; };
-  }, [isSuperAdminRoute, isPsychRoute, isAdminRoute, auth?.role]);
+  }, [isSuperAdminRoute, isAdminRoute, isPsychRoute, isSuperAdminAuthorized, isAdminAuthorized, isPsychAuthorized, location.pathname, navigate]);
+
+  if ((isSuperAdminRoute && !isSuperAdminAuthorized) || (isAdminRoute && !isAdminAuthorized) || (isPsychRoute && !isPsychAuthorized)) {
+    return (
+      <div className="min-h-screen bg-[#FFFFFF] flex flex-col items-center justify-center p-4">
+        <div className="w-10 h-10 border-4 border-[#111111] border-t-[#F4C542] rounded-full animate-spin mb-4" />
+        <p className="font-heading font-black text-sm text-[#111111]">Redirecting to Portal Authentication...</p>
+      </div>
+    );
+  }
 
   const handleLogout = () => {
     clearAuth();

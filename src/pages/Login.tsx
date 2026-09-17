@@ -41,7 +41,12 @@ export default function Login() {
     }
     return p;
   });
-  const [showDirectForm, setShowDirectForm] = useState(false);
+  const [showDirectForm, setShowDirectForm] = useState(() => {
+    if (roleParam && roleParam !== savedProfile?.role) {
+      return true;
+    }
+    return false;
+  });
 
   const initialRole: 'student' | 'psychologist' | 'admin' | 'super_admin' = 
     roleParam === 'super_admin' || roleParam === 'superadmin' ? 'super_admin' :
@@ -79,14 +84,23 @@ export default function Login() {
   useEffect(() => {
     if (roleParam === 'super_admin' || roleParam === 'superadmin') {
       setActiveRoleTab('super_admin');
+      if (savedProfile?.role !== 'super_admin') {
+        setShowDirectForm(true);
+      }
     } else if (roleParam === 'admin') {
       setActiveRoleTab('admin');
+      if (savedProfile?.role !== 'admin') {
+        setShowDirectForm(true);
+      }
     } else if (roleParam === 'psychologist' || roleParam === 'counselor') {
       setActiveRoleTab('psychologist');
+      if (savedProfile?.role !== 'psychologist') {
+        setShowDirectForm(true);
+      }
     } else if (roleParam === 'student') {
       setActiveRoleTab('student');
     }
-  }, [roleParam]);
+  }, [roleParam, savedProfile?.role]);
 
   const handleContinueAsSaved = async () => {
     const currentAuth = getAuth();
@@ -145,29 +159,37 @@ export default function Login() {
         primary_color: data.primary_color,
       }, cleanEmail);
 
-      navigate(getHomeRoute(data.role));
+      const redirectParam = searchParams.get('redirect');
+      if (redirectParam && redirectParam.startsWith('/')) {
+        navigate(redirectParam);
+      } else {
+        navigate(getHomeRoute(data.role));
+      }
     } catch (err: any) {
       clearTimeout(timeoutId);
       const isTimeoutOrNetwork = err.name === 'AbortError' || err.message?.includes('Failed to fetch') || err.message?.includes('NetworkError');
 
       // Offline resilient fallback only if network/server is completely unreachable AND valid credentials:
       if (isTimeoutOrNetwork) {
+        const redirectParam = searchParams.get('redirect');
+        const resolveTarget = (role: any) => (redirectParam && redirectParam.startsWith('/') ? redirectParam : getHomeRoute(role));
+
         const cleanEmail = email.trim().toLowerCase();
         if (cleanEmail.includes('superadmin') && (password === 'superadmin123' || password === 'RootCentral@2026' || password === 'admin123')) {
           const saAuth = await loginAsSuperAdminDemo();
-          navigate(getHomeRoute(saAuth.role));
+          navigate(resolveTarget(saAuth.role));
           return;
         } else if (cleanEmail.includes('admin') && (password === 'admin123' || password === 'Admin@VIT2024' || password === 'admin@123')) {
           const adminAuth = await loginAsAdminDemo();
-          navigate(getHomeRoute(adminAuth.role));
+          navigate(resolveTarget(adminAuth.role));
           return;
         } else if ((cleanEmail.includes('prudhvi') || cleanEmail.includes('counselor')) && (password === 'counselor123' || password === 'Counselor@VIT2024')) {
           const psychAuth = await loginAsPsychologistDemo();
-          navigate(getHomeRoute(psychAuth.role));
+          navigate(resolveTarget(psychAuth.role));
           return;
         } else if (password && password.length >= 4) {
           const studentAuth = await loginAsStudentDemo();
-          navigate(getHomeRoute(studentAuth.role));
+          navigate(resolveTarget(studentAuth.role));
           return;
         }
       }

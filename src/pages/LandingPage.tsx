@@ -130,13 +130,13 @@ export default function LandingPage() {
             <a href="#anonymity" className="hover:text-[#111111] transition-colors">Anonymity Vault</a>
             <a href="#breathwork" className="hover:text-[#111111] transition-colors">Quick Calm</a>
             <Link 
-              to="/admin/dashboard" 
+              to={auth?.role === 'admin' || auth?.role === 'super_admin' ? "/admin/dashboard" : "/login?role=admin"} 
               className="text-xs font-mono font-black uppercase px-2.5 py-1 rounded-lg bg-[#FAFAFA] border border-[#111111]/30 hover:border-[#111111] hover:bg-[#F4C542] text-[#111111] transition-all"
             >
               Admin
             </Link>
             <Link 
-              to="/superadmin/dashboard" 
+              to={auth?.role === 'super_admin' ? "/superadmin/dashboard" : "/login?role=super_admin"} 
               className="text-xs font-mono font-black uppercase px-2.5 py-1 rounded-lg bg-[#F4C542] border border-[#111111] text-[#111111] hover:bg-[#e0b435] transition-all shadow-xs"
             >
               Super Admin
@@ -232,7 +232,7 @@ export default function LandingPage() {
               </a>
 
               <Link
-                to="/login"
+                to={auth?.role === 'psychologist' ? "/psychologist/dashboard" : "/login?role=psychologist"}
                 className="w-full sm:w-auto text-[#111111]/80 hover:text-[#111111] font-bold text-sm px-5 py-4 flex items-center justify-center gap-1.5"
               >
                 <span>Psychologist & Staff Login</span>
@@ -460,7 +460,7 @@ export default function LandingPage() {
                   </div>
                   <div className="mt-6 pt-4 border-t border-[#111111]/10 flex items-center justify-between text-xs font-bold text-[#111111]">
                     <span>Zero False Alarm Engine</span>
-                    <Link to="/psychologist/dashboard" className="flex items-center gap-1 hover:text-[#F4C542]">Staff Triage <ArrowRight size={14} /></Link>
+                    <Link to={auth?.role === 'psychologist' ? "/psychologist/dashboard" : "/login?role=psychologist"} className="flex items-center gap-1 hover:text-[#F4C542]">Staff Triage <ArrowRight size={14} /></Link>
                   </div>
                 </div>
 
@@ -477,7 +477,7 @@ export default function LandingPage() {
                   </div>
                   <div className="mt-6 pt-4 border-t border-[#111111]/10 flex items-center justify-between text-xs font-bold text-[#111111]">
                     <span>Clinical Compliance</span>
-                    <Link to="/psychologist/soap-notes" className="flex items-center gap-1 hover:text-[#F4C542]">SOAP Editor <ArrowRight size={14} /></Link>
+                    <Link to={auth?.role === 'psychologist' ? "/psychologist/soap-notes" : "/login?role=psychologist"} className="flex items-center gap-1 hover:text-[#F4C542]">SOAP Editor <ArrowRight size={14} /></Link>
                   </div>
                 </div>
 
@@ -494,7 +494,7 @@ export default function LandingPage() {
                   </div>
                   <div className="mt-6 pt-4 border-t border-[#111111]/10 flex items-center justify-between text-xs font-bold text-[#111111]">
                     <span>Multi-Key Protocol</span>
-                    <Link to="/psychologist/dashboard" className="flex items-center gap-1 hover:text-[#F4C542]">Clinical Radar <ArrowRight size={14} /></Link>
+                    <Link to={auth?.role === 'psychologist' ? "/psychologist/dashboard" : "/login?role=psychologist"} className="flex items-center gap-1 hover:text-[#F4C542]">Clinical Radar <ArrowRight size={14} /></Link>
                   </div>
                 </div>
 
@@ -517,7 +517,7 @@ export default function LandingPage() {
                   </div>
                   <div className="mt-6 pt-4 border-t border-[#111111]/10 flex items-center justify-between text-xs font-bold text-[#111111]">
                     <span>Institutional Oversight</span>
-                    <Link to="/admin/dashboard" className="flex items-center gap-1 hover:text-[#F4C542]">Admin Suite <ArrowRight size={14} /></Link>
+                    <Link to={auth?.role === 'admin' || auth?.role === 'super_admin' ? "/admin/dashboard" : "/login?role=admin"} className="flex items-center gap-1 hover:text-[#F4C542]">Admin Suite <ArrowRight size={14} /></Link>
                   </div>
                 </div>
 
@@ -534,7 +534,7 @@ export default function LandingPage() {
                   </div>
                   <div className="mt-6 pt-4 border-t border-[#111111]/10 flex items-center justify-between text-xs font-bold text-[#111111]">
                     <span>Staff Rostering</span>
-                    <Link to="/admin/users" className="flex items-center gap-1 hover:text-[#F4C542]">Manage Staff <ArrowRight size={14} /></Link>
+                    <Link to={auth?.role === 'admin' || auth?.role === 'super_admin' ? "/admin/users" : "/login?role=admin"} className="flex items-center gap-1 hover:text-[#F4C542]">Manage Staff <ArrowRight size={14} /></Link>
                   </div>
                 </div>
 
@@ -551,7 +551,7 @@ export default function LandingPage() {
                   </div>
                   <div className="mt-6 pt-4 border-t border-[#111111]/10 flex items-center justify-between text-xs font-bold text-[#111111]">
                     <span>Accreditation Ready</span>
-                    <Link to="/admin/reports" className="flex items-center gap-1 hover:text-[#F4C542]">Generate Reports <ArrowRight size={14} /></Link>
+                    <Link to={auth?.role === 'admin' || auth?.role === 'super_admin' ? "/admin/reports" : "/login?role=admin"} className="flex items-center gap-1 hover:text-[#F4C542]">Generate Reports <ArrowRight size={14} /></Link>
                   </div>
                 </div>
 
@@ -574,7 +574,7 @@ export default function LandingPage() {
                   </div>
                   <div className="mt-6 pt-4 border-t border-[#111111]/10 flex items-center justify-between text-xs font-bold text-[#111111]">
                     <span>Society Governance</span>
-                    <Link to="/superadmin/dashboard" className="flex items-center gap-1 hover:text-[#F4C542]">Campus Console <ArrowRight size={14} /></Link>
+                    <Link to={auth?.role === 'super_admin' ? "/superadmin/dashboard" : "/login?role=super_admin"} className="flex items-center gap-1 hover:text-[#F4C542]">Campus Console <ArrowRight size={14} /></Link>
                   </div>
                 </div>
 
@@ -591,7 +591,7 @@ export default function LandingPage() {
                   </div>
                   <div className="mt-6 pt-4 border-t border-[#111111]/10 flex items-center justify-between text-xs font-bold text-[#111111]">
                     <span>Vector PDF Export</span>
-                    <Link to="/superadmin/dashboard" className="flex items-center gap-1 hover:text-[#F4C542]">Central Repository <ArrowRight size={14} /></Link>
+                    <Link to={auth?.role === 'super_admin' ? "/superadmin/dashboard" : "/login?role=super_admin"} className="flex items-center gap-1 hover:text-[#F4C542]">Central Repository <ArrowRight size={14} /></Link>
                   </div>
                 </div>
 
@@ -608,7 +608,7 @@ export default function LandingPage() {
                   </div>
                   <div className="mt-6 pt-4 border-t border-[#111111]/10 flex items-center justify-between text-xs font-bold text-[#111111]">
                     <span>Root RBAC Control</span>
-                    <Link to="/superadmin/dashboard" className="flex items-center gap-1 hover:text-[#F4C542]">Configure AI &amp; RBAC <ArrowRight size={14} /></Link>
+                    <Link to={auth?.role === 'super_admin' ? "/superadmin/dashboard" : "/login?role=super_admin"} className="flex items-center gap-1 hover:text-[#F4C542]">Configure AI &amp; RBAC <ArrowRight size={14} /></Link>
                   </div>
                 </div>
 

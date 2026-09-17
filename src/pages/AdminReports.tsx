@@ -127,6 +127,15 @@ export default function AdminReports() {
 
   useEffect(() => { fetchReport(); }, []);
 
+  const handleDeleteConsolidatedReport = (id: string, title: string) => {
+    if (!confirm(`Are you sure you want to delete "${title}"?`)) return;
+    const updated = consolidatedReports.filter(r => r.id !== id);
+    setConsolidatedReports(updated);
+    try {
+      localStorage.setItem('mindbridge_consolidated_monthly_reports', JSON.stringify(updated));
+    } catch {}
+  };
+
   const downloadJSON = () => {
     if (!report) return;
     setDownloading(true);
@@ -288,7 +297,13 @@ export default function AdminReports() {
                   </div>
 
                   {/* Action Bar */}
-                  <div className="pt-2 flex justify-end">
+                  <div className="pt-2 flex items-center justify-between flex-wrap gap-2">
+                    <button
+                      onClick={() => handleDeleteConsolidatedReport(rep.id, rep.reportTitle)}
+                      className="px-3 py-1.5 rounded-xl bg-[#FAFAFA] hover:bg-rose-50 text-rose-700 hover:text-rose-900 border border-rose-200 text-xs font-bold transition-all cursor-pointer"
+                    >
+                      Delete Report
+                    </button>
                     <button
                       onClick={() => generateConsolidatedReportPDF(rep)}
                       className="px-6 py-2.5 rounded-xl bg-[#F4C542] hover:bg-[#e0b435] text-[#111111] font-heading font-black text-xs border-2 border-[#111111] transition-all shadow-xs flex items-center gap-2 cursor-pointer active:scale-95"
@@ -402,7 +417,11 @@ export default function AdminReports() {
         isOpen={showConsolidatedModal}
         onClose={() => setShowConsolidatedModal(false)}
         onSaveReport={(newReport) => {
-          setConsolidatedReports(prev => [newReport, ...prev]);
+          const updated = [newReport, ...consolidatedReports];
+          setConsolidatedReports(updated);
+          try {
+            localStorage.setItem('mindbridge_consolidated_monthly_reports', JSON.stringify(updated));
+          } catch {}
         }}
       />
     </div>

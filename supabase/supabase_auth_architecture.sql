@@ -123,7 +123,31 @@ CREATE TABLE IF NOT EXISTS public.mood_logs (
 
 CREATE INDEX IF NOT EXISTS idx_mood_student_id ON public.mood_logs(student_id);
 
--- 7. Row-Level Security (RLS) Configuration
+-- 7. Helper Functions (SECURITY DEFINER to prevent RLS recursion)
+CREATE OR REPLACE FUNCTION public.get_current_user_role(user_id UUID DEFAULT auth.uid())
+RETURNS TEXT
+LANGUAGE sql
+SECURITY DEFINER
+SET search_path = public
+STABLE
+AS $$
+    SELECT role FROM public.profiles WHERE id = user_id;
+$$;
+
+CREATE OR REPLACE FUNCTION public.is_admin_or_staff(user_id UUID DEFAULT auth.uid())
+RETURNS BOOLEAN
+LANGUAGE sql
+SECURITY DEFINER
+SET search_path = public
+STABLE
+AS $$
+    SELECT EXISTS (
+        SELECT 1 FROM public.profiles
+        WHERE id = user_id AND role IN ('admin', 'super_admin', 'counsellor', 'psychologist')
+    );
+$$;
+
+-- 8. Row-Level Security (RLS) Configuration
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.bookings ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.journal_entries ENABLE ROW LEVEL SECURITY;
@@ -136,10 +160,7 @@ CREATE POLICY "Users can view own profile"
     ON public.profiles FOR SELECT
     USING (
         auth.uid() = id
-        OR EXISTS (
-            SELECT 1 FROM public.profiles AS p
-            WHERE p.id = auth.uid() AND p.role IN ('admin', 'super_admin', 'counsellor', 'psychologist')
-        )
+        OR public.is_admin_or_staff(auth.uid())
     );
 
 -- Users can update only their own profile display attributes (role modification strictly prevented)
@@ -149,13 +170,10 @@ CREATE POLICY "Users can update own profile"
     USING (auth.uid() = id)
     WITH CHECK (
         auth.uid() = id
-        -- Ensure non-admins cannot elevate their own role
+        -- Non-admins cannot elevate their own role
         AND (
-            role = (SELECT p.role FROM public.profiles p WHERE p.id = auth.uid())
-            OR EXISTS (
-                SELECT 1 FROM public.profiles AS p
-                WHERE p.id = auth.uid() AND p.role IN ('admin', 'super_admin')
-            )
+            role = public.get_current_user_role(auth.uid())
+            OR public.is_admin_or_staff(auth.uid())
         )
     );
 
@@ -172,10 +190,7 @@ CREATE POLICY "Students can view own bookings"
     ON public.bookings FOR SELECT
     USING (
         auth.uid() = student_id
-        OR EXISTS (
-            SELECT 1 FROM public.profiles AS p
-            WHERE p.id = auth.uid() AND p.role IN ('admin', 'super_admin', 'counsellor', 'psychologist')
-        )
+        OR public.is_admin_or_staff(auth.uid())
     );
 
 -- Students can cancel/update only their own bookings
@@ -184,10 +199,7 @@ CREATE POLICY "Students can update own bookings"
     ON public.bookings FOR UPDATE
     USING (
         auth.uid() = student_id
-        OR EXISTS (
-            SELECT 1 FROM public.profiles AS p
-            WHERE p.id = auth.uid() AND p.role IN ('admin', 'super_admin', 'counsellor', 'psychologist')
-        )
+        OR public.is_admin_or_staff(auth.uid())
     );
 
 -- ── JOURNAL POLICIES ──
@@ -203,13 +215,3 @@ CREATE POLICY "Students own their mood logs"
     ON public.mood_logs FOR ALL
     USING (auth.uid() = student_id)
     WITH CHECK (auth.uid() = student_id);
-
--- 8. Helper Function: Get User Role Server-side
-CREATE OR REPLACE FUNCTION public.get_current_user_role()
-RETURNS TEXT
-LANGUAGE sql
-STABLE
-SECURITY DEFINER
-AS $$
-    SELECT role FROM public.profiles WHERE id = auth.uid();
-$$;

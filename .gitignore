@@ -32,6 +32,7 @@ uploads/
 mindbridge.db
 seed_psychologists.py
 .vercel
+supabase/.temp/
 test-results/
 /*.apk
 

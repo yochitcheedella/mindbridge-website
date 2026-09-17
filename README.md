@@ -84,19 +84,6 @@ The optimized production bundle will be generated in `dist/`.
 
 ---
 
-## 🔑 Demo & Testing Accounts
-
-The web platform is pre-configured to authenticate against the live Render cloud API:
-
-| Role | Email | Password | Access Path |
-| :--- | :--- | :--- | :--- |
-| **Institutional Admin** | `admin@vishnu.edu.in` | `Admin@VIT2024` | `/admin/dashboard` |
-| **Senior Psychologist** | `prudhvi.v@vishnu.edu.in` | `Psych@VIT2024` | `/psychologist/dashboard` |
-| **Visiting Counselor** | `ram.sir@vishnu.edu.in` | `Psych@VIT2024` | `/psychologist/dashboard` |
-| **Student Level** | Register anytime via web UI | Chosen at signup | `/student/home` |
-
----
-
 ## ☁️ Deployment
 
 ### 1. Deploy on Vercel (1-Click)

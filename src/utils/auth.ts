@@ -490,3 +490,16 @@ export async function loginAsStudentDemo(): Promise<AuthState> {
   return studentAuth;
 }
 
+export async function loginAsSuperAdminDemo(): Promise<AuthState> {
+  const superAdminAuth: AuthState = {
+    access_token: 'offline-superadmin-token',
+    role: 'super_admin',
+    admin_id: 1,
+    name: 'SVES Central Governance (Root)',
+    institution: 'Sri Vishnu Educational Society Central Governance',
+    primary_color: '#F4C542',
+  };
+  setAuth(superAdminAuth, 'superadmin@vishnu.edu.in');
+  return superAdminAuth;
+}
+

@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 import { 
   getAuth, clearAuth, getAlias, getUserName, getRole, getHomeRoute, 
-  type UserRole, loginAsPsychologistDemo, loginAsAdminDemo, loginAsStudentDemo 
+  type UserRole, loginAsPsychologistDemo, loginAsAdminDemo, loginAsStudentDemo, loginAsSuperAdminDemo 
 } from '../../utils/auth';
 import { screenTimeTracker, type ScreenTimeState } from '../../utils/screenTimeTracker';
 
@@ -107,7 +107,10 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
   useEffect(() => {
     let cancelled = false;
     async function alignSession() {
-      if (isPsychRoute && auth?.role !== 'psychologist') {
+      if (isSuperAdminRoute && auth?.role !== 'super_admin') {
+        const synced = await loginAsSuperAdminDemo();
+        if (!cancelled) setLocalAuth(synced);
+      } else if (isPsychRoute && auth?.role !== 'psychologist') {
         const synced = await loginAsPsychologistDemo();
         if (!cancelled) setLocalAuth(synced);
       } else if (isAdminRoute && auth?.role !== 'admin' && auth?.role !== 'super_admin') {
@@ -117,7 +120,7 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
     }
     alignSession();
     return () => { cancelled = true; };
-  }, [isPsychRoute, isAdminRoute, auth?.role]);
+  }, [isSuperAdminRoute, isPsychRoute, isAdminRoute, auth?.role]);
 
   const handleLogout = () => {
     clearAuth();
@@ -127,15 +130,15 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
   let displayName = 'User';
   let roleLabel = 'Student Account';
 
-  if (effectiveRole === 'psychologist') {
+  if (effectiveRole === 'super_admin') {
+    displayName = (auth?.role === 'super_admin' && auth?.name) ? auth.name : 'Central Society Governance';
+    roleLabel = 'ROOT Governance';
+  } else if (effectiveRole === 'psychologist') {
     displayName = (auth?.role === 'psychologist' && auth?.name) ? auth.name : 'Dr. Ram Prudhvi Teja';
     roleLabel = 'Counsellor Account';
   } else if (effectiveRole === 'admin') {
-    displayName = (auth?.role === 'admin' && auth?.name) ? auth.name : 'SVES Administrator';
+    displayName = (auth?.role === 'admin' && auth?.name) ? auth.name : 'VIT Institutional Administrator';
     roleLabel = 'Admin Account';
-  } else if (effectiveRole === 'super_admin') {
-    displayName = (auth?.role === 'super_admin' && auth?.name) ? auth.name : 'Society Super Admin';
-    roleLabel = 'Super Admin';
   } else {
     displayName = auth?.role === 'student' ? (auth?.anonymous_alias || getAlias()) : (auth?.name || 'StarlightSeeker');
     roleLabel = 'Student Account';

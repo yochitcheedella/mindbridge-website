@@ -4,7 +4,7 @@ import {
   Shield, Heart, Sparkles, Brain, Wind, Activity, Users,
   Calendar, PhoneCall, Download, ArrowRight, CheckCircle2,
   Lock, AlertTriangle, Play, Pause, RefreshCw, Smartphone,
-  Monitor, ChevronRight, FileText, BarChart3, HelpCircle, Star
+  Monitor, ChevronRight, FileText, BarChart3, HelpCircle, Star, Building2
 } from 'lucide-react';
 import { getAuth } from '../utils/auth';
 import { OFFICIAL_COUNSELORS, VISHNU_WELLNESS_CENTRE, type CounselorData } from '../data/counselors';
@@ -36,7 +36,7 @@ export default function LandingPage() {
   const [breathTimer, setBreathTimer] = useState(4);
 
   // Active Showcase Tab
-  const [activeTab, setActiveTab] = useState<'student' | 'psychologist' | 'admin'>('student');
+  const [activeTab, setActiveTab] = useState<'student' | 'psychologist' | 'admin' | 'super_admin'>('student');
 
   // Cycle Anonymity Demo
   const cyclePseudonym = () => {
@@ -133,7 +133,13 @@ export default function LandingPage() {
               to="/admin/dashboard" 
               className="text-xs font-mono font-black uppercase px-2.5 py-1 rounded-lg bg-[#FAFAFA] border border-[#111111]/30 hover:border-[#111111] hover:bg-[#F4C542] text-[#111111] transition-all"
             >
-              Admin Portal
+              Admin
+            </Link>
+            <Link 
+              to="/superadmin/dashboard" 
+              className="text-xs font-mono font-black uppercase px-2.5 py-1 rounded-lg bg-[#F4C542] border border-[#111111] text-[#111111] hover:bg-[#e0b435] transition-all shadow-xs"
+            >
+              Super Admin
             </Link>
             <a href="#download" className="hover:text-[#111111] transition-colors flex items-center gap-1.5 text-[#111111]">
               <Download size={15} className="text-[#111111]" />
@@ -335,7 +341,7 @@ export default function LandingPage() {
             </p>
 
             {/* Portal Tab Switcher */}
-            <div className="flex items-center justify-center gap-2 mt-8 p-1.5 bg-[#FAFAFA] border-2 border-[#111111] rounded-2xl max-w-md mx-auto shadow-xs">
+            <div className="flex items-center justify-center gap-1.5 mt-8 p-1.5 bg-[#FAFAFA] border-2 border-[#111111] rounded-2xl max-w-xl mx-auto shadow-xs flex-wrap sm:flex-nowrap">
               <button
                 onClick={() => setActiveTab('student')}
                 className={`flex-1 py-2 px-3 rounded-xl font-bold text-xs transition-all ${
@@ -365,6 +371,16 @@ export default function LandingPage() {
                 }`}
               >
                 Institutional Admin
+              </button>
+              <button
+                onClick={() => setActiveTab('super_admin')}
+                className={`flex-1 py-2 px-3 rounded-xl font-bold text-xs transition-all ${
+                  activeTab === 'super_admin'
+                    ? 'bg-[#F4C542] text-[#111111] border border-[#111111] shadow-xs'
+                    : 'text-[#111111]/70 hover:text-[#111111]'
+                }`}
+              >
+                Super Admin (Root)
               </button>
             </div>
           </div>
@@ -536,6 +552,63 @@ export default function LandingPage() {
                   <div className="mt-6 pt-4 border-t border-[#111111]/10 flex items-center justify-between text-xs font-bold text-[#111111]">
                     <span>Accreditation Ready</span>
                     <Link to="/admin/reports" className="flex items-center gap-1 hover:text-[#F4C542]">Generate Reports <ArrowRight size={14} /></Link>
+                  </div>
+                </div>
+
+              </div>
+            )}
+
+            {activeTab === 'super_admin' && (
+              <div className="grid md:grid-cols-3 gap-6 animate-fade-in">
+                
+                <div className="p-6 rounded-3xl bg-[#FFFFFF] border-2 border-[#111111] shadow-[4px_4px_0px_#111111] flex flex-col justify-between">
+                  <div>
+                    <div className="w-12 h-12 rounded-2xl bg-[#F4C542] border-2 border-[#111111] flex items-center justify-center text-[#111111] mb-4">
+                      <Building2 size={24} />
+                    </div>
+                    <h3 className="font-heading font-black text-xl text-[#111111] mb-2">Multi-Campus Provisioning</h3>
+                    <p className="text-sm text-[#111111]/70 leading-relaxed">
+                      Centralized deployment engine managing 7 Sri Vishnu Educational Society campuses 
+                      (VIT, BVRITH, SVECW, VDC, SVCP, SBSP, BVRC) with one-click institution onboarding.
+                    </p>
+                  </div>
+                  <div className="mt-6 pt-4 border-t border-[#111111]/10 flex items-center justify-between text-xs font-bold text-[#111111]">
+                    <span>Society Governance</span>
+                    <Link to="/superadmin/dashboard" className="flex items-center gap-1 hover:text-[#F4C542]">Campus Console <ArrowRight size={14} /></Link>
+                  </div>
+                </div>
+
+                <div className="p-6 rounded-3xl bg-[#FFFFFF] border-2 border-[#111111] shadow-[4px_4px_0px_#111111] flex flex-col justify-between">
+                  <div>
+                    <div className="w-12 h-12 rounded-2xl bg-[#F4C542] border-2 border-[#111111] flex items-center justify-center text-[#111111] mb-4">
+                      <FileText size={24} />
+                    </div>
+                    <h3 className="font-heading font-black text-xl text-[#111111] mb-2">Attachment 5 Society Reports</h3>
+                    <p className="text-sm text-[#111111]/70 leading-relaxed">
+                      Generate official society-level consolidated reports aggregating clinical intake across all 
+                      counselors, crisis SOS interventions, and monthly student satisfaction ratings.
+                    </p>
+                  </div>
+                  <div className="mt-6 pt-4 border-t border-[#111111]/10 flex items-center justify-between text-xs font-bold text-[#111111]">
+                    <span>Vector PDF Export</span>
+                    <Link to="/superadmin/dashboard" className="flex items-center gap-1 hover:text-[#F4C542]">Central Repository <ArrowRight size={14} /></Link>
+                  </div>
+                </div>
+
+                <div className="p-6 rounded-3xl bg-[#FFFFFF] border-2 border-[#111111] shadow-[4px_4px_0px_#111111] flex flex-col justify-between">
+                  <div>
+                    <div className="w-12 h-12 rounded-2xl bg-[#F4C542] border-2 border-[#111111] flex items-center justify-center text-[#111111] mb-4">
+                      <Shield size={24} />
+                    </div>
+                    <h3 className="font-heading font-black text-xl text-[#111111] mb-2">AI Sentinel &amp; Root Guard</h3>
+                    <p className="text-sm text-[#111111]/70 leading-relaxed">
+                      Configure clinical reasoning engines (Google Gemini, OpenAI GPT-4o, Air-Gapped Local), 
+                      set society-wide SOS escalation thresholds, and review cryptographic access audits.
+                    </p>
+                  </div>
+                  <div className="mt-6 pt-4 border-t border-[#111111]/10 flex items-center justify-between text-xs font-bold text-[#111111]">
+                    <span>Root RBAC Control</span>
+                    <Link to="/superadmin/dashboard" className="flex items-center gap-1 hover:text-[#F4C542]">Configure AI &amp; RBAC <ArrowRight size={14} /></Link>
                   </div>
                 </div>
 

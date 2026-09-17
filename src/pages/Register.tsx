@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Shield, Mail, Lock, Eye, EyeOff, ChevronRight, Sparkles, Check, User, Phone, Building2, BookOpen, Layers, Users } from 'lucide-react';
 import { setAuth, setStudentProfile, API_URL, type StudentProfileData } from '../utils/auth';
+import { signUpWithSupabase } from '../utils/supabaseAuth';
 
 const SVES_COLLEGES = [
   'Vishnu Institute of Technology (VIT)',
@@ -62,6 +63,23 @@ export default function Register() {
     const numericYear = parseInt(year.replace(/\D/g, '')) || 1;
 
     try {
+      // 1. Supabase Auth Registration (auth.uid() is the single identity key)
+      const supaResult = await signUpWithSupabase({
+        email: email.trim().toLowerCase(),
+        password,
+        realName: name.trim(),
+        alias: alias.trim() || undefined,
+        role: 'student',
+        collegeName,
+        department: cleanDept,
+        year,
+        phone: phone.trim(),
+      });
+
+      if (supaResult.error && !supaResult.error.includes('already registered')) {
+        console.warn('Supabase Auth registration notice:', supaResult.error);
+      }
+
       let data: any = {};
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 3000); // 3s maximum wait

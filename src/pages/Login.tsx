@@ -21,6 +21,7 @@ import {
   loginAsSuperAdminDemo,
   prewarmBackend
 } from '../utils/auth';
+import { signInWithSupabase, signOutSupabase } from '../utils/supabaseAuth';
 
 export default function Login() {
   const [searchParams] = useSearchParams();
@@ -113,6 +114,7 @@ export default function Login() {
   };
 
   const handleForgetProfile = () => {
+    signOutSupabase();
     clearSavedProfile();
     setSavedProfileState(null);
     setShowDirectForm(true);
@@ -123,11 +125,27 @@ export default function Login() {
     setLoading(true);
     setError('');
 
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 3000); // 3s maximum wait
+    const cleanEmail = email.trim();
+    const redirectParam = searchParams.get('redirect');
+    let timeoutId: any = null;
 
     try {
-      const cleanEmail = email.trim();
+      // 1. Supabase Auth Sign In (auth.uid() is the single identity key)
+      const supaResult = await signInWithSupabase(cleanEmail, password);
+      if (supaResult.profile) {
+        if (redirectParam && redirectParam.startsWith('/')) {
+          navigate(redirectParam);
+        } else {
+          const homeRole = supaResult.profile.role === 'counsellor' ? 'psychologist' : supaResult.profile.role;
+          navigate(getHomeRoute(homeRole));
+        }
+        return;
+      }
+
+      // 2. Fallback to API backend if Supabase returned an error or is offline
+      const controller = new AbortController();
+      timeoutId = setTimeout(() => controller.abort(), 3000); // 3s maximum wait
+
       const res = await fetch(`${API_URL}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -137,11 +155,11 @@ export default function Login() {
         }),
         signal: controller.signal,
       });
-      clearTimeout(timeoutId);
+      if (timeoutId) clearTimeout(timeoutId);
 
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
-        throw new Error(err.detail || 'Authentication failed. Please check your credentials.');
+        throw new Error(supaResult.error || err.detail || 'Authentication failed. Please check your credentials.');
       }
 
       const data = await res.json();
@@ -159,19 +177,17 @@ export default function Login() {
         primary_color: data.primary_color,
       }, cleanEmail);
 
-      const redirectParam = searchParams.get('redirect');
       if (redirectParam && redirectParam.startsWith('/')) {
         navigate(redirectParam);
       } else {
         navigate(getHomeRoute(data.role));
       }
     } catch (err: any) {
-      clearTimeout(timeoutId);
+      if (timeoutId) clearTimeout(timeoutId);
       const isTimeoutOrNetwork = err.name === 'AbortError' || err.message?.includes('Failed to fetch') || err.message?.includes('NetworkError');
 
       // Offline resilient fallback only if network/server is completely unreachable AND valid credentials:
       if (isTimeoutOrNetwork) {
-        const redirectParam = searchParams.get('redirect');
         const resolveTarget = (role: any) => (redirectParam && redirectParam.startsWith('/') ? redirectParam : getHomeRoute(role));
 
         const cleanEmail = email.trim().toLowerCase();

@@ -25,6 +25,8 @@ import {
 } from '../utils/whatsapp';
 import CounselorFlashcard from '../components/flashcards/CounselorFlashcard';
 import SessionFeedbackModal from '../components/clinical/SessionFeedbackModal';
+import { supabase } from '../utils/supabaseClient';
+import { getCurrentUser } from '../utils/supabaseAuth';
 
 export interface Appointment {
   id: number;
@@ -186,12 +188,44 @@ export default function Appointments() {
         setPsychologists(OFFICIAL_COUNSELORS);
       });
 
-    const loadAppointments = () => {
+    const loadAppointments = async () => {
       let localBooked: Appointment[] = [];
+      const currentUser = await getCurrentUser();
+      const storageKey = currentUser?.id ? `mindbridge_booked_appointments_${currentUser.id}` : 'mindbridge_booked_appointments';
+
       try {
-        const raw = localStorage.getItem('mindbridge_booked_appointments');
+        const raw = localStorage.getItem(storageKey);
         if (raw) localBooked = JSON.parse(raw);
       } catch {}
+
+      // Query Supabase Bookings strictly by auth.uid()
+      if (currentUser?.id) {
+        try {
+          const { data: supaBookings } = await supabase
+            .from('bookings')
+            .select('*')
+            .eq('student_id', currentUser.id);
+
+          if (Array.isArray(supaBookings) && supaBookings.length > 0) {
+            supaBookings.forEach((b: any) => {
+              const exists = localBooked.find((a: any) => a.id === b.id || a.slot_time === b.booking_date);
+              if (!exists) {
+                localBooked.push({
+                  id: b.id,
+                  psychologist_id: parseInt(b.counsellor_id) || 1,
+                  psychologist_name: b.counsellor_name || 'Dr. Ram Prudhvi Teja',
+                  specialization: 'Wellness Counsellor',
+                  slot_time: b.booking_date,
+                  status: b.status || 'confirmed',
+                  notes: b.issue_description || 'Booked via Supabase',
+                });
+              }
+            });
+          }
+        } catch (supaErr) {
+          console.warn('Supabase bookings load warning:', supaErr);
+        }
+      }
 
       apiFetch('/api/appointments/mine')
         .then(r => r.json())
@@ -304,11 +338,36 @@ export default function Appointments() {
         type: selectedMode,
       };
 
-      // Persist to local storage for instant sync with Counsellor portal
+      // Persist to Supabase public.bookings table using auth.uid() (user.id)
+      const currentUser = await getCurrentUser();
+      if (currentUser?.id) {
+        try {
+          await supabase.from('bookings').insert({
+            student_id: currentUser.id, // Strictly user.id (auth.uid()), never student_name
+            counsellor_id: selectedDoc,
+            counsellor_name: doc?.name || 'Dr. Ram Prudhvi Teja',
+            booking_date: validSlotTime,
+            time_slot: effectiveTime,
+            session_type: selectedMode === 'Physical Session' ? 'in_person' : selectedMode === 'Audio Call' ? 'audio' : 'chat',
+            status: 'confirmed',
+            issue_description: `${selectedMode} consultation request (${bookingIdentityMode === 'anonymous' ? 'Anonymous' : 'Verified'})`,
+          });
+        } catch (supaErr) {
+          console.warn('Supabase booking insert warning:', supaErr);
+        }
+      }
+
+      // Persist to user-isolated storage so students never see duplicate/shared appointments
       try {
-        const stored = localStorage.getItem('mindbridge_booked_appointments');
+        const userStorageKey = currentUser?.id ? `mindbridge_booked_appointments_${currentUser.id}` : 'mindbridge_booked_appointments';
+        const stored = localStorage.getItem(userStorageKey);
         const list = stored ? JSON.parse(stored) : [];
-        localStorage.setItem('mindbridge_booked_appointments', JSON.stringify([newAppt, ...list.filter((a: any) => a.id !== newId)]));
+        localStorage.setItem(userStorageKey, JSON.stringify([newAppt, ...list.filter((a: any) => a.id !== newId)]));
+
+        // Also sync to global key for counselor portal view
+        const globalStored = localStorage.getItem('mindbridge_booked_appointments');
+        const globalList = globalStored ? JSON.parse(globalStored) : [];
+        localStorage.setItem('mindbridge_booked_appointments', JSON.stringify([newAppt, ...globalList.filter((a: any) => a.id !== newId)]));
       } catch (e) {
         console.warn('Could not save to local storage', e);
       }

@@ -54,12 +54,15 @@ import MindPuzzles from './pages/MindPuzzles';
 import LandingPage from './pages/LandingPage';
 import StudentEvents from './pages/StudentEvents';
 import { AppSplashScreen } from './components/common/AppSplashScreen';
+import ProtectedRoute from './components/auth/ProtectedRoute';
 
-const withLayout = (element: React.ReactNode) => (
-  <AppLayout>
-    {element}
-  </AppLayout>
-);
+const withLayout = (element: React.ReactNode, allowedRoles?: string[]) => {
+  const content = <AppLayout>{element}</AppLayout>;
+  if (allowedRoles && allowedRoles.length > 0) {
+    return <ProtectedRoute allowedRoles={allowedRoles}>{content}</ProtectedRoute>;
+  }
+  return content;
+};
 
 function App() {
   const [showSplash, setShowSplash] = React.useState(() => {
@@ -111,54 +114,54 @@ function App() {
         <Route path="/reset-password"  element={<ResetPassword />} />
 
         {/* ── Student Routes (Wrapped in Widescreen AppLayout) ── */}
-        <Route path="/student/home"            element={withLayout(<StudentDashboard />)} />
-        <Route path="/student/events"          element={withLayout(<StudentEvents />)} />
-        <Route path="/student/chat"            element={withLayout(<AIChat />)} />
-        <Route path="/student/messages"        element={<CounselorChat />} />
-        <Route path="/student/counselor-chat"  element={<CounselorChat />} />
-        <Route path="/student/cbt-reframing"   element={withLayout(<CognitiveReframing />)} />
-        <Route path="/student/breathwork"      element={withLayout(<InteractiveBreathwork />)} />
-        <Route path="/student/digital-detox"   element={withLayout(<DigitalDetox />)} />
-        <Route path="/student/mind-puzzles"    element={withLayout(<MindPuzzles />)} />
-        <Route path="/student/mood"            element={withLayout(<MoodTracker />)} />
-        <Route path="/student/journal"         element={withLayout(<Journal />)} />
-        <Route path="/student/appointments"    element={withLayout(<Appointments />)} />
-        <Route path="/student/wellness"        element={withLayout(<WellnessExercises />)} />
-        <Route path="/student/habits"          element={withLayout(<HabitTracker />)} />
-        <Route path="/student/assessments"     element={withLayout(<Assessments />)} />
-        <Route path="/student/sleep"           element={withLayout(<SleepTracker />)} />
-        <Route path="/student/recovery-plan"   element={withLayout(<FollowUpPlan />)} />
-        <Route path="/student/notifications"   element={withLayout(<Notifications />)} />
-        <Route path="/student/voice-therapist" element={withLayout(<VoiceTherapist />)} />
-        <Route path="/student/community"       element={withLayout(<Community />)} />
-        <Route path="/student/campus-feed"     element={withLayout(<CampusFeed />)} />
-        <Route path="/student/emergency"       element={withLayout(<EmergencyResponse />)} />
-        <Route path="/student/profile"         element={withLayout(<ProfileSettings />)} />
+        <Route path="/student/home"            element={withLayout(<StudentDashboard />, ['student'])} />
+        <Route path="/student/events"          element={withLayout(<StudentEvents />, ['student'])} />
+        <Route path="/student/chat"            element={withLayout(<AIChat />, ['student'])} />
+        <Route path="/student/messages"        element={<ProtectedRoute allowedRoles={['student']}><CounselorChat /></ProtectedRoute>} />
+        <Route path="/student/counselor-chat"  element={<ProtectedRoute allowedRoles={['student']}><CounselorChat /></ProtectedRoute>} />
+        <Route path="/student/cbt-reframing"   element={withLayout(<CognitiveReframing />, ['student'])} />
+        <Route path="/student/breathwork"      element={withLayout(<InteractiveBreathwork />, ['student'])} />
+        <Route path="/student/digital-detox"   element={withLayout(<DigitalDetox />, ['student'])} />
+        <Route path="/student/mind-puzzles"    element={withLayout(<MindPuzzles />, ['student'])} />
+        <Route path="/student/mood"            element={withLayout(<MoodTracker />, ['student'])} />
+        <Route path="/student/journal"         element={withLayout(<Journal />, ['student'])} />
+        <Route path="/student/appointments"    element={withLayout(<Appointments />, ['student'])} />
+        <Route path="/student/wellness"        element={withLayout(<WellnessExercises />, ['student'])} />
+        <Route path="/student/habits"          element={withLayout(<HabitTracker />, ['student'])} />
+        <Route path="/student/assessments"     element={withLayout(<Assessments />, ['student'])} />
+        <Route path="/student/sleep"           element={withLayout(<SleepTracker />, ['student'])} />
+        <Route path="/student/recovery-plan"   element={withLayout(<FollowUpPlan />, ['student'])} />
+        <Route path="/student/notifications"   element={withLayout(<Notifications />, ['student'])} />
+        <Route path="/student/voice-therapist" element={withLayout(<VoiceTherapist />, ['student'])} />
+        <Route path="/student/community"       element={withLayout(<Community />, ['student'])} />
+        <Route path="/student/campus-feed"     element={withLayout(<CampusFeed />, ['student'])} />
+        <Route path="/student/emergency"       element={withLayout(<EmergencyResponse />, ['student'])} />
+        <Route path="/student/profile"         element={withLayout(<ProfileSettings />, ['student'])} />
 
         {/* ── Psychologist Routes ── */}
-        <Route path="/psychologist/dashboard"    element={withLayout(<PsychologistDashboard />)} />
-        <Route path="/psychologist/campus-feed"  element={withLayout(<CampusFeed />)} />
-        <Route path="/psychologist/events"       element={withLayout(<StudentEvents />)} />
-        <Route path="/psychologist/patients"     element={withLayout(<PsychologistPatients />)} />
-        <Route path="/psychologist/soap-notes"   element={withLayout(<ClinicalSOAPNotes />)} />
-        <Route path="/psychologist/calendar"     element={withLayout(<PsychologistCalendar />)} />
-        <Route path="/psychologist/mind-puzzles" element={withLayout(<MindPuzzles />)} />
-        <Route path="/psychologist/diary"        element={withLayout(<Journal />)} />
-        <Route path="/psychologist/profile"      element={withLayout(<ProfileSettings />)} />
+        <Route path="/psychologist/dashboard"    element={withLayout(<PsychologistDashboard />, ['psychologist', 'counsellor'])} />
+        <Route path="/psychologist/campus-feed"  element={withLayout(<CampusFeed />, ['psychologist', 'counsellor'])} />
+        <Route path="/psychologist/events"       element={withLayout(<StudentEvents />, ['psychologist', 'counsellor'])} />
+        <Route path="/psychologist/patients"     element={withLayout(<PsychologistPatients />, ['psychologist', 'counsellor'])} />
+        <Route path="/psychologist/soap-notes"   element={withLayout(<ClinicalSOAPNotes />, ['psychologist', 'counsellor'])} />
+        <Route path="/psychologist/calendar"     element={withLayout(<PsychologistCalendar />, ['psychologist', 'counsellor'])} />
+        <Route path="/psychologist/mind-puzzles" element={withLayout(<MindPuzzles />, ['psychologist', 'counsellor'])} />
+        <Route path="/psychologist/diary"        element={withLayout(<Journal />, ['psychologist', 'counsellor'])} />
+        <Route path="/psychologist/profile"      element={withLayout(<ProfileSettings />, ['psychologist', 'counsellor'])} />
 
         {/* ── Admin Routes ── */}
         <Route path="/admin"            element={<Navigate to="/admin/dashboard" replace />} />
         <Route path="/admin/"           element={<Navigate to="/admin/dashboard" replace />} />
-        <Route path="/admin/dashboard"  element={withLayout(<AdminAnalytics />)} />
-        <Route path="/admin/users"      element={withLayout(<AdminUsers />)} />
-        <Route path="/admin/reports"    element={withLayout(<AdminReports />)} />
-        <Route path="/admin/settings"   element={withLayout(<ProfileSettings />)} />
-        <Route path="/admin/manage-feed" element={withLayout(<AdminFeedManager />)} />
+        <Route path="/admin/dashboard"  element={withLayout(<AdminAnalytics />, ['admin', 'super_admin'])} />
+        <Route path="/admin/users"      element={withLayout(<AdminUsers />, ['admin', 'super_admin'])} />
+        <Route path="/admin/reports"    element={withLayout(<AdminReports />, ['admin', 'super_admin'])} />
+        <Route path="/admin/settings"   element={withLayout(<ProfileSettings />, ['admin', 'super_admin'])} />
+        <Route path="/admin/manage-feed" element={withLayout(<AdminFeedManager />, ['admin', 'super_admin'])} />
 
         {/* ── Super Admin Routes ── */}
         <Route path="/superadmin"           element={<Navigate to="/superadmin/dashboard" replace />} />
         <Route path="/superadmin/"          element={<Navigate to="/superadmin/dashboard" replace />} />
-        <Route path="/superadmin/dashboard" element={withLayout(<SuperAdminDashboard />)} />
+        <Route path="/superadmin/dashboard" element={withLayout(<SuperAdminDashboard />, ['super_admin'])} />
         <Route path="/super-admin"          element={<Navigate to="/superadmin/dashboard" replace />} />
         <Route path="/super-admin/dashboard" element={<Navigate to="/superadmin/dashboard" replace />} />
 

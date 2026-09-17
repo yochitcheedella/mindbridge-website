@@ -403,7 +403,7 @@ export default function LandingPage() {
                   </div>
                   <div className="mt-6 pt-4 border-t border-[#111111]/10 flex items-center justify-between text-xs font-bold text-[#111111]">
                     <span>Real-time Biomarkers</span>
-                    <Link to="/login" className="flex items-center gap-1 hover:text-[#F4C542]">Try Demo <ArrowRight size={14} /></Link>
+                    <Link to="/login" className="flex items-center gap-1 hover:text-[#F4C542]">Explore AI <ArrowRight size={14} /></Link>
                   </div>
                 </div>
 

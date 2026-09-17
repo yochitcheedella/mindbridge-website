@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Shield, ArrowRight, Eye, EyeOff, ArrowLeft, Info } from 'lucide-react';
+import { Shield, ArrowRight, Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { apiFetch } from '../utils/auth';
 
@@ -49,15 +49,7 @@ export default function ResetPassword() {
         </div>
         
         <h2 className="text-2xl font-heading font-bold text-center mb-2">Reset Password</h2>
-        <p className="text-text-muted text-center text-sm mb-4">Enter the OTP sent to your institutional email address.</p>
-
-        {/* Institutional Multi-Role OTP Hint for Evaluators */}
-        <div className="mb-6 p-3 bg-primary/5 border border-primary/20 rounded-xl flex items-start gap-2.5 text-xs text-text-muted">
-          <Info size={16} className="text-primary shrink-0 mt-0.5" />
-          <div>
-            <span className="font-semibold text-text">Demo Mode OTP:</span> Use <code className="bg-primary/10 px-1 py-0.5 rounded text-primary font-bold">123456</code> to test instant credential reset across <span className="font-medium text-primary">Student, Counselor, & Admin</span> accounts.
-          </div>
-        </div>
+        <p className="text-text-muted text-center text-sm mb-6">Enter the 6-digit OTP sent to your institutional email address.</p>
         
         {message && (
           <div className={`mb-4 p-3 text-sm rounded-lg text-center font-medium ${isSuccess ? 'bg-success/10 text-success' : 'bg-error/10 text-error'}`}>

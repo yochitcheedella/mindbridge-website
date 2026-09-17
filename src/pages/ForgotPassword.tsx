@@ -19,7 +19,7 @@ export default function ForgotPassword() {
       });
       const data = await res.json();
       if (res.ok) {
-        setMessage('If an account exists, an OTP has been sent. (Use 123456 for demo)');
+        setMessage('If an account exists, an OTP has been sent to your institutional email.');
         setTimeout(() => navigate(`/reset-password?email=${encodeURIComponent(email)}`), 3000);
       } else {
         setMessage(data.detail || 'An error occurred.');

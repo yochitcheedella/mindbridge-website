@@ -19,6 +19,7 @@ import {
   buildStudentBookingMessage,
   buildCounselorBookingMessage,
   dispatchWhatsAppMessage,
+  getWhatsAppUrl,
   VWC_DISPATCHER_DISPLAY,
 } from '../utils/whatsapp';
 
@@ -616,37 +617,8 @@ export default function PsychologistDashboard() {
     const appt = appointments.find(a => String(a.id) === idStr);
     const studentName = appt?.student_name || appt?.original_name || appt?.anonymous_id || appt?.student_alias || 'Student';
 
-    // 4. Instant visual confirmation toast
-    if (targetStatus === 'confirmed') {
-      setApptToast({
-        title: '✅ Booking Request Accepted',
-        desc: `Session with ${studentName} is confirmed. Slots locked and WhatsApp reminder prepared.`,
-        type: 'success'
-      });
-    } else if (targetStatus === 'rejected') {
-      setApptToast({
-        title: '❌ Booking Request Declined',
-        desc: `Session request from ${studentName} was declined.`,
-        type: 'danger'
-      });
-    }
-    setTimeout(() => setApptToast(null), 6000);
-
-    // 5. Backend sync with 2.5s AbortController timeout (non-blocking)
-    try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 2500);
-      await apiFetch(`/api/appointments/${id}/status`, {
-        method: 'PUT',
-        body: JSON.stringify({ status: targetStatus, new_time: newTime }),
-        signal: controller.signal
-      });
-      clearTimeout(timeoutId);
-    } catch (err) {
-      console.warn('Backend status update offline or timed out, persistent local override preserved:', err);
-    }
-
-    // 6. If confirmed, log WhatsApp dispatch
+    // 4. Instant WhatsApp dispatch & visual confirmation toast
+    let waUrl = '';
     if (targetStatus === 'confirmed' && appt) {
       try {
         const studentPhone = appt.mobile_number || appt.phone || appt.whatsappNumber || '+91 98765 43210';
@@ -666,10 +638,40 @@ export default function PsychologistDashboard() {
           type: 'appointment_student_reminder',
           openInWindow: false,
         });
-        setApptToast(prev => prev ? { ...prev, url: dispatchRes.url } : null);
+        waUrl = dispatchRes.url;
       } catch (waErr) {
         console.warn('WhatsApp dispatch warning:', waErr);
       }
+    }
+
+    if (targetStatus === 'confirmed') {
+      setApptToast({
+        title: '✅ Booking Request Accepted',
+        desc: `Session with ${studentName} is confirmed. Slots locked and WhatsApp reminder prepared.`,
+        type: 'success',
+        url: waUrl || undefined
+      });
+    } else if (targetStatus === 'rejected') {
+      setApptToast({
+        title: '❌ Booking Request Declined',
+        desc: `Session request from ${studentName} was declined.`,
+        type: 'danger'
+      });
+    }
+    setTimeout(() => setApptToast(null), 8000);
+
+    // 5. Backend sync with 2.5s AbortController timeout (non-blocking)
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 2500);
+      await apiFetch(`/api/appointments/${id}/status`, {
+        method: 'PUT',
+        body: JSON.stringify({ status: targetStatus, new_time: newTime }),
+        signal: controller.signal
+      });
+      clearTimeout(timeoutId);
+    } catch (err) {
+      console.warn('Backend status update offline or timed out, persistent local override preserved:', err);
     }
   };
 
@@ -1605,13 +1607,37 @@ export default function PsychologistDashboard() {
 
                         {isConfirmed && (
                           <div className="space-y-2">
-                            <button
-                              onClick={() => navigate(`/call/${appt.id}`)}
-                              className="w-full py-2.5 bg-[#F4C542] hover:bg-[#e0b435] text-[#111111] text-xs font-black rounded-2xl border-2 border-[#111111] flex items-center justify-center gap-1.5 shadow-xs active:scale-95 cursor-pointer"
-                            >
-                              <span className="w-2 h-2 rounded-full bg-[#111111]" />
-                              <span>Start Session</span>
-                            </button>
+                            <div className="flex gap-2">
+                              <button
+                                onClick={() => navigate(`/call/${appt.id}`)}
+                                className="flex-1 py-2.5 bg-[#F4C542] hover:bg-[#e0b435] text-[#111111] text-xs font-black rounded-2xl border-2 border-[#111111] flex items-center justify-center gap-1.5 shadow-xs active:scale-95 cursor-pointer"
+                              >
+                                <span className="w-2 h-2 rounded-full bg-[#111111]" />
+                                <span>Start Session</span>
+                              </button>
+                              <a
+                                href={getWhatsAppUrl(
+                                  appt.mobile_number || appt.phone || appt.whatsappNumber || '',
+                                  buildStudentConfirmationMessage({
+                                    studentName: appt.student_name || appt.original_name || appt.anonymous_id || appt.student_alias || 'Student',
+                                    counselorName: appt.psychologist_name || 'Ram Prudhvi Teja',
+                                    collegeName: appt.college_name || appt.institution || 'Vishnu Institute of Technology (VIT)',
+                                    department: appt.department || appt.branch || 'General',
+                                    year: appt.year || 'N/A',
+                                    slotTime: appt.slot_time,
+                                    mode: appt.type || 'Audio Call',
+                                    meetingLink: `${window.location.origin}/call/${appt.id}`
+                                  })
+                                )}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="py-2.5 px-3 bg-[#25D366] hover:bg-[#1ebd59] text-white text-xs font-black rounded-2xl border-2 border-[#128C7E] flex items-center justify-center gap-1.5 shadow-xs active:scale-95 transition-all shrink-0"
+                                title="Send / Open WhatsApp Session Confirmation"
+                              >
+                                <Send size={13} />
+                                <span>WhatsApp</span>
+                              </a>
+                            </div>
                             <div className="flex gap-2">
                               <button 
                                 onClick={() => handleUpdateApptStatus(appt.id, 'completed')} 

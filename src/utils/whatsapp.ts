@@ -31,6 +31,8 @@ export function cleanPhoneNumber(phone: string): string {
     digits = `91${digits}`;
   } else if (digits.length === 11 && digits.startsWith('0')) {
     digits = `91${digits.slice(1)}`;
+  } else if (digits.length === 13 && digits.startsWith('910')) {
+    digits = `91${digits.slice(3)}`;
   } else if (digits.length === 12 && digits.startsWith('91')) {
     return digits;
   }
@@ -38,11 +40,19 @@ export function cleanPhoneNumber(phone: string): string {
 }
 
 /**
+ * Checks if a phone number is valid for WhatsApp dispatch.
+ */
+export function isValidWhatsAppPhone(phone: string): boolean {
+  const cleaned = cleanPhoneNumber(phone);
+  return cleaned.length >= 10;
+}
+
+/**
  * Formats a phone number for user-friendly UI display.
  */
 export function formatDisplayPhone(phone: string): string {
   const cleaned = cleanPhoneNumber(phone);
-  if (!cleaned) return 'Not Provided';
+  if (!cleaned || cleaned.length < 10) return phone && phone.trim() ? phone : 'Not Provided';
   if (cleaned.startsWith('91') && cleaned.length === 12) {
     return `+91 ${cleaned.slice(2, 7)} ${cleaned.slice(7)}`;
   }
@@ -51,10 +61,15 @@ export function formatDisplayPhone(phone: string): string {
 
 /**
  * Generates an official WhatsApp Web / Mobile direct deep-link.
+ * If phone number is omitted or invalid, creates a universal share link so
+ * WhatsApp does not show an "Invalid Phone Number" error.
  */
 export function getWhatsAppUrl(phoneNumber: string, message: string): string {
   const cleaned = cleanPhoneNumber(phoneNumber);
   const encoded = encodeURIComponent(message);
+  if (!cleaned || cleaned.length < 10) {
+    return `https://api.whatsapp.com/send?text=${encoded}`;
+  }
   return `https://api.whatsapp.com/send?phone=${cleaned}&text=${encoded}`;
 }
 

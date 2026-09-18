@@ -2,10 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Calendar, Clock, CheckCircle2, XCircle, RefreshCw,
-  ChevronLeft, ChevronRight, User, PhoneCall,
+  ChevronLeft, ChevronRight, User, PhoneCall, Send,
 } from 'lucide-react';
 import { Card } from '../components/ui/Card';
 import { apiFetch } from '../utils/auth';
+import {
+  buildStudentConfirmationMessage,
+  dispatchWhatsAppMessage,
+  getWhatsAppUrl,
+} from '../utils/whatsapp';
 
 interface AppointmentItem {
   id: number;
@@ -53,6 +58,31 @@ export default function PsychologistCalendar() {
   useEffect(() => { fetchAppointments(); }, []);
 
   const updateStatus = async (id: number, status: 'confirmed' | 'cancelled') => {
+    const appt = appointments.find(a => a.id === id);
+    if (status === 'confirmed' && appt) {
+      try {
+        const studentMsg = buildStudentConfirmationMessage({
+          studentName: appt.anonymous_id || 'Student',
+          counselorName: 'Campus Wellness Counsellor',
+          collegeName: 'Vishnu Institute of Technology (VIT)',
+          department: 'B.Tech',
+          year: '3rd Year',
+          slotTime: appt.slot_time,
+          mode: 'Audio Call',
+          meetingLink: `${window.location.origin}/call/${appt.id}`,
+        });
+        dispatchWhatsAppMessage({
+          toPhone: (appt as any).mobile_number || (appt as any).phone || '',
+          message: studentMsg,
+          recipientName: appt.anonymous_id || 'Student',
+          type: 'appointment_student_reminder',
+          openInWindow: false,
+        });
+      } catch (waErr) {
+        console.warn('WhatsApp dispatch warning:', waErr);
+      }
+    }
+
     try {
       await apiFetch(`/api/appointments/${id}/status`, {
         method: 'PUT',
@@ -61,6 +91,7 @@ export default function PsychologistCalendar() {
       setAppointments(prev => prev.map(a => a.id === id ? { ...a, status } : a));
     } catch (e) {
       console.error(e);
+      setAppointments(prev => prev.map(a => a.id === id ? { ...a, status } : a));
     }
   };
 
@@ -334,13 +365,37 @@ export default function PsychologistCalendar() {
                         </div>
                       )}
                       {appt.status === 'confirmed' && (
-                        <button
-                          onClick={() => navigate(`/call/${appt.id}`)}
-                          className="px-4 py-2 bg-[#F4C542] hover:bg-[#e0b435] text-[#111111] border-2 border-[#111111] rounded-xl text-xs font-black transition-all flex items-center gap-1.5 shadow-sm active:scale-95 cursor-pointer"
-                        >
-                          <PhoneCall size={14} />
-                          <span>Start Session</span>
-                        </button>
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => navigate(`/call/${appt.id}`)}
+                            className="px-4 py-2 bg-[#F4C542] hover:bg-[#e0b435] text-[#111111] border-2 border-[#111111] rounded-xl text-xs font-black transition-all flex items-center gap-1.5 shadow-xs active:scale-95 cursor-pointer"
+                          >
+                            <PhoneCall size={14} />
+                            <span>Start Session</span>
+                          </button>
+                          <a
+                            href={getWhatsAppUrl(
+                              (appt as any).mobile_number || (appt as any).phone || '',
+                              buildStudentConfirmationMessage({
+                                studentName: appt.anonymous_id || 'Student',
+                                counselorName: 'Campus Wellness Counsellor',
+                                collegeName: 'Vishnu Institute of Technology (VIT)',
+                                department: 'B.Tech',
+                                year: '3rd Year',
+                                slotTime: appt.slot_time,
+                                mode: 'Audio Call',
+                                meetingLink: `${window.location.origin}/call/${appt.id}`,
+                              })
+                            )}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="px-3 py-2 bg-[#25D366] hover:bg-[#1ebd59] text-white rounded-xl text-xs font-black transition-all flex items-center gap-1.5 shadow-xs active:scale-95"
+                            title="Send WhatsApp Confirmation"
+                          >
+                            <Send size={13} />
+                            <span>WhatsApp</span>
+                          </a>
+                        </div>
                       )}
                     </div>
                   </div>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { getAuth } from '../../utils/auth';
 
 const STUDENT_NAV = [
   { path: '/student/home',         icon: 'home',       label: 'Home' },
@@ -33,9 +34,12 @@ const SUPERADMIN_NAV = [
 
 export function Navbar() {
   const location = useLocation();
+  const auth = getAuth();
 
   let navItems: typeof STUDENT_NAV = [];
-  if (location.pathname.startsWith('/student')) {
+  if (auth?.role === 'super_admin' && (location.pathname.startsWith('/superadmin') || location.pathname.startsWith('/admin'))) {
+    navItems = SUPERADMIN_NAV;
+  } else if (location.pathname.startsWith('/student')) {
     navItems = STUDENT_NAV;
   } else if (location.pathname.startsWith('/psychologist')) {
     navItems = PSYCHOLOGIST_NAV;

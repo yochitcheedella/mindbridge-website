@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { getCurrentUser, getUserProfile } from '../../utils/supabaseAuth';
+import { getCurrentUser, getUserProfile, syncProfileToLocalAuth } from '../../utils/supabaseAuth';
 import { getAuth, type UserRole } from '../../utils/auth';
 
 interface ProtectedRouteProps {
@@ -40,6 +40,7 @@ export function ProtectedRoute({ allowedRoles, children }: ProtectedRouteProps) 
           const profile = await getUserProfile(user.id);
           if (profile?.role) {
             role = profile.role;
+            syncProfileToLocalAuth(profile);
           }
         }
 

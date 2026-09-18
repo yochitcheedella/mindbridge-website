@@ -90,24 +90,15 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
   // Derive effective role from current route path - NEVER let student route act as super_admin
   const effectiveRole: UserRole = isStudentRoute
     ? 'student'
-    : isSuperAdminRoute
-    ? 'super_admin'
     : isPsychRoute
     ? 'psychologist'
+    : (auth?.role === 'super_admin' && (isSuperAdminRoute || isAdminRoute))
+    ? 'super_admin'
+    : isSuperAdminRoute
+    ? 'super_admin'
     : isAdminRoute
     ? 'admin'
-    : (auth?.role === 'super_admin' ? 'student' : (auth?.role || 'student'));
-
-  // MindBridge brand logo destination: on student pages, it ALWAYS navigates to /student/home
-  const brandHomeRoute = isStudentRoute
-    ? '/student/home'
-    : isPsychRoute
-    ? '/psychologist/dashboard'
-    : isAdminRoute
-    ? '/admin/dashboard'
-    : isSuperAdminRoute
-    ? '/superadmin/dashboard'
-    : '/student/home';
+    : (auth?.role || 'student');
 
   let navItems: NavItem[] = STUDENT_NAV;
   if (effectiveRole === 'super_admin') {
@@ -195,11 +186,7 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
           <div className="relative w-80 max-w-[85vw] h-full bg-[#FFFFFF] border-r-2 border-[#111111] flex flex-col shadow-2xl z-10 animate-slide-right">
             {/* Drawer Header */}
             <div className="h-20 flex items-center justify-between px-6 border-b border-[#111111]/10 shrink-0">
-              <Link 
-                to={brandHomeRoute} 
-                onClick={() => setMobileMenuOpen(false)} 
-                className="flex items-center gap-3 cursor-pointer"
-              >
+              <div className="flex items-center gap-3 select-none">
                 <img 
                   src="/logo.png" 
                   alt="Vishnu Wellness Centre" 
@@ -209,7 +196,7 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
                   <span className="font-heading font-black text-base text-[#111111] tracking-tight leading-tight block">MindBridge</span>
                   <span className="block text-[10px] uppercase font-mono tracking-wider text-[#111111]/60 font-semibold">SVES Wellness</span>
                 </div>
-              </Link>
+              </div>
               <button 
                 onClick={() => setMobileMenuOpen(false)} 
                 className="text-[#111111]/70 hover:text-[#111111] p-1.5 rounded-xl hover:bg-[#111111]/5 transition-colors cursor-pointer"
@@ -295,29 +282,28 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
         {/* Sidebar Brand Header */}
         <div className="h-20 flex items-center justify-between px-5 border-b border-[#111111]/10">
           {!isCollapsed ? (
-            <Link to={brandHomeRoute} className="flex items-center gap-3 group overflow-hidden">
+            <div className="flex items-center gap-3 overflow-hidden select-none">
               <img 
                 src="/logo.png" 
                 alt="Vishnu Wellness Centre" 
-                className="w-10 h-10 rounded-full object-cover border border-[#111111]/15 bg-[#FFFFFF] group-hover:scale-105 transition-transform flex-shrink-0" 
+                className="w-10 h-10 rounded-full object-cover border border-[#111111]/15 bg-[#FFFFFF] flex-shrink-0" 
               />
               <div className="overflow-hidden">
                 <span className="font-heading font-black text-base text-[#111111] tracking-tight leading-tight block truncate">MindBridge</span>
                 <span className="block text-[10px] uppercase font-mono tracking-wider text-[#111111]/60 font-bold truncate">SVES Wellness</span>
               </div>
-            </Link>
+            </div>
           ) : (
-            <Link 
-              to={brandHomeRoute} 
-              title="MindBridge Home"
-              className="w-10 h-10 mx-auto flex items-center justify-center hover:scale-105 transition-transform"
+            <div 
+              title="MindBridge"
+              className="w-10 h-10 mx-auto flex items-center justify-center select-none"
             >
               <img 
                 src="/logo.png" 
                 alt="Vishnu Wellness Centre" 
                 className="w-10 h-10 rounded-full object-cover border border-[#111111]/15 bg-[#FFFFFF]" 
               />
-            </Link>
+            </div>
           )}
           <button 
             onClick={() => setIsCollapsed(!isCollapsed)} 
@@ -414,10 +400,10 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
               >
                 <Menu size={20} />
               </button>
-              <Link to={brandHomeRoute} className="flex items-center gap-2 min-w-0">
+              <div className="flex items-center gap-2 min-w-0 select-none">
                 <img src="/logo.png" alt="Vishnu Wellness Centre" className="w-7 h-7 rounded-full object-cover shrink-0 border border-[#111111]/20" />
                 <span className="font-heading font-black text-sm text-[#111111] truncate">MindBridge</span>
-              </Link>
+              </div>
             </div>
             <span className="hidden md:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold bg-[#FAFAFA] text-[#111111] border border-[#111111]/15">
               <span>🔒</span>
@@ -484,7 +470,7 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
             </Link>
 
             <Link
-              to={effectiveRole === 'psychologist' ? '/psychologist/profile' : effectiveRole === 'admin' ? '/admin/settings' : '/student/profile'}
+              to={effectiveRole === 'psychologist' ? '/psychologist/profile' : (effectiveRole === 'admin' || effectiveRole === 'super_admin') ? '/admin/settings' : '/student/profile'}
               className="shrink-0 group"
               title={`Logged in as ${displayName}`}
             >

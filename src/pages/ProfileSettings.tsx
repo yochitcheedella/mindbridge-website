@@ -74,7 +74,7 @@ export default function ProfileSettings() {
   const [loadingLogs, setLoadingLogs] = useState(false);
 
   const fetchAuditLogs = () => {
-    if (role === 'admin') {
+    if (role === 'admin' || role === 'super_admin') {
       setLoadingLogs(true);
       apiFetch('/api/admin/audit-logs')
         .then(r => {
@@ -101,7 +101,7 @@ export default function ProfileSettings() {
           if (data.year) setYear(data.year);
         }
       }).catch(console.warn);
-    } else if (role === 'admin') {
+    } else if (role === 'admin' || role === 'super_admin') {
       fetchAuditLogs();
       const name = getUserName();
       if (name) setUserAlias(name);

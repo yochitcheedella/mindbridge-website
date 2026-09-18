@@ -15,10 +15,6 @@ import {
   type SavedProfile,
   API_URL,
   getHomeRoute,
-  loginAsPsychologistDemo,
-  loginAsAdminDemo,
-  loginAsStudentDemo,
-  loginAsSuperAdminDemo,
   prewarmBackend
 } from '../utils/auth';
 import { signInWithSupabase, signOutSupabase } from '../utils/supabaseAuth';
@@ -184,28 +180,6 @@ export default function Login() {
       }
     } catch (err: any) {
       if (timeoutId) clearTimeout(timeoutId);
-      const resolveTarget = (role: any) => (redirectParam && redirectParam.startsWith('/') ? redirectParam : getHomeRoute(role));
-      const cleanEmail = email.trim().toLowerCase();
-
-      // Offline resilient fallback for recognized institutional admin, superadmin, and counselor credentials:
-      if (cleanEmail.includes('superadmin') && (password === 'superadmin123' || password === 'RootCentral@2026' || password === 'admin123')) {
-        const saAuth = await loginAsSuperAdminDemo();
-        navigate(resolveTarget(saAuth.role));
-        return;
-      } else if (cleanEmail.includes('admin') && (password === 'admin123' || password === 'Admin@VIT2024' || password === 'admin@123')) {
-        const adminAuth = await loginAsAdminDemo();
-        navigate(resolveTarget(adminAuth.role));
-        return;
-      } else if ((cleanEmail.includes('prudhvi') || cleanEmail.includes('counselor')) && (password === 'counselor123' || password === 'Counselor@VIT2024')) {
-        const psychAuth = await loginAsPsychologistDemo();
-        navigate(resolveTarget(psychAuth.role));
-        return;
-      } else if (cleanEmail && password && password.length >= 4 && (err.name === 'AbortError' || err.message?.includes('Failed to fetch') || err.message?.includes('NetworkError'))) {
-        const studentAuth = await loginAsStudentDemo();
-        navigate(resolveTarget(studentAuth.role));
-        return;
-      }
-
       setError(err.message || 'Authentication failed. Please verify your email and password.');
     } finally {
       setLoading(false);
@@ -298,52 +272,24 @@ export default function Login() {
             </button>
           </div>
 
-          {/* Role Context Notification with Quick Fill Helper */}
+          {/* Role Context Notification */}
           {activeRoleTab === 'super_admin' && (
-            <div className="mb-5 px-3.5 py-2.5 rounded-2xl bg-[#F4C542]/15 border-2 border-[#111111] flex items-center justify-between gap-3 animate-fade-in">
-              <div className="flex items-center gap-3 min-w-0">
-                <span className="text-xl shrink-0">👑</span>
-                <div className="min-w-0">
-                  <span className="font-black text-xs text-[#111111] block truncate">SVES Central Society Governance</span>
-                  <span className="text-[11px] text-[#111111]/70 font-medium block truncate">Root Campuses &amp; Multi-Institution Central Access</span>
-                </div>
+            <div className="mb-5 px-3.5 py-2.5 rounded-2xl bg-[#F4C542]/15 border-2 border-[#111111] flex items-center gap-3 animate-fade-in">
+              <span className="text-xl shrink-0">👑</span>
+              <div className="min-w-0">
+                <span className="font-black text-xs text-[#111111] block truncate">SVES Central Society Governance</span>
+                <span className="text-[11px] text-[#111111]/70 font-medium block truncate">Root Campuses &amp; Multi-Institution Central Access</span>
               </div>
-              <button
-                type="button"
-                onClick={() => {
-                  setEmail('superadmin@vishnu.edu.in');
-                  setPassword('superadmin123');
-                  setShowDirectForm(true);
-                }}
-                className="text-[10px] font-black uppercase font-mono px-2.5 py-1 bg-[#FFFFFF] hover:bg-[#F4C542] border-2 border-[#111111] rounded-xl shadow-2xs cursor-pointer shrink-0 transition-all active:scale-95 text-[#111111]"
-                title="Autofill Super Admin credentials"
-              >
-                Fill Credentials
-              </button>
             </div>
           )}
 
           {activeRoleTab === 'admin' && (
-            <div className="mb-5 px-3.5 py-2.5 rounded-2xl bg-[#F4C542]/15 border-2 border-[#111111] flex items-center justify-between gap-3 animate-fade-in">
-              <div className="flex items-center gap-3 min-w-0">
-                <span className="text-xl shrink-0">🛡️</span>
-                <div className="min-w-0">
-                  <span className="font-black text-xs text-[#111111] block truncate">VIT Campus Institutional Administrator</span>
-                  <span className="text-[11px] text-[#111111]/70 font-medium block truncate">Executive Analytics &amp; Department Governance</span>
-                </div>
+            <div className="mb-5 px-3.5 py-2.5 rounded-2xl bg-[#F4C542]/15 border-2 border-[#111111] flex items-center gap-3 animate-fade-in">
+              <span className="text-xl shrink-0">🛡️</span>
+              <div className="min-w-0">
+                <span className="font-black text-xs text-[#111111] block truncate">VIT Campus Institutional Administrator</span>
+                <span className="text-[11px] text-[#111111]/70 font-medium block truncate">Executive Analytics &amp; Department Governance</span>
               </div>
-              <button
-                type="button"
-                onClick={() => {
-                  setEmail('admin@vishnu.edu.in');
-                  setPassword('Admin@VIT2024');
-                  setShowDirectForm(true);
-                }}
-                className="text-[10px] font-black uppercase font-mono px-2.5 py-1 bg-[#FFFFFF] hover:bg-[#F4C542] border-2 border-[#111111] rounded-xl shadow-2xs cursor-pointer shrink-0 transition-all active:scale-95 text-[#111111]"
-                title="Autofill Admin credentials"
-              >
-                Fill Credentials
-              </button>
             </div>
           )}
 

@@ -52,7 +52,7 @@ class ScreenTimeTracker {
 
   private getTodayKey(): string {
     const today = new Date().toISOString().split('T')[0];
-    return `mindbridge_screen_time_${today}`;
+    return `mindbridge_screen_time_sync_${today}`;
   }
 
   private init() {
@@ -63,8 +63,8 @@ class ScreenTimeTracker {
     if (storedSeconds) {
       this.activeSeconds = parseInt(storedSeconds, 10) || 0;
     } else {
-      // For first-time realistic demonstration, seed baseline 1h 45m (6300s) if empty
-      const initialBaseline = 6300; 
+      // Seed baseline to 9h 15m (33300s) to match mobile sync for demo
+      const initialBaseline = 33300; 
       this.activeSeconds = initialBaseline;
       localStorage.setItem(this.getTodayKey(), initialBaseline.toString());
     }

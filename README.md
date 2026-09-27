@@ -10,7 +10,7 @@ MindBridge AI is the dedicated, confidential, and anonymous institutional mental
 
 ## 🌐 Web Platform Overview
 
-This repository hosts the **official MindBridge web platform**, built with **100% feature parity** to the native mobile APK (`MindBridge-VIT-v1.7.apk`), adding a high-impact institutional landing page, dual desktop/mobile responsive navigation, and direct APK distribution.
+This repository hosts the **official MindBridge web platform**, featuring a high-impact institutional landing page, dual desktop/mobile responsive navigation, and comprehensive mental health portals for students, faculty, and clinical psychologists.
 
 ### 🌟 Key Web Features
 - **🏛️ Institutional Landing Page (`/`)**: Features official Vishnu Institute of Technology branding, SVES Wellness Centre insignia, and direct 24/7 emergency hotline (*Tele-MANAS: 14416*).
@@ -24,7 +24,6 @@ This repository hosts the **official MindBridge web platform**, built with **100
   6. **Sahithi Challa** — Wellness Counsellor • Forensic Psychologist (*Vishnu School*)
   7. **Bantu Anumitha** — Wellness Counsellor (*Smt. B. Seetha Polytechnic College*)
 - **🧘 4-7-8 Quick Calm Breathwork Widget**: Embedded breathing pause visualizer right on the landing page for instant anxiety reduction.
-- **📲 Direct APK Download (`/MindBridge-VIT-v1.7.apk`)**: Direct download button and mobile QR code for Android installation on campus.
 
 ---
 

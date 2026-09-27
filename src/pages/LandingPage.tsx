@@ -3,8 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import {
   Shield, Heart, Sparkles, Brain, Wind, Activity, Users,
   Calendar, PhoneCall, Download, ArrowRight, CheckCircle2,
-  Lock, AlertTriangle, Play, Pause, RefreshCw, Smartphone,
-  Monitor, ChevronRight, FileText, BarChart3, HelpCircle, Star, Building2
+  Lock, AlertTriangle, Play, Pause, RefreshCw,
+  ChevronRight, FileText, BarChart3, HelpCircle, Star, Building2
 } from 'lucide-react';
 import { getAuth } from '../utils/auth';
 import { OFFICIAL_COUNSELORS, VISHNU_WELLNESS_CENTRE, type CounselorData } from '../data/counselors';
@@ -141,10 +141,6 @@ export default function LandingPage() {
             >
               Super Admin
             </Link>
-            <a href="#download" className="hover:text-[#111111] transition-colors flex items-center gap-1.5 text-[#111111]">
-              <Download size={15} className="text-[#111111]" />
-              Download APK <span className="bg-[#111111] text-[#FFFFFF] text-[10px] font-mono px-1.5 py-0.2 rounded-md">v1.7</span>
-            </a>
           </nav>
 
           {/* Action CTAs */}
@@ -222,15 +218,6 @@ export default function LandingPage() {
                 <span>Launch Student Web Portal</span>
                 <ArrowRight size={18} />
               </Link>
-              
-              <a
-                href="/MindBridge-VIT-v1.7.apk"
-                download="MindBridge-VIT-v1.7.apk"
-                className="w-full sm:w-auto bg-[#FFFFFF] text-[#111111] font-bold text-base px-7 py-4 rounded-2xl border-2 border-[#111111] shadow-[4px_4px_0px_#111111] hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all flex items-center justify-center gap-3"
-              >
-                <Download size={20} />
-                <span>Download Android APK (v1.7)</span>
-              </a>
 
               <Link
                 to={auth?.role === 'psychologist' ? "/psychologist/dashboard" : "/login?role=psychologist"}
@@ -737,91 +724,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── Download APK & Multi-Platform Section ── */}
-      <section id="download" className="py-20 lg:py-28 bg-[#FFFFFF] border-b border-[#111111]/10">
-        <div className="container mx-auto px-4 lg:px-8">
-          
-          <div className="max-w-5xl mx-auto bg-[#111111] text-[#FFFFFF] rounded-3xl p-8 sm:p-14 border-2 border-[#111111] shadow-[8px_8px_0px_#F4C542]">
-            <div className="grid md:grid-cols-2 gap-10 items-center">
-              
-              <div>
-                <div className="inline-flex items-center gap-2 bg-[#F4C542] text-[#111111] text-xs font-mono font-black px-3 py-1 rounded-full mb-4">
-                  <Smartphone size={14} />
-                  <span>ANDROID APK RELEASE • v1.7</span>
-                </div>
-                
-                <h2 className="font-heading font-black text-3xl sm:text-4xl text-[#FFFFFF] tracking-tight mb-4">
-                  Carry MindBridge in Your Pocket.
-                </h2>
-                
-                <p className="text-sm text-[#FFFFFF]/75 leading-relaxed mb-6">
-                  Install the official Android application built specifically for Vishnu Institute of Technology. 
-                  Enjoy ultra-fast biometric app entry, offline audio breathwork, and instant background crisis triage.
-                </p>
-
-                <div className="space-y-3 mb-8 text-xs font-mono text-[#FFFFFF]/80">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 size={16} className="text-[#F4C542]" />
-                    <span>Package: <strong className="text-[#FFFFFF]">MindBridge-VIT-v1.7.apk</strong> (~45 MB)</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 size={16} className="text-[#F4C542]" />
-                    <span>Android 8.0 (Oreo) to Android 15+ Compatible</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 size={16} className="text-[#F4C542]" />
-                    <span>Zero Adware • Zero Trackers • Direct Institutional Build</span>
-                  </div>
-                </div>
-
-                <div className="flex flex-wrap items-center gap-4">
-                  <a
-                    href="/MindBridge-VIT-v1.7.apk"
-                    download="MindBridge-VIT-v1.7.apk"
-                    className="bg-[#F4C542] text-[#111111] font-black text-sm px-6 py-3.5 rounded-xl hover:bg-[#FFFFFF] transition-all inline-flex items-center gap-2"
-                  >
-                    <Download size={18} />
-                    <span>Download APK Directly</span>
-                  </a>
-                  
-                  <Link
-                    to="/login"
-                    className="bg-[#FFFFFF]/10 text-[#FFFFFF] font-bold text-sm px-5 py-3.5 rounded-xl hover:bg-[#FFFFFF]/20 transition-all inline-flex items-center gap-2"
-                  >
-                    <Monitor size={18} />
-                    <span>Use Web Version Instead</span>
-                  </Link>
-                </div>
-              </div>
-
-              {/* QR Code / Phone Graphic Preview */}
-              <div className="flex flex-col items-center justify-center p-8 bg-[#FFFFFF]/5 rounded-2xl border border-[#FFFFFF]/10 text-center">
-                <div className="w-44 h-44 bg-[#FFFFFF] p-3 rounded-2xl border-2 border-[#F4C542] mb-4 flex items-center justify-center shadow-lg">
-                  {/* Visual QR Simulator */}
-                  <div className="w-full h-full flex flex-col items-center justify-center border-2 border-dashed border-[#111111] rounded-xl p-2 bg-[#FAFAFA]">
-                    <Smartphone size={40} className="text-[#111111] mb-2" />
-                    <span className="text-[10px] font-mono font-bold text-[#111111] leading-tight">
-                      SCAN TO INSTALL ON PHONE
-                    </span>
-                    <span className="text-[9px] font-mono text-[#111111]/60 mt-1">
-                      v1.7 Android Build
-                    </span>
-                  </div>
-                </div>
-                <div className="text-xs font-mono text-[#F4C542] font-bold">
-                  Direct Campus Download
-                </div>
-                <div className="text-[11px] text-[#FFFFFF]/60 mt-1 max-w-xs">
-                  Scan with your phone camera to download the APK directly over campus Wi-Fi.
-                </div>
-              </div>
-
-            </div>
-          </div>
-
-        </div>
-      </section>
-
       {/* ── Campus Emergency Crisis Helplines ── */}
       <section id="helplines" className="py-16 bg-[#FAFAFA] border-b border-[#111111]/10">
         <div className="container mx-auto px-4 lg:px-8">
@@ -914,7 +816,6 @@ export default function LandingPage() {
                 <li><Link to="/login" className="hover:text-[#F4C542] transition-colors">Psychologist Clinical Radar</Link></li>
                 <li><Link to="/login" className="hover:text-[#F4C542] transition-colors">Executive Administration</Link></li>
                 <li><Link to="/register" className="hover:text-[#F4C542] transition-colors">Register Anonymous Account</Link></li>
-                <li><a href="/MindBridge-VIT-v1.7.apk" className="hover:text-[#F4C542] transition-colors">Download Android APK</a></li>
               </ul>
             </div>
 

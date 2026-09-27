@@ -155,16 +155,6 @@ async def get_clinical_pulse():
         "sentiment_trend": "-12%",
     }
 
-# ── Direct App Download Endpoints ──────────────────────────────────────────────
-@app.get("/download", tags=["downloads"])
-@app.get("/download-apk", tags=["downloads"])
-async def download_apk():
-    from fastapi.responses import RedirectResponse
-    return RedirectResponse(
-        url="https://github.com/yochitcheedella/mind_bridge/releases/download/v1.2/MindBridge-VIT.apk",
-        status_code=302
-    )
-
 # ── Static SPA Frontend Serving (Full Production Deployment Ready) ─────────────
 if os.path.exists("dist"):
     from fastapi.responses import FileResponse

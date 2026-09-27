@@ -44,7 +44,6 @@ export const OFFICIAL_COUNSELORS: CounselorData[] = [
   {
     id: 1,
     name: "Ram Prudhvi Teja",
-    crn: "CRN5259951",
     specialization: "Senior Wellness Counsellor • Author • Mind-Body Therapist",
     institution: "Vishnu Institute of Technology",
     acronym: "VIT",

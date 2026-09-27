@@ -872,11 +872,6 @@ export default function LandingPage() {
                   <span className="text-[10px] font-mono font-bold bg-[#F4C542] text-[#111111] px-2.5 py-0.5 rounded-full border border-[#111111]">
                     {selectedCounselor.institution}
                   </span>
-                  {selectedCounselor.crn && (
-                    <span className="text-[10px] font-mono font-bold bg-[#111111] text-[#FFFFFF] px-2 py-0.5 rounded-md">
-                      {selectedCounselor.crn}
-                    </span>
-                  )}
                 </div>
                 <h3 className="font-heading font-black text-2xl text-[#111111]">
                   {selectedCounselor.name}

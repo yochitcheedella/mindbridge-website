@@ -66,11 +66,6 @@ export const CounselorFlashcard: React.FC<CounselorFlashcardProps> = ({
             <span className="text-[10px] font-mono font-black uppercase px-2 py-0.5 rounded-md bg-[#F4C542] border border-[#111111] text-[#111111]">
               {counselor.institution}
             </span>
-            {counselor.crn && (
-              <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-[#111111] text-[#FFFFFF]">
-                {counselor.crn}
-              </span>
-            )}
           </div>
           <span className="inline-flex items-center gap-1 text-[10px] font-mono font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-300 shrink-0">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />

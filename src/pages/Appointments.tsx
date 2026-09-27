@@ -1206,11 +1206,6 @@ export default function Appointments() {
                   <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-[#F4C542]/20 border border-[#F4C542] text-[#111111] text-[10px] font-mono font-bold">
                     {activeModalCounselor.institution}
                   </span>
-                  {activeModalCounselor.crn && (
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-[#111111] text-[#FFFFFF] text-[10px] font-mono font-bold">
-                      {activeModalCounselor.crn}
-                    </span>
-                  )}
                 </div>
                 <h3 className="text-xl sm:text-2xl font-heading font-black text-[#111111]">{activeModalCounselor.name}</h3>
                 <p className="text-xs sm:text-sm text-[#111111]/75 font-bold">{activeModalCounselor.specialization}</p>

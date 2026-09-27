@@ -444,11 +444,12 @@ export const StudentScreeningModal: React.FC<StudentScreeningModalProps> = ({
                   </p>
                 </div>
 
-                <div className="space-y-3 max-h-[440px] overflow-y-auto pr-1">
+                <div id="dass-container" className="space-y-3 max-h-[440px] overflow-y-auto pr-1 pb-4 scroll-smooth">
                   {DASS_QUESTIONS.map((q, idx) => {
-                    const currentVal = dassAnswers[q.id] ?? 0;
+                    if (idx > 0 && dassAnswers[DASS_QUESTIONS[idx - 1].id] === undefined) return null;
+                    const currentVal = dassAnswers[q.id];
                     return (
-                      <div key={q.id} className="p-3.5 rounded-2xl bg-[#FFFFFF] border border-[#111111]/15 space-y-2">
+                      <div key={q.id} className="p-3.5 rounded-2xl bg-[#FFFFFF] border border-[#111111]/15 space-y-2 animate-fade-in">
                         <div className="flex items-start justify-between gap-2">
                           <div>
                             <span className="text-xs font-black text-[#111111]">
@@ -469,7 +470,13 @@ export const StudentScreeningModal: React.FC<StudentScreeningModalProps> = ({
                             <button
                               key={val}
                               type="button"
-                              onClick={() => handleDassChange(q.id, val)}
+                              onClick={() => {
+                                handleDassChange(q.id, val);
+                                setTimeout(() => {
+                                  const container = document.getElementById('dass-container');
+                                  if (container) container.scrollTop = container.scrollHeight;
+                                }, 50);
+                              }}
                               className={`py-1.5 px-2 rounded-xl text-xs font-mono font-bold transition-all text-center cursor-pointer ${
                                 currentVal === val
                                   ? 'bg-[#111111] text-[#FFFFFF] shadow-xs'
@@ -496,7 +503,12 @@ export const StudentScreeningModal: React.FC<StudentScreeningModalProps> = ({
                   <button
                     type="button"
                     onClick={() => setStep(3)}
-                    className="px-5 py-2.5 rounded-xl bg-[#F4C542] hover:bg-[#e0b435] text-[#111111] font-black text-xs border-2 border-[#111111] shadow-xs flex items-center gap-1.5 cursor-pointer"
+                    disabled={Object.keys(dassAnswers).length < DASS_QUESTIONS.length}
+                    className={`px-5 py-2.5 rounded-xl font-black text-xs border-2 border-[#111111] shadow-xs flex items-center gap-1.5 transition-colors ${
+                      Object.keys(dassAnswers).length < DASS_QUESTIONS.length
+                        ? 'bg-gray-200 text-gray-400 cursor-not-allowed opacity-70'
+                        : 'bg-[#F4C542] hover:bg-[#e0b435] text-[#111111] cursor-pointer'
+                    }`}
                   >
                     <span>Safety Questions</span>
                     <ChevronRight size={14} />

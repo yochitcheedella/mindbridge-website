@@ -4,7 +4,7 @@ import {
   Eye, CheckCircle2, ChevronRight, Play, RotateCcw, Zap, Target
 } from 'lucide-react';
 
-type GameType = 'memory' | 'breathing' | 'word' | 'number' | 'pattern' | 'focus';
+type GameType = 'memory' | 'breathing' | 'word' | 'number' | 'pattern' | 'focus' | 'color' | 'reaction';
 
 export default function MindPuzzles() {
   const [activeGame, setActiveGame] = useState<GameType>('memory');
@@ -37,6 +37,8 @@ export default function MindPuzzles() {
           { type: 'number' as GameType, label: '🔢 Number Puzzle' },
           { type: 'pattern' as GameType, label: '🧠 Pattern Recognition' },
           { type: 'focus' as GameType, label: '🎯 Focus Challenge' },
+          { type: 'color' as GameType, label: '🎨 Color Match' },
+          { type: 'reaction' as GameType, label: '⚡ Zen Reflex' },
         ].map(item => (
           <button
             key={item.type}
@@ -61,6 +63,8 @@ export default function MindPuzzles() {
           {activeGame === 'number' && <NumberPuzzleGame />}
           {activeGame === 'pattern' && <PatternGame />}
           {activeGame === 'focus' && <FocusChallengeGame />}
+          {activeGame === 'color' && <ColorMatchGame />}
+          {activeGame === 'reaction' && <ReactionGame />}
         </div>
 
         {/* Footnote Disclaimer */}
@@ -521,6 +525,161 @@ function FocusChallengeGame() {
         </button>
       ) : (
         <p className="text-xs text-[#111111]/60">Keep rhythmic focus...</p>
+      )}
+    </div>
+  );
+}
+
+/* =========================================================================
+   7. COLOR MATCH (STROOP EFFECT)
+   ========================================================================= */
+function ColorMatchGame() {
+  const COLORS = ['Red', 'Blue', 'Green', 'Yellow', 'Purple'];
+  const HEX = ['#ef4444', '#3b82f6', '#22c55e', '#eab308', '#a855f7'];
+
+  const [wordIdx, setWordIdx] = useState(0);
+  const [colorIdx, setColorIdx] = useState(0);
+  const [score, setScore] = useState(0);
+  const [timeLeft, setTimeLeft] = useState(15);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  useEffect(() => {
+    let timer: any = null;
+    if (isPlaying && timeLeft > 0) {
+      timer = setInterval(() => setTimeLeft((t) => t - 1), 1000);
+    } else if (timeLeft === 0 && isPlaying) {
+      setIsPlaying(false);
+    }
+    return () => clearInterval(timer);
+  }, [isPlaying, timeLeft]);
+
+  const startGame = () => {
+    setScore(0);
+    setTimeLeft(15);
+    setIsPlaying(true);
+    nextRound();
+  };
+
+  const nextRound = () => {
+    setWordIdx(Math.floor(Math.random() * COLORS.length));
+    setColorIdx(Math.floor(Math.random() * COLORS.length));
+  };
+
+  const handleChoice = (match: boolean) => {
+    if (!isPlaying) return;
+    const isMatch = wordIdx === colorIdx;
+    if (match === isMatch) {
+      setScore((s) => s + 1);
+    }
+    nextRound();
+  };
+
+  return (
+    <div className="max-w-md mx-auto text-center py-4 w-full">
+      <h2 className="text-base font-heading font-black text-[#111111]">🎨 Color Match</h2>
+      <p className="text-xs text-[#111111]/60 mb-4">Does the word match its text color?</p>
+
+      <div className="flex justify-between text-xs font-bold mb-6 px-4">
+        <span>Time: {timeLeft}s</span>
+        <span>Score: {score}</span>
+      </div>
+
+      {!isPlaying ? (
+        <button
+          onClick={startGame}
+          className="w-full max-w-xs mx-auto py-3 rounded-2xl bg-[#F4C542] hover:bg-[#e0b435] text-[#111111] text-xs font-black border-2 border-[#111111] transition-all cursor-pointer"
+        >
+          {timeLeft === 0 ? 'Play Again' : 'Start Game'}
+        </button>
+      ) : (
+        <>
+          <div className="py-10 mb-6 rounded-3xl bg-[#111111]/5 border border-[#111111]/10 flex items-center justify-center min-h-[120px]">
+            <h1
+              className="text-5xl font-black uppercase tracking-widest"
+              style={{ color: HEX[colorIdx] }}
+            >
+              {COLORS[wordIdx]}
+            </h1>
+          </div>
+          <div className="grid grid-cols-2 gap-3 max-w-xs mx-auto">
+            <button
+              onClick={() => handleChoice(true)}
+              className="py-3 rounded-2xl bg-[#FFFFFF] border-2 border-[#111111] text-[#111111] text-xs font-black hover:bg-[#111111]/5 transition-all cursor-pointer"
+            >
+              Yes
+            </button>
+            <button
+              onClick={() => handleChoice(false)}
+              className="py-3 rounded-2xl bg-[#FFFFFF] border-2 border-[#111111] text-[#111111] text-xs font-black hover:bg-[#111111]/5 transition-all cursor-pointer"
+            >
+              No
+            </button>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+/* =========================================================================
+   8. ZEN REFLEX (REACTION TIME)
+   ========================================================================= */
+function ReactionGame() {
+  const [state, setState] = useState<'idle' | 'waiting' | 'ready' | 'done'>('idle');
+  const [message, setMessage] = useState('Wait for Green...');
+  const [startTime, setStartTime] = useState(0);
+  const [reactionTime, setReactionTime] = useState<number | null>(null);
+  const [timeoutId, setTimeoutId] = useState<any>(null);
+
+  const handleClick = () => {
+    if (state === 'idle' || state === 'done') {
+      setState('waiting');
+      setMessage('Wait for Green...');
+      setReactionTime(null);
+      const delay = 2000 + Math.random() * 3000;
+      const tid = setTimeout(() => {
+        setState('ready');
+        setMessage('CLICK NOW!');
+        setStartTime(Date.now());
+      }, delay);
+      setTimeoutId(tid);
+    } else if (state === 'waiting') {
+      if (timeoutId) clearTimeout(timeoutId);
+      setState('done');
+      setMessage('Too early! Try again.');
+    } else if (state === 'ready') {
+      const time = Date.now() - startTime;
+      setReactionTime(time);
+      setState('done');
+      setMessage(`Reaction time: ${time}ms`);
+    }
+  };
+
+  return (
+    <div className="max-w-md mx-auto text-center py-4 w-full">
+      <h2 className="text-base font-heading font-black text-[#111111]">⚡ Zen Reflex</h2>
+      <p className="text-xs text-[#111111]/60 mb-6">Test your mindful reflexes.</p>
+
+      <button
+        onClick={handleClick}
+        className={`w-full aspect-[2/1] rounded-3xl border-4 flex flex-col items-center justify-center transition-all cursor-pointer active:scale-95 ${
+          state === 'idle' || state === 'done'
+            ? 'bg-[#111111]/5 border-[#111111]/20 hover:border-[#111111]/40 text-[#111111]'
+            : state === 'waiting'
+            ? 'bg-rose-500 border-rose-700 text-white shadow-inner'
+            : 'bg-emerald-400 border-emerald-600 text-white shadow-lg'
+        }`}
+      >
+        <span className="text-lg font-black">{message}</span>
+        {reactionTime && (
+          <span className="text-xs font-medium mt-2 text-current">
+            {reactionTime < 250 ? 'Incredible reflexes!' : 'Nice and steady.'}
+          </span>
+        )}
+      </button>
+
+      {(state === 'idle' || state === 'done') && (
+        <p className="mt-4 text-xs font-bold text-[#111111]/60">Click the box to start.</p>
       )}
     </div>
   );

@@ -594,7 +594,7 @@ export default function AdminAnalytics() {
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h2 className="font-heading font-black text-lg text-[#111111]">Manage Psychologists</h2>
-                <p className="text-xs text-[#111111]/60 mt-1 font-medium">Add or remove clinical staff from the platform.</p>
+                <p className="text-xs text-[#111111]/60 mt-1 font-medium">Add or remove counselling staff from the platform.</p>
               </div>
             </div>
             
@@ -650,7 +650,7 @@ export default function AdminAnalytics() {
                 </div>
               ))}
               {psychologists.length === 0 && (
-                <div className="text-center py-10 text-[#111111]/50 text-sm">No clinical staff added yet.</div>
+                <div className="text-center py-10 text-[#111111]/50 text-sm">No counselling staff added yet.</div>
               )}
             </div>
           </div>

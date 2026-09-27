@@ -941,7 +941,7 @@ export default function Appointments() {
                     </div>
 
                     <p className="text-[10px] text-[#111111]/70 leading-relaxed font-medium">
-                      Your counsellor will address you by your anonymous alias. Real details remain confidential for clinical care continuity.
+                      Your counsellor will address you by your anonymous alias. Real details remain confidential for counselling care continuity.
                     </p>
                   </div>
                 </div>
@@ -953,12 +953,12 @@ export default function Appointments() {
                   <Shield size={18} />
                 </div>
                 <div className="text-xs min-w-0">
-                  <p className="font-bold text-[#111111]">Clinical Documentation Transparency</p>
+                  <p className="font-bold text-[#111111]">Counselling Documentation Transparency</p>
                   <p className="text-[#111111]/75 mt-0.5 text-[11px] sm:text-xs">
                     {bookingIdentityMode === 'original' ? (
                       <span>Booking with your verified original identity: <strong>{studentProfile.original_name}</strong>. Counsellors can prepare tailored academic &amp; personal guidance.</span>
                     ) : (
-                      <span>Booking anonymously as: <strong>{studentProfile.anonymous_alias}</strong>. Your treating counsellor will receive your clinical institutional details to ensure patient safety.</span>
+                      <span>Booking anonymously as: <strong>{studentProfile.anonymous_alias}</strong>. Your treating counsellor will receive your counselling institutional details to ensure patient safety.</span>
                     )}
                   </p>
                 </div>
@@ -1411,7 +1411,7 @@ export default function Appointments() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2 font-black text-xs text-[#111111]">
                     <span className="w-2 h-2 rounded-full bg-[#F4C542]" />
-                    <span>Counsellor Clinical Alert</span>
+                    <span>Counsellor Counselling Alert</span>
                   </div>
                   <span className="text-[11px] font-mono font-bold text-[#111111]">
                     To: {dispatchedWhatsAppBooking.counselorName} ({formatDisplayPhone(dispatchedWhatsAppBooking.counselorPhone)})

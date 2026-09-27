@@ -39,7 +39,7 @@ export default function CounselorChat() {
 
   const [counselor, setCounselor] = useState<CounselorInfo>({
     name: 'Dr. Ananya Sharma',
-    specialization: 'Clinical Psychologist',
+    specialization: 'Counselling Psychologist',
     is_online: true,
     appointment_id: queryApptId ? parseInt(queryApptId, 10) : null,
   });
@@ -216,7 +216,7 @@ export default function CounselorChat() {
         {/* Welcome note */}
         <div className="text-center my-4">
           <div className="inline-block bg-white/[0.04] border border-white/10 rounded-2xl px-4 py-2 text-xs text-on-surface-variant max-w-md">
-            🔒 This is a secure, end-to-end shielded clinical conversation with Vishnu Institute psychologists. Only your anonymous alias is shared.
+            🔒 This is a secure, end-to-end shielded counselling conversation with Vishnu Institute psychologists. Only your anonymous alias is shared.
           </div>
         </div>
 

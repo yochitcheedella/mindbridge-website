@@ -98,7 +98,7 @@ def get_counselor_chat_history(
 
     counselor_info = {
         "name": "Dr. Ananya Sharma",
-        "specialization": "Clinical Psychologist",
+        "specialization": "Counselling Psychologist",
         "is_online": True,
         "appointment_id": latest_appt.id if latest_appt else None,
         "appointment_status": latest_appt.status if latest_appt else None,
@@ -108,7 +108,7 @@ def get_counselor_chat_history(
         psych = db.query(Psychologist).filter(Psychologist.id == latest_appt.psychologist_id).first()
         if psych:
             counselor_info["name"] = psych.name
-            counselor_info["specialization"] = psych.specialization or "Clinical Psychologist"
+            counselor_info["specialization"] = psych.specialization or "Counselling Psychologist"
 
     return {
         "student_alias": student.anonymous_token,
@@ -141,7 +141,7 @@ async def send_message_to_counselor(
     if not text_clean:
         raise HTTPException(status_code=400, detail="Message text cannot be empty.")
 
-    # 1. MindBridge AI Safety & Clinical Risk Analysis
+    # 1. MindBridge AI Safety & Counselling Risk Analysis
     analysis = await analyze_message_with_history(text_clean)
     risk_score = analysis.risk_score
     risk_level = analysis.risk_classification
@@ -385,7 +385,7 @@ async def chat_endpoint(websocket: WebSocket, token: str = Query(...), db: Sessi
                     )
 
                     
-                    # Real-time WebSocket broadcast to clinical staff
+                    # Real-time WebSocket broadcast to counselling staff
                     alert_manager.dispatch_alert({
                         "type": "CRITICAL_ALERT",
                         "student_id": student.anonymous_token,

@@ -103,7 +103,7 @@ export default function AdminReports() {
         facultyTrainingSummary: 'Conducted 4 gatekeeper awareness sessions for 112 faculty mentors across VIT and SVECW on detecting early signs of academic burnout and depressive withdrawal.',
         upcomingDirectives: [
           'Scale up pre-exam stress decompression booths across library zones.',
-          'Initiate bi-weekly hostel rounds by clinical psychologists in evening hours.',
+          'Initiate bi-weekly hostel rounds by counselling psychologists in evening hours.',
           'Roll out institutional psycho-social screening for incoming cohorts.'
         ]
       }

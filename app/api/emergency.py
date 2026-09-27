@@ -46,7 +46,7 @@ def get_emergency_contacts():
         {
             "name": "Vishnu Health & Counseling Center",
             "location": "A-Block Ground Floor, VIT Campus",
-            "type": "Walk-in Clinical Care",
+            "type": "Walk-in Counselling Care",
             "available": "Mon-Sat 8:30 AM - 6:00 PM"
         }
     ]

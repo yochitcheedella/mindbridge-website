@@ -28,7 +28,7 @@ import ProfileSettings from './pages/ProfileSettings';
 import Community from './pages/Community';
 import CampusFeed from './pages/CampusFeed';
 
-// ── NEW Mindblowing & Clinical Student Pages ───────────────────────────────────
+// ── NEW Mindblowing & Counselling Student Pages ───────────────────────────────────
 import CognitiveReframing from './pages/CognitiveReframing';
 import InteractiveBreathwork from './pages/InteractiveBreathwork';
 

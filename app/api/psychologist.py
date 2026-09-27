@@ -91,7 +91,7 @@ def get_student_case_details(anonymous_id: str, db: Session = Depends(get_db)):
     # Fetch active appointment if any
     appt = db.query(Appointment).filter(Appointment.student_id == student.id).order_by(Appointment.created_at.desc()).first()
 
-    # Determine MindBridge AI Clinical Concern Level
+    # Determine MindBridge AI Counselling Concern Level
     r_score = student.risk_score or 0.0
     if r_score >= 0.7:
         clinical_concern_level = "high_concern"
@@ -175,7 +175,7 @@ async def send_counselor_message(anonymous_id: str, req: ChatMessageRequest, db:
     # Note: Retrieving the student's registered FCM token from the database
     if student.fcm_token:
         send_push_notification(
-            title="MindBridge Clinical Team",
+            title="MindBridge Counselling Team",
             body="You have a new message from a counselor.",
             fcm_token=student.fcm_token,
             data={"type": "counselor_message", "student_id": str(student.id)}
@@ -295,7 +295,7 @@ def request_student_identity(anonymous_id: str, req: IdentityRequestPayload, db:
     if not student:
         raise HTTPException(status_code=404, detail="Student not found")
         
-    # Note: Anonymity reveal is strictly monitored. Whether acute crisis or clinical emergency override, an immutable audit log is committed.
+    # Note: Anonymity reveal is strictly monitored. Whether acute crisis or counselling emergency override, an immutable audit log is committed.
     from app.core.security import decrypt_data
     
     real_name = decrypt_data(student.encrypted_name) if student.encrypted_name else "Unknown"

@@ -50,7 +50,7 @@ export default function ConsolidatedReportModal({
 
   const [directives, setDirectives] = useState([
     'Scale up pre-exam stress decompression booths across library zones.',
-    'Initiate bi-weekly hostel rounds by clinical psychologists in evening hours.',
+    'Initiate bi-weekly hostel rounds by counselling psychologists in evening hours.',
     'Roll out institutional psycho-social screening for incoming cohorts.'
   ]);
 
@@ -308,7 +308,7 @@ export default function ConsolidatedReportModal({
                   <input
                     type="text"
                     value={init.impact}
-                    placeholder="Clinical Impact"
+                    placeholder="Counselling Impact"
                     onChange={e => {
                       const updated = [...keyInitiatives];
                       updated[idx].impact = e.target.value;

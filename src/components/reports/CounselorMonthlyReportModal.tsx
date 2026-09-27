@@ -380,7 +380,7 @@ export default function CounselorMonthlyReportModal({
                   <input
                     type="text"
                     value={a.keyTakeaway}
-                    placeholder="Key Impact / Clinical Takeaway / Core Outcome"
+                    placeholder="Key Impact / Counselling Takeaway / Core Outcome"
                     onChange={e => {
                       const updated = [...activities];
                       updated[idx].keyTakeaway = e.target.value;
@@ -554,10 +554,10 @@ export default function CounselorMonthlyReportModal({
             </div>
           </div>
 
-          {/* Clinical Remarks */}
+          {/* Counselling Remarks */}
           <div className="space-y-2">
             <h3 className="text-sm font-heading font-black uppercase tracking-wider text-[#111111]">
-              Clinical Remarks & Overall Observations
+              Counselling Remarks & Overall Observations
             </h3>
             <textarea
               rows={3}

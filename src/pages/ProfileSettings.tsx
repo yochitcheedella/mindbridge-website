@@ -434,8 +434,8 @@ export default function ProfileSettings() {
             </button>
             <div>
               <h1 className="text-xl sm:text-2xl font-heading font-black text-[#111111] tracking-tight flex items-center gap-2">
-                <span>Counselor Profile &amp; Clinical Credentials</span>
-                <span className="hidden sm:inline-flex px-2.5 py-0.5 rounded-full text-[10px] uppercase font-mono font-black bg-[#F4C542] text-[#111111] border border-[#111111]">Clinical Staff</span>
+                <span>Counselor Profile &amp; Counselling Credentials</span>
+                <span className="hidden sm:inline-flex px-2.5 py-0.5 rounded-full text-[10px] uppercase font-mono font-black bg-[#F4C542] text-[#111111] border border-[#111111]">Counselling Staff</span>
               </h1>
               <p className="text-xs sm:text-sm text-[#111111]/70 font-semibold mt-0.5">
                 Vishnu Institute of Technology • Mental Health &amp; Psychological Counseling Division
@@ -462,7 +462,7 @@ export default function ProfileSettings() {
                 </div>
                 <div>
                   <h2 className="text-lg font-black text-[#111111]">{auth?.name || 'Staff Counselor'}</h2>
-                  <p className="text-xs text-[#111111]/70 font-bold">{auth?.specialization || 'Clinical Psychology & CBT Specialist'}</p>
+                  <p className="text-xs text-[#111111]/70 font-bold">{auth?.specialization || 'Counselling Psychology & CBT Specialist'}</p>
                   <div className="flex items-center gap-2 mt-1.5">
                     <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
                     <span className="text-[11px] font-mono text-emerald-800 font-bold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">Live for Telehealth &amp; Audio Consultations</span>
@@ -480,7 +480,7 @@ export default function ProfileSettings() {
                   <span className="font-bold text-[#111111]">Vishnu Institute of Technology</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="font-bold text-[#111111]/70">Clinical Privileges:</span>
+                  <span className="font-bold text-[#111111]/70">Counselling Privileges:</span>
                   <span className="text-emerald-800 font-bold bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">SOAP Notes · Audio Call · Crisis Protocol</span>
                 </div>
               </div>
@@ -496,7 +496,7 @@ export default function ProfileSettings() {
                 In accordance with Vishnu Institute of Technology counseling policies, student real names, roll numbers, and contact details are permanently masked behind pseudonyms.
               </p>
               <p className="text-xs text-[#111111]/70 leading-relaxed font-medium">
-                If an immediate crisis arises (e.g. medical emergency or risk of self-harm), emergency identity reveal is available via the Risk Radar and logged to the central audit registry with mandatory clinical justification.
+                If an immediate crisis arises (e.g. medical emergency or risk of self-harm), emergency identity reveal is available via the Risk Radar and logged to the central audit registry with mandatory counselling justification.
               </p>
             </div>
           </div>
@@ -504,7 +504,7 @@ export default function ProfileSettings() {
           {/* Right Column (5 cols): Quick Navigation */}
           <div className="lg:col-span-5 space-y-5">
             <div className="p-5 rounded-3xl border-2 border-[#111111] bg-[#FFFFFF] space-y-3 shadow-sm">
-              <span className="text-xs font-mono font-black uppercase text-[#111111] block mb-1">Clinical Navigation</span>
+              <span className="text-xs font-mono font-black uppercase text-[#111111] block mb-1">Counselling Navigation</span>
               <div className="space-y-2">
                 <button 
                   onClick={() => navigate('/psychologist/dashboard')}
@@ -524,7 +524,7 @@ export default function ProfileSettings() {
                   onClick={() => navigate('/psychologist/soap-notes')}
                   className="w-full text-left p-3 rounded-2xl hover:bg-[#F4C542]/20 text-xs text-[#111111] font-bold flex items-center justify-between border border-[#111111]/15 hover:border-[#111111] transition-all cursor-pointer shadow-2xs"
                 >
-                  <span>📝 Clinical SOAP Notes</span>
+                  <span>📝 Counselling SOAP Notes</span>
                   <span className="font-mono font-black">→</span>
                 </button>
                 <button 
@@ -556,7 +556,7 @@ export default function ProfileSettings() {
               className="w-full p-3.5 rounded-2xl bg-[#FFFFFF] hover:bg-rose-50 border-2 border-[#111111] text-rose-600 hover:text-rose-700 font-heading font-black text-xs transition-all flex items-center justify-center gap-2 shadow-xs active:scale-98 cursor-pointer"
             >
               <LogOut size={16} />
-              <span>End Clinical Session</span>
+              <span>End Counselling Session</span>
             </button>
           </div>
         </div>

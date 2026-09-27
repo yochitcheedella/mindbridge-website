@@ -36,7 +36,7 @@ const REGIMENS: BreathingRegimen[] = [
     exhale: 8,
     holdOut: 0,
     color: 'from-purple-500 to-indigo-600',
-    description: 'Developed by clinical neuroscientists to trigger rapid activation of the parasympathetic rest-and-digest response before sleep.',
+    description: 'Developed by counselling neuroscientists to trigger rapid activation of the parasympathetic rest-and-digest response before sleep.',
     icon: 'bedtime'
   },
   {
@@ -173,7 +173,7 @@ export default function InteractiveBreathwork() {
           </div>
           <h1 className="text-3xl font-heading font-black text-[#111111]">Guided Breathwork Studio</h1>
           <p className="text-sm text-[#111111]/70 max-w-2xl mt-1 font-medium">
-            Immersive physiological respiration rhythms engineered to lower clinical anxiety and restore focus instantly.
+            Immersive physiological respiration rhythms engineered to lower counselling anxiety and restore focus instantly.
           </p>
         </div>
 

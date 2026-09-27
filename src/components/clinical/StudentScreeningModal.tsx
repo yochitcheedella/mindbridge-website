@@ -511,7 +511,7 @@ export const StudentScreeningModal: React.FC<StudentScreeningModalProps> = ({
                 <div className="p-4 rounded-2xl bg-amber-50 border-2 border-amber-300 text-amber-900 space-y-1">
                   <span className="font-heading font-black text-xs uppercase tracking-wider flex items-center gap-1.5">
                     <AlertTriangle size={14} />
-                    <span>Important Clinical Safety Questions</span>
+                    <span>Important Counselling Safety Questions</span>
                   </span>
                   <p className="text-xs text-amber-800/90 leading-relaxed">
                     Please answer with complete honesty. Your wellness counsellor is here to support you in a completely judgment-free safe space.
@@ -612,7 +612,7 @@ export const StudentScreeningModal: React.FC<StudentScreeningModalProps> = ({
                     My Consent &amp; Understanding
                   </h4>
                   <p className="text-xs text-[#111111]/75 leading-relaxed">
-                    Your responses will be kept strictly confidential and will only be accessed by your authorized campus Wellness Counsellor at <strong>{institution}</strong>. Completing this form does not mean you have a psychiatric condition or clinical diagnosis.
+                    Your responses will be kept strictly confidential and will only be accessed by your authorized campus Wellness Counsellor at <strong>{institution}</strong>. Completing this form does not mean you have a psychiatric condition or counselling diagnosis.
                   </p>
 
                   <label className="flex items-start gap-2.5 text-xs text-[#111111] cursor-pointer pt-2">

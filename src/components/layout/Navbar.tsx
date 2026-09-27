@@ -11,7 +11,7 @@ const STUDENT_NAV = [
 ];
 
 const PSYCHOLOGIST_NAV = [
-  { path: '/psychologist/dashboard', icon: 'dashboard',      label: 'Clinical' },
+  { path: '/psychologist/dashboard', icon: 'dashboard',      label: 'Counselling' },
   { path: '/psychologist/patients',  icon: 'groups',         label: 'Patients' },
   { path: '/psychologist/soap-notes',icon: 'clinical_notes', label: 'Records' },
   { path: '/psychologist/calendar',  icon: 'calendar_month', label: 'Schedule' },

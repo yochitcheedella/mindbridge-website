@@ -55,7 +55,7 @@ export interface CounselorMonthlyReportData {
   // Section 4: Upcoming Goals
   upcomingGoals: string[];
 
-  // Remarks / Clinical Notes
+  // Remarks / Counselling Notes
   generalRemarks?: string;
 }
 

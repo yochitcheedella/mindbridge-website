@@ -214,7 +214,7 @@ async def generate_recovery_plan(student_context: str) -> dict:
     if GEMINI_AVAILABLE and api_key:
         client = genai.Client(api_key=api_key)
         system_prompt = """
-        You are an expert AI clinical psychologist creating a recovery action plan for a student.
+        You are an expert AI counselling psychologist creating a recovery action plan for a student.
         Based on the provided context (recent moods, chats, journals), create a structured 3-day recovery plan.
         Generate exactly 3 tasks, one for each day. Make them highly actionable and therapeutic (e.g., breathing, journaling, a walk).
         """

@@ -195,7 +195,7 @@ export default function VoiceTherapist() {
                 24/7 Voice Care
               </span>
             </div>
-            <p className="text-xs text-[#111111]/60 mt-0.5 font-medium">Real-time clinical voice guidance · 100% confidential</p>
+            <p className="text-xs text-[#111111]/60 mt-0.5 font-medium">Real-time counselling voice guidance · 100% confidential</p>
           </div>
         </div>
 
@@ -261,7 +261,7 @@ export default function VoiceTherapist() {
           {isThinking && (
             <div className="flex items-center gap-2 text-xs sm:text-sm font-bold text-[#111111] bg-[#F4C542]/20 px-4 py-2 rounded-2xl border border-[#F4C542]">
               <Sparkles size={16} className="animate-spin text-[#111111]" />
-              <span>Formulating compassionate clinical guidance...</span>
+              <span>Formulating compassionate counselling guidance...</span>
             </div>
           )}
           {!isListening && !isThinking && (

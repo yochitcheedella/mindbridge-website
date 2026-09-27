@@ -35,7 +35,7 @@ def get_notifications(
 
     for a in appts:
         psych = db.query(Psychologist).filter(Psychologist.id == a.psychologist_id).first()
-        psych_name = psych.name if psych else "Clinical Counselor"
+        psych_name = psych.name if psych else "Counselling Counselor"
         time_str = a.slot_time.strftime("%b %d at %I:%M %p") if a.slot_time else "scheduled time"
         notifications.insert(0, {
             "id": 1000 + a.id,

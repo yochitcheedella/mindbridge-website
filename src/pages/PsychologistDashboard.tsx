@@ -140,7 +140,7 @@ export default function PsychologistDashboard() {
           {
             date: '28-08-2026',
             meetingName: 'Learning & Development (L&D) Programme',
-            purposeOutcome: 'Two-day clinical enrichment programme conducted by Ms. Akshitha on Psychosomatic Conditions.',
+            purposeOutcome: 'Two-day counselling enrichment programme conducted by Ms. Akshitha on Psychosomatic Conditions.',
             text: 'Attended the Learning & Development (L&D) Programme conducted by Ms. Akshitha on 28th and 29th August 2026.'
           },
           {
@@ -221,7 +221,7 @@ export default function PsychologistDashboard() {
         submittedAt: new Date().toISOString(),
         administrativeMeetings: [
           { date: '04/09/2026', meetingName: 'Student Welfare & Mentor HOD Coordination', purposeOutcome: 'Reviewed 1st year transition distress cases and mentor referral protocol.' },
-          { date: '18/09/2026', meetingName: 'Central Wellness Clinical Review Meeting', purposeOutcome: 'Harmonized crisis intervention protocol and case documentation.' }
+          { date: '18/09/2026', meetingName: 'Central Wellness Counselling Review Meeting', purposeOutcome: 'Harmonized crisis intervention protocol and case documentation.' }
         ],
         activitiesConducted: [
           { date: '08/09/2026', activityName: 'Stress Buster & Exam Resilience Workshop', targetAudience: '2nd Year B.Tech Students', participantsCount: 65, keyTakeaway: 'Taught 4-7-8 breathing, cognitive reframing, and sleep hygiene.' },
@@ -451,7 +451,7 @@ export default function PsychologistDashboard() {
       fetchAppointments();
     }, 8000); // refresh queue, alerts, and appointments every 8s
     
-    // Connect to real-time clinical alerts
+    // Connect to real-time counselling alerts
     const wsUrl = API_URL.replace('https://', 'wss://').replace('http://', 'ws://');
     const ws = new WebSocket(`${wsUrl}/api/risk/ws/alerts`);
     ws.onmessage = (event) => {
@@ -761,7 +761,7 @@ export default function PsychologistDashboard() {
               Counsellor Portal
             </h1>
             <span className="px-2.5 py-0.5 rounded-full bg-[#F4C542] text-[#111111] border border-[#111111] text-[10px] font-black uppercase">
-              Clinical
+              Counselling
             </span>
           </div>
           <p className="text-xs text-[#111111]/60 font-semibold mt-0.5">
@@ -1099,7 +1099,7 @@ export default function PsychologistDashboard() {
                         <span className="text-[10px] font-mono font-black uppercase tracking-wider bg-[#F4C542] px-2 py-0.5 rounded-full border border-[#111111]">
                           Mandatory Screening Radar
                         </span>
-                        <span className="text-xs text-[#111111]/60 font-mono">DASS-21 Clinical Stratification</span>
+                        <span className="text-xs text-[#111111]/60 font-mono">DASS-21 Counselling Stratification</span>
                       </div>
                       <h3 className="font-heading font-black text-lg text-[#111111] mt-0.5">
                         Student Wellbeing Assessment Triage Queue ({screenedStudents.length})
@@ -1706,7 +1706,7 @@ export default function PsychologistDashboard() {
                       <th className="py-3 px-4">Type</th>
                       <th className="py-3 px-4">Primary Concern</th>
                       <th className="py-3 px-4">Risk Level</th>
-                      <th className="py-3 px-4">Clinical Notes</th>
+                      <th className="py-3 px-4">Counselling Notes</th>
                       <th className="py-3 px-4">Follow-up</th>
                     </tr>
                   </thead>
@@ -1767,7 +1767,7 @@ export default function PsychologistDashboard() {
                     <span>Counsellor Dedicated Task Manager</span>
                   </h2>
                   <p className="text-xs text-on-surface-variant mt-1">
-                    Track clinical follow-ups, case reviews, session prep, and administrative tasks.
+                    Track counselling follow-ups, case reviews, session prep, and administrative tasks.
                   </p>
                 </div>
                 <button
@@ -2061,7 +2061,7 @@ export default function PsychologistDashboard() {
                             onClick={() => setSelectedCase(alert.student_alias)}
                             className="flex-1 py-2.5 rounded-xl bg-surface-container-high hover:bg-surface-bright text-on-surface font-semibold text-xs transition-colors border border-border-structural"
                           >
-                            Open Clinical Case
+                            Open Counselling Case
                           </button>
                           <button
                             onClick={() => handleResolveAlert(alert.id)}
@@ -2107,7 +2107,7 @@ export default function PsychologistDashboard() {
                           onClick={() => setSelectedCase(student.anonymous_id)}
                           className="w-full py-2.5 rounded-xl bg-surface-container-high hover:bg-surface-bright text-on-surface font-semibold text-xs transition-colors border border-border-structural"
                         >
-                          Open Clinical Case & Chat
+                          Open Counselling Case & Chat
                         </button>
                       </div>
                     </div>
@@ -2435,7 +2435,7 @@ export default function PsychologistDashboard() {
               <div className="flex-1 overflow-y-auto p-md flex flex-col">
                 {caseTab === 'chat' && (
                   <div className="flex-1 flex flex-col">
-                    {/* ── MindBridge AI Clinical Risk Guidance Banner ── */}
+                    {/* ── MindBridge AI Counselling Risk Guidance Banner ── */}
                     <div
                       className="mb-4 p-3.5 rounded-2xl border flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm transition-all shrink-0"
                       style={{
@@ -2494,7 +2494,7 @@ export default function PsychologistDashboard() {
                           </div>
                           <p className="text-[11px] text-on-surface-variant mt-0.5">
                             {caseDetails.student.clinical_concern_level === 'high_concern'
-                              ? 'Clinical distress or crisis markers detected in student messages. Escalated monitoring active.'
+                              ? 'Counselling distress or crisis markers detected in student messages. Escalated monitoring active.'
                               : caseDetails.student.clinical_concern_level === 'elevated'
                               ? 'Stress or burnout markers detected. Consider offering a live audio counseling session.'
                               : 'Conversation exhibits standard baseline sentiment. Routine support recommended.'}
@@ -2597,7 +2597,7 @@ export default function PsychologistDashboard() {
                 )}
                 {caseTab === 'notes' && (
                   <div className="space-y-4">
-                    <textarea value={newNote} onChange={e=>setNewNote(e.target.value)} rows={4} className="w-full bg-surface-container border border-border-internal rounded-lg p-3 text-sm focus:outline-none" placeholder="Clinical notes..."></textarea>
+                    <textarea value={newNote} onChange={e=>setNewNote(e.target.value)} rows={4} className="w-full bg-surface-container border border-border-internal rounded-lg p-3 text-sm focus:outline-none" placeholder="Counselling notes..."></textarea>
                     <button onClick={handleSaveNote} className="w-full bg-primary py-2 rounded-lg text-sm text-white">Save Note</button>
                     <div className="space-y-2">
                       {notes.map(n => (
@@ -2783,7 +2783,7 @@ export default function PsychologistDashboard() {
                   required
                   value={offNotes}
                   onChange={e => setOffNotes(e.target.value)}
-                  placeholder="Document physical counselling discussion points, clinical recommendations, and follow-up guidance..."
+                  placeholder="Document physical counselling discussion points, counselling recommendations, and follow-up guidance..."
                   className="w-full p-2.5 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-blue-500"
                 />
               </div>

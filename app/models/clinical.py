@@ -40,7 +40,7 @@ class ClinicalAssessment(Base):
 
 
 class SOAPRecord(Base):
-    """Structured SOAP clinical EHR records created by licensed campus counseling professionals."""
+    """Structured SOAP counselling EHR records created by licensed campus counseling professionals."""
     __tablename__ = "soap_records"
 
     id = Column(Integer, primary_key=True, index=True)

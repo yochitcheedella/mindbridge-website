@@ -68,7 +68,7 @@ export default function CognitiveReframing() {
       const res = await apiFetch('/api/chat/message', {
         method: 'POST',
         body: JSON.stringify({
-          message: `[CBT REFRAME REQUEST - Distortion: ${selectedDistortion.name}] My automatic thought is: "${automaticThought}". Please act as an empathetic clinical cognitive behavioral therapy guide. Analyze the irrational beliefs and suggest 2 constructive, empowering ways to reframe this thought calmly and logically.`
+          message: `[CBT REFRAME REQUEST - Distortion: ${selectedDistortion.name}] My automatic thought is: "${automaticThought}". Please act as an empathetic counselling cognitive behavioral therapy guide. Analyze the irrational beliefs and suggest 2 constructive, empowering ways to reframe this thought calmly and logically.`
         })
       });
       if (res.ok) {
@@ -81,7 +81,7 @@ export default function CognitiveReframing() {
       // High-quality local therapeutic formulation fallback
       setTimeout(() => {
         setAiAnalysis(
-          `**Clinical Cognitive Reframe Guidance**:\n\n1. **Identify the Trap**: You are exhibiting *${selectedDistortion.name}*. Notice how the thought assumes an uncompromising negative certainty without verifying objective facts.\n\n2. **Empathetic Evidence Check**: Ask yourself: *${selectedDistortion.reframePrompt}*\n\n3. **Empowerment Mantra**: "I choose to observe this stressful thought without letting it govern my self-worth or actions. I have solved difficult academic challenges before, and I can navigate this step by step."`
+          `**Counselling Cognitive Reframe Guidance**:\n\n1. **Identify the Trap**: You are exhibiting *${selectedDistortion.name}*. Notice how the thought assumes an uncompromising negative certainty without verifying objective facts.\n\n2. **Empathetic Evidence Check**: Ask yourself: *${selectedDistortion.reframePrompt}*\n\n3. **Empowerment Mantra**: "I choose to observe this stressful thought without letting it govern my self-worth or actions. I have solved difficult academic challenges before, and I can navigate this step by step."`
         );
       }, 1000);
     } finally {
@@ -201,7 +201,7 @@ export default function CognitiveReframing() {
             {isAnalyzing ? (
               <>
                 <RefreshCw size={16} className="animate-spin" />
-                <span>AI Clinical Guide is Analyzing...</span>
+                <span>AI Counselling Guide is Analyzing...</span>
               </>
             ) : (
               <>
@@ -233,7 +233,7 @@ export default function CognitiveReframing() {
             ) : (
               <div className="h-48 flex flex-col items-center justify-center text-center p-6 text-[#111111]/50 border border-dashed border-[#111111]/20 rounded-2xl my-4">
                 <Brain size={36} className="mb-2 opacity-30 animate-pulse-slow" />
-                <span className="text-xs font-medium">Your clinical cognitive breakdown and guided reframing techniques will emerge here once you submit your thought above.</span>
+                <span className="text-xs font-medium">Your counselling cognitive breakdown and guided reframing techniques will emerge here once you submit your thought above.</span>
               </div>
             )}
           </div>

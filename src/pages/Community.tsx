@@ -349,7 +349,7 @@ export default function Community() {
               <li><strong>1. Respect &amp; Empathy:</strong> Treat everyone with kindness and understanding.</li>
               <li><strong>2. Anonymity &amp; Privacy:</strong> Never post personal contact details, names, or hostel numbers.</li>
               <li><strong>3. No Hate Speech or Bullying:</strong> Zero tolerance for discrimination or harassment.</li>
-              <li><strong>4. Support, Not Advice:</strong> Offer encouragement; avoid giving unsolicited clinical advice.</li>
+              <li><strong>4. Support, Not Advice:</strong> Offer encouragement; avoid giving unsolicited counselling advice.</li>
               <li><strong>5. Safe Content:</strong> No offensive, graphic, or self-harm content.</li>
             </ul>
           </div>

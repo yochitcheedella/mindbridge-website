@@ -99,7 +99,7 @@ const INITIAL_AUDIT_LOGS: AuditLogEntry[] = [
   { id: 'log-1', timestamp: new Date(Date.now() - 1000 * 60 * 15).toLocaleString(), campus: 'VIT-BVRM', role: 'Super Admin', action: 'AES-256 student identity vault key rotated. Zero-PII integrity verified.', status: 'Verified' },
   { id: 'log-2', timestamp: new Date(Date.now() - 1000 * 60 * 45).toLocaleString(), campus: 'SVES Central', role: 'Central Admin', action: 'Attachment 5 Society Consolidated Wellbeing Report compiled for August 2026.', status: 'Success' },
   { id: 'log-3', timestamp: new Date(Date.now() - 1000 * 60 * 120).toLocaleString(), campus: 'BVRITH-HYD', role: 'Licensed Counsellor', action: 'Completed scheduled anonymous audio consultation for alias #StarVoyager412.', status: 'Verified' },
-  { id: 'log-4', timestamp: new Date(Date.now() - 1000 * 60 * 240).toLocaleString(), campus: 'SVECW-BVRM', role: 'Campus Admin', action: 'Authorized new clinical wellness counsellor Dr. Sahithi Challa.', status: 'Success' },
+  { id: 'log-4', timestamp: new Date(Date.now() - 1000 * 60 * 240).toLocaleString(), campus: 'SVECW-BVRM', role: 'Campus Admin', action: 'Authorized new counselling wellness counsellor Dr. Sahithi Challa.', status: 'Success' },
   { id: 'log-5', timestamp: new Date(Date.now() - 1000 * 60 * 360).toLocaleString(), campus: 'VIT-BVRM', role: 'System Sentinel', action: 'SlowAPI DoS rate limiter enforced. Blocked 14 anomalous token requests.', status: 'Nominal' },
   { id: 'log-6', timestamp: new Date(Date.now() - 1000 * 60 * 500).toLocaleString(), campus: 'VDC-BVRM', role: 'Super Admin', action: 'Automated SOC2 compliance sweep across 7 society databases passed with 0 leaks.', status: 'Verified' },
 ];
@@ -421,7 +421,7 @@ export default function SuperAdminDashboard() {
       timestamp: new Date().toLocaleString(),
       campus: 'Global Society',
       role: 'Super Admin',
-      action: `AI Clinical Sentinel calibrated: Engine=${aiProvider.toUpperCase()}, EscalationThreshold=${safetyThreshold}, AutoAlerts=${autoEscalateEmergency}.`,
+      action: `AI Counselling Sentinel calibrated: Engine=${aiProvider.toUpperCase()}, EscalationThreshold=${safetyThreshold}, AutoAlerts=${autoEscalateEmergency}.`,
       status: 'Verified'
     };
     const updatedLogs = [newLog, ...auditLogs];
@@ -765,7 +765,7 @@ export default function SuperAdminDashboard() {
                     </div>
                     <div className="flex justify-between">
                       <span>Licensed Counsellors:</span>
-                      <span className="font-bold text-[#111111]">{col.counselorsCount} Clinical Staff</span>
+                      <span className="font-bold text-[#111111]">{col.counselorsCount} Counselling Staff</span>
                     </div>
                     {col.departments && col.departments.length > 0 && (
                       <div className="pt-1 flex flex-wrap gap-1">
@@ -813,7 +813,7 @@ export default function SuperAdminDashboard() {
           <div className="space-y-5">
             <div>
               <label className="block text-xs font-black uppercase tracking-wider text-[#111111] mb-2">
-                Primary Clinical Reasoning LLM Engine
+                Primary Counselling Reasoning LLM Engine
               </label>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <button
@@ -826,7 +826,7 @@ export default function SuperAdminDashboard() {
                   }`}
                 >
                   <p className="text-sm font-black">Google Gemini 1.5</p>
-                  <p className="text-[11px] text-[#111111]/70 mt-1 font-medium">Clinical empathy &amp; real-time conversational streaming</p>
+                  <p className="text-[11px] text-[#111111]/70 mt-1 font-medium">Counselling empathy &amp; real-time conversational streaming</p>
                 </button>
                 <button
                   type="button"
@@ -875,11 +875,11 @@ export default function SuperAdminDashboard() {
               />
               <div className="flex justify-between text-[10px] font-mono text-[#111111]/50 font-bold">
                 <span>50% (High Sensitivity)</span>
-                <span>75% (Balanced Clinical)</span>
+                <span>75% (Balanced Counselling)</span>
                 <span>90% (Strict Emergency)</span>
               </div>
               <p className="text-[11px] text-[#111111]/60 font-medium pt-1">
-                When student conversations or journal entries score above this threshold, the system flags the student for clinical review.
+                When student conversations or journal entries score above this threshold, the system flags the student for counselling review.
               </p>
             </div>
 
@@ -923,7 +923,7 @@ export default function SuperAdminDashboard() {
             <div>
               <h2 className="text-xl font-heading font-black text-[#111111]">Role-Based Access Control (RBAC) Matrix</h2>
               <p className="text-xs text-[#111111]/70 font-medium mt-0.5">
-                Grant or restrict feature permissions across administrative, clinical, and student platform tiers.
+                Grant or restrict feature permissions across administrative, counselling, and student platform tiers.
               </p>
             </div>
             <button
@@ -976,7 +976,7 @@ export default function SuperAdminDashboard() {
                   <span className="text-base">🩺</span>
                   <h3 className="text-sm font-black text-[#111111]">Licensed Psychologist Privileges</h3>
                 </div>
-                <span className="text-[10px] font-mono font-black px-2 py-0.5 bg-[#F4C542] border border-[#111111] text-[#111111] rounded">CLINICAL PRIVILEGES</span>
+                <span className="text-[10px] font-mono font-black px-2 py-0.5 bg-[#F4C542] border border-[#111111] text-[#111111] rounded">COUNSELLING PRIVILEGES</span>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                 {Object.entries(rbacMatrix.psychologist || {}).map(([permKey, isEnabled]) => (
@@ -1031,7 +1031,7 @@ export default function SuperAdminDashboard() {
             <div>
               <h2 className="text-xl font-heading font-black text-[#111111]">Immutable Platform Audit Trails</h2>
               <p className="text-xs text-[#111111]/70 font-medium mt-0.5">
-                Real-time cryptographic oversight tracking institutional key rotation, policy changes, and clinical events.
+                Real-time cryptographic oversight tracking institutional key rotation, policy changes, and counselling events.
               </p>
             </div>
             <div className="flex items-center gap-2 self-start sm:self-auto">
@@ -1229,7 +1229,7 @@ export default function SuperAdminDashboard() {
             <div>
               <div className="flex items-center gap-2 mb-1">
                 <span className="text-[10px] font-mono font-black uppercase tracking-wider bg-[#F4C542] text-[#111111] px-2 py-0.5 rounded-full border border-[#111111]">
-                  Attachment 4 Clinical Archive
+                  Attachment 4 Counselling Archive
                 </span>
                 <span className="text-xs font-mono text-[#111111]/60">All Institutional Counsellors</span>
               </div>

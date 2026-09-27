@@ -135,7 +135,7 @@ export default function EmergencyResponse() {
           <div className="mb-6 p-4 rounded-2xl bg-emerald-500/15 border-2 border-emerald-600 text-xs text-emerald-900 flex items-start gap-3 text-left animate-slide-up">
             <Clock size={16} className="text-emerald-700 shrink-0 mt-0.5" />
             <p className="font-medium">
-              Campus security dispatch and the on-duty Vishnu College clinical psychologist have received your distress signal. Stay in a safe place. Support is arriving.
+              Campus security dispatch and the on-duty Vishnu College counselling psychologist have received your distress signal. Stay in a safe place. Support is arriving.
             </p>
           </div>
         )}

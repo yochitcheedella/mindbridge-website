@@ -125,7 +125,7 @@ export default function ClinicalSOAPNotes() {
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F4C542]/20 text-[#111111] border border-[#111111] text-xs font-mono font-bold uppercase tracking-wider mb-2">
             <Lock size={14} />
-            <span>Encrypted Clinical EHR Console</span>
+            <span>Encrypted Counselling EHR Console</span>
           </div>
           <h1 className="text-3xl font-heading font-extrabold text-[#111111]">SOAP Notes & Case Formulation</h1>
           <p className="text-sm text-[#111111]/70 mt-1 max-w-2xl">
@@ -137,14 +137,14 @@ export default function ClinicalSOAPNotes() {
           onClick={() => setIsCreating(!isCreating)}
           className="px-6 py-3.5 rounded-2xl bg-[#F4C542] hover:bg-[#E5B532] text-[#111111] border-2 border-[#111111] shadow-[3px_3px_0px_#111111] font-heading font-bold text-sm flex items-center gap-2 transition-all transform active:scale-95"
         >
-          {isCreating ? <span>Close Editor</span> : <><Plus size={18} /><span>New Clinical Note</span></>}
+          {isCreating ? <span>Close Editor</span> : <><Plus size={18} /><span>New Counselling Note</span></>}
         </button>
       </div>
 
       {savedSuccess && (
         <div className="p-4 rounded-2xl bg-emerald-500/20 border-2 border-emerald-600 text-emerald-800 flex items-center gap-3 animate-scale-in">
           <Check className="w-5 h-5 text-emerald-600 shrink-0" />
-          <span className="text-sm font-bold">SOAP note saved and encrypted to clinical database successfully!</span>
+          <span className="text-sm font-bold">SOAP note saved and encrypted to counselling database successfully!</span>
         </div>
       )}
 
@@ -171,7 +171,7 @@ export default function ClinicalSOAPNotes() {
             </div>
 
             <div className="space-y-1">
-              <label className="text-xs font-mono uppercase font-bold text-[#111111]">Clinical Risk Stratification</label>
+              <label className="text-xs font-mono uppercase font-bold text-[#111111]">Counselling Risk Stratification</label>
               <div className="flex items-center gap-2">
                 {(['Minimal', 'Moderate', 'High', 'Critical'] as const).map((r) => (
                   <button
@@ -234,7 +234,7 @@ export default function ClinicalSOAPNotes() {
                 rows={4}
                 value={ass}
                 onChange={(e) => setAss(e.target.value)}
-                placeholder="Professional synthesis: clinical impressions, symptom severity progression, stress etiology..."
+                placeholder="Professional synthesis: counselling impressions, symptom severity progression, stress etiology..."
                 className="w-full bg-[#FAFAFA] border-2 border-[#111111] focus:border-[#F4C542] rounded-2xl p-4 text-sm text-[#111111] placeholder-[#111111]/40 outline-none resize-none transition-all"
               />
             </div>
@@ -269,7 +269,7 @@ export default function ClinicalSOAPNotes() {
               className="px-8 py-3 rounded-xl bg-[#F4C542] hover:bg-[#E5B532] text-[#111111] border-2 border-[#111111] shadow-[3px_3px_0px_#111111] font-heading font-bold text-sm flex items-center gap-2 transition-all"
             >
               <Send size={16} />
-              <span>Encrypt & Save Clinical Note</span>
+              <span>Encrypt & Save Counselling Note</span>
             </button>
           </div>
         </form>
@@ -298,9 +298,9 @@ export default function ClinicalSOAPNotes() {
         {filteredNotes.length === 0 ? (
           <div className="bg-white p-12 rounded-3xl border-2 border-[#111111] text-center space-y-3 shadow-[4px_4px_0px_#111111]">
             <FileText className="text-[#111111]/40 mx-auto" size={40} />
-            <h3 className="text-lg font-heading font-bold text-[#111111]">No Clinical Notes Yet</h3>
+            <h3 className="text-lg font-heading font-bold text-[#111111]">No Counselling Notes Yet</h3>
             <p className="text-sm text-[#111111]/70 max-w-md mx-auto">
-              Create your first confidential case formulation by clicking <span className="font-bold text-[#111111]">"+ New Clinical Note"</span> above.
+              Create your first confidential case formulation by clicking <span className="font-bold text-[#111111]">"+ New Counselling Note"</span> above.
             </p>
           </div>
         ) : (
@@ -374,7 +374,7 @@ export default function ClinicalSOAPNotes() {
                   <div className="p-4 rounded-2xl bg-[#FAFAFA] border-2 border-emerald-500/40 space-y-1.5">
                     <div className="text-xs font-mono font-bold uppercase tracking-wider text-emerald-700 flex items-center gap-2">
                       <span className="w-5 h-5 rounded bg-emerald-100 text-emerald-800 flex items-center justify-center text-[10px] font-bold">P</span>
-                      <span>Clinical Treatment Plan</span>
+                      <span>Counselling Treatment Plan</span>
                     </div>
                     <p className="text-[#111111]/80 leading-relaxed">{note.plan}</p>
                   </div>

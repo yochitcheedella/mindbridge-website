@@ -19,7 +19,7 @@ export function IdentityRequestModal({ isOpen, onClose, anonymousId, onSuccess }
 
   const handleRequest = async () => {
     if (!reason.trim()) {
-      setError("You must provide a clinical justification for this breach of anonymity.");
+      setError("You must provide a counselling justification for this breach of anonymity.");
       return;
     }
     setLoading(true);
@@ -74,7 +74,7 @@ export function IdentityRequestModal({ isOpen, onClose, anonymousId, onSuccess }
             )}
 
             <div className="mb-6">
-              <label className="block text-sm font-bold text-text mb-2">Clinical Justification (Required for Audit)</label>
+              <label className="block text-sm font-bold text-text mb-2">Counselling Justification (Required for Audit)</label>
               <textarea
                 className="w-full h-32 bg-background border border-border rounded-xl p-4 text-text focus:outline-none focus:border-error transition-colors"
                 placeholder="Detail the imminent risk factors that necessitate breaking anonymity..."

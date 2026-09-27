@@ -366,7 +366,7 @@ export default function WellnessExercises() {
               <span className="hidden sm:inline-flex px-2 py-0.5 rounded-md text-[10px] uppercase font-mono font-extrabold bg-[#F4C542] text-[#111111] border border-[#111111]">Mindfulness</span>
             </h1>
             <p className="text-xs sm:text-sm text-[#111111]/70 font-medium mt-0.5">
-              Guided acoustic relaxation, clinical somatic breathing, and daily wellness challenges.
+              Guided acoustic relaxation, counselling somatic breathing, and daily wellness challenges.
             </p>
           </div>
         </div>

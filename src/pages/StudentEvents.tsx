@@ -69,7 +69,7 @@ export const INITIAL_EVENTS: WellnessEvent[] = [
     venue: 'VDC Mini Auditorium, Ground Floor',
     facilitator: 'Angel Mariam Benny',
     facilitator_role: 'Wellness Counsellor, VDC',
-    description: 'Tailored for healthcare and clinical students facing clinical exam anxiety, self-doubt, and patient interaction stress. Practical cognitive toolkits provided.',
+    description: 'Tailored for healthcare and counselling students facing counselling exam anxiety, self-doubt, and patient interaction stress. Practical cognitive toolkits provided.',
     attendees_count: 48,
     max_capacity: 60,
     tags: ['Self-Worth', 'Confidence', 'Exam Resilience'],

@@ -401,7 +401,7 @@ def get_appointment_call_token(
         )
 
     student_alias = student.anonymous_token or "Anonymous Student"
-    psych_name = psych.name if psych else "Clinical Psychologist"
+    psych_name = psych.name if psych else "Counselling Psychologist"
 
     if role == "student":
         if appt.student_id != user_id:

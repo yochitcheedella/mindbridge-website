@@ -472,7 +472,7 @@ export default function Register() {
 
             {/* Privacy note */}
             <div className="p-3 bg-[#F4C542]/15 border border-[#111111]/15 rounded-xl text-left text-[11px] text-[#111111]/80 leading-relaxed">
-              💡 <strong>Appointment Booking Control:</strong> When booking a session with your counsellor, you can choose to book <em>with your original name by default</em> or <em>anonymously</em>. Your counsellor will always have your clinical details to ensure seamless care.
+              💡 <strong>Appointment Booking Control:</strong> When booking a session with your counsellor, you can choose to book <em>with your original name by default</em> or <em>anonymously</em>. Your counsellor will always have your counselling details to ensure seamless care.
             </div>
 
             <button 
@@ -487,7 +487,7 @@ export default function Register() {
 
         <p className="text-[11px] text-[#111111]/50 text-center mt-4 flex items-center justify-center gap-1.5 font-medium">
           <Shield size={12} className="text-[#111111]/70" />
-          <span>Sri Vishnu Educational Society · Clinical Governance &amp; Student Welfare</span>
+          <span>Sri Vishnu Educational Society · Counselling Governance &amp; Student Welfare</span>
         </p>
       </div>
     </div>

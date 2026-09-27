@@ -205,7 +205,7 @@ export default function LandingPage() {
             {/* Subtitle */}
             <p className="text-lg sm:text-xl text-[#111111]/70 max-w-2xl mx-auto font-normal leading-relaxed mb-10">
               MindBridge AI is the dedicated, confidential mental wellbeing ecosystem engineered exclusively for 
-              <strong> Vishnu Institute of Technology</strong>. Instant empathetic AI counseling, peer circles, and direct clinical appointments without fear of stigma.
+              <strong> Vishnu Institute of Technology</strong>. Instant empathetic AI counseling, peer circles, and direct counselling appointments without fear of stigma.
             </p>
 
             {/* Action Buttons */}
@@ -324,7 +324,7 @@ export default function LandingPage() {
               Three Portals. One United Campus.
             </h2>
             <p className="text-base text-[#111111]/70">
-              MindBridge AI seamlessly bridges students, campus clinical psychologists, and institutional leadership 
+              MindBridge AI seamlessly bridges students, campus counselling psychologists, and institutional leadership 
               while maintaining strict role-based data boundaries.
             </p>
 
@@ -348,7 +348,7 @@ export default function LandingPage() {
                     : 'text-[#111111]/70 hover:text-[#111111]'
                 }`}
               >
-                Clinical Suite
+                Counselling Suite
               </button>
               <button
                 onClick={() => setActiveTab('admin')}
@@ -442,7 +442,7 @@ export default function LandingPage() {
                     </div>
                     <h3 className="font-heading font-black text-xl text-[#111111] mb-2">Real-Time Risk Radar</h3>
                     <p className="text-sm text-[#111111]/70 leading-relaxed">
-                      Prioritized clinical triage queue automatically ranks student distress levels 
+                      Prioritized counselling triage queue automatically ranks student distress levels 
                       synthesizing mood check-ins, journal sentiments, and chat biomarkers.
                     </p>
                   </div>
@@ -457,14 +457,14 @@ export default function LandingPage() {
                     <div className="w-12 h-12 rounded-2xl bg-[#F4C542] border-2 border-[#111111] flex items-center justify-center text-[#111111] mb-4">
                       <FileText size={24} />
                     </div>
-                    <h3 className="font-heading font-black text-xl text-[#111111] mb-2">SOAP Clinical Notes</h3>
+                    <h3 className="font-heading font-black text-xl text-[#111111] mb-2">SOAP Counselling Notes</h3>
                     <p className="text-sm text-[#111111]/70 leading-relaxed">
                       Standardized Subjective, Objective, Assessment, and Plan documentation editor. 
                       Streamlines patient continuity while maintaining strict confidentiality.
                     </p>
                   </div>
                   <div className="mt-6 pt-4 border-t border-[#111111]/10 flex items-center justify-between text-xs font-bold text-[#111111]">
-                    <span>Clinical Compliance</span>
+                    <span>Counselling Compliance</span>
                     <Link to={auth?.role === 'psychologist' ? "/psychologist/soap-notes" : "/login?role=psychologist"} className="flex items-center gap-1 hover:text-[#F4C542]">SOAP Editor <ArrowRight size={14} /></Link>
                   </div>
                 </div>
@@ -482,7 +482,7 @@ export default function LandingPage() {
                   </div>
                   <div className="mt-6 pt-4 border-t border-[#111111]/10 flex items-center justify-between text-xs font-bold text-[#111111]">
                     <span>Multi-Key Protocol</span>
-                    <Link to={auth?.role === 'psychologist' ? "/psychologist/dashboard" : "/login?role=psychologist"} className="flex items-center gap-1 hover:text-[#F4C542]">Clinical Radar <ArrowRight size={14} /></Link>
+                    <Link to={auth?.role === 'psychologist' ? "/psychologist/dashboard" : "/login?role=psychologist"} className="flex items-center gap-1 hover:text-[#F4C542]">Counselling Radar <ArrowRight size={14} /></Link>
                   </div>
                 </div>
 
@@ -517,7 +517,7 @@ export default function LandingPage() {
                     <h3 className="font-heading font-black text-xl text-[#111111] mb-2">Counselor Management</h3>
                     <p className="text-sm text-[#111111]/70 leading-relaxed">
                       Onboard, manage, and verify campus psychologists and visiting counselors. 
-                      Assign clinical specialties, set office hours, and review capacity.
+                      Assign counselling specialties, set office hours, and review capacity.
                     </p>
                   </div>
                   <div className="mt-6 pt-4 border-t border-[#111111]/10 flex items-center justify-between text-xs font-bold text-[#111111]">
@@ -573,7 +573,7 @@ export default function LandingPage() {
                     </div>
                     <h3 className="font-heading font-black text-xl text-[#111111] mb-2">Attachment 5 Society Reports</h3>
                     <p className="text-sm text-[#111111]/70 leading-relaxed">
-                      Generate official society-level consolidated reports aggregating clinical intake across all 
+                      Generate official society-level consolidated reports aggregating counselling intake across all 
                       counselors, crisis SOS interventions, and monthly student satisfaction ratings.
                     </p>
                   </div>
@@ -590,7 +590,7 @@ export default function LandingPage() {
                     </div>
                     <h3 className="font-heading font-black text-xl text-[#111111] mb-2">AI Sentinel &amp; Root Guard</h3>
                     <p className="text-sm text-[#111111]/70 leading-relaxed">
-                      Configure clinical reasoning engines (Google Gemini, OpenAI GPT-4o, Air-Gapped Local), 
+                      Configure counselling reasoning engines (Google Gemini, OpenAI GPT-4o, Air-Gapped Local), 
                       set society-wide SOS escalation thresholds, and review cryptographic access audits.
                     </p>
                   </div>
@@ -813,7 +813,7 @@ export default function LandingPage() {
               <div className="font-heading font-bold text-sm text-[#FFFFFF] mb-3">Campus Portals</div>
               <ul className="space-y-2 text-xs text-[#FFFFFF]/70">
                 <li><Link to="/login" className="hover:text-[#F4C542] transition-colors">Student Sanctuary</Link></li>
-                <li><Link to="/login" className="hover:text-[#F4C542] transition-colors">Psychologist Clinical Radar</Link></li>
+                <li><Link to="/login" className="hover:text-[#F4C542] transition-colors">Psychologist Counselling Radar</Link></li>
                 <li><Link to="/login" className="hover:text-[#F4C542] transition-colors">Executive Administration</Link></li>
                 <li><Link to="/register" className="hover:text-[#F4C542] transition-colors">Register Anonymous Account</Link></li>
               </ul>

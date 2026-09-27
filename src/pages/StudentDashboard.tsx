@@ -309,7 +309,7 @@ export default function StudentDashboard() {
                 Action Recommended
               </span>
             )}
-            <span className="text-[11px] font-mono text-[#111111]/60">38 Clinical Questions · Bilingual EN/TE</span>
+            <span className="text-[11px] font-mono text-[#111111]/60">38 Counselling Questions · Bilingual EN/TE</span>
           </div>
 
           <h2 className="text-2xl sm:text-3xl font-heading font-black text-[#111111] tracking-tight flex items-center gap-2">
@@ -317,7 +317,7 @@ export default function StudentDashboard() {
             <span>Student Wellbeing &amp; Triage Assessment</span>
           </h2>
           <p className="text-sm text-[#111111]/70 leading-relaxed font-medium">
-            Confidential DASS-21 psychological screening aligned with Sri Vishnu Educational Society clinical protocols. Automatically stratifies support needs and connects you directly with campus counsellors.
+            Confidential DASS-21 psychological screening aligned with Sri Vishnu Educational Society counselling protocols. Automatically stratifies support needs and connects you directly with campus counsellors.
           </p>
         </div>
 
@@ -612,12 +612,12 @@ export default function StudentDashboard() {
           </div>
         </div>
 
-        {/* COLUMN 2: Clinical Suites (5 cols) */}
+        {/* COLUMN 2: Counselling Suites (5 cols) */}
         <div className="lg:col-span-5 space-y-6">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-heading font-black text-[#111111] flex items-center gap-2">
               <Sparkles className="text-[#F4C542]" size={20} />
-              <span>Evidence-Based Clinical Suites</span>
+              <span>Evidence-Based Counselling Suites</span>
             </h2>
             <span className="text-xs font-mono text-[#111111]/50 font-bold">Self-Regulation</span>
           </div>
@@ -640,7 +640,7 @@ export default function StudentDashboard() {
                 Thought Reframing Studio
               </h3>
               <p className="text-xs text-[#111111]/70 leading-relaxed font-medium">
-                Deconstruct academic anxiety and imposter syndrome into logical equilibrium using clinical AI guidance.
+                Deconstruct academic anxiety and imposter syndrome into logical equilibrium using counselling AI guidance.
               </p>
             </div>
             <div className="mt-5 pt-3 border-t border-[#111111]/10 flex items-center justify-between text-xs font-black text-[#111111]">

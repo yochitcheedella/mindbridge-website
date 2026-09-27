@@ -26,7 +26,7 @@ interface StudentRecord {
   department: string;
   year: string;
   checkinsCount: number;
-  riskStatus: 'Safe' | 'Mild Stress' | 'Monitored' | 'Clinical Priority';
+  riskStatus: 'Safe' | 'Mild Stress' | 'Monitored' | 'Counselling Priority';
   lastActivity: string;
   encryptionStatus: 'AES-256 Hashed';
   clientHash?: string;
@@ -62,7 +62,7 @@ const INITIAL_STUDENTS: StudentRecord[] = [
   { id: 'std-105', alias: 'SolarBeam #5021', department: 'IT', year: '2nd Year', checkinsCount: 5, riskStatus: 'Safe', lastActivity: '2 days ago', encryptionStatus: 'AES-256 Hashed', clientHash: '18ac3e7343f016890c510e93f935261169d9e3f565436429830faf0934f4f8e4' },
   { id: 'std-106', alias: 'AmberShadow #314', department: 'CSBS', year: '1st Year', checkinsCount: 11, riskStatus: 'Mild Stress', lastActivity: '4 hours ago', encryptionStatus: 'AES-256 Hashed', clientHash: '8f434346648f6b96df89dda901c5176b10a6d83961dd3c1ac88b59b2dc327aa4' },
   { id: 'std-107', alias: 'EchoVoyager #882', department: 'MECH', year: '3rd Year', checkinsCount: 3, riskStatus: 'Safe', lastActivity: '3 days ago', encryptionStatus: 'AES-256 Hashed', clientHash: 'eccbc87e4b5ce2fe28308fd9f2a7baf3a41e974e622b7945d8b2d8471b088b64' },
-  { id: 'std-108', alias: 'BraveSparrow #410', department: 'CIVIL', year: '4th Year', checkinsCount: 16, riskStatus: 'Clinical Priority', lastActivity: '30 mins ago', encryptionStatus: 'AES-256 Hashed', clientHash: 'c81e728d9d4c2f636f067f89cc14862c1f54316a738676bb2d358be85ffcf88e' },
+  { id: 'std-108', alias: 'BraveSparrow #410', department: 'CIVIL', year: '4th Year', checkinsCount: 16, riskStatus: 'Counselling Priority', lastActivity: '30 mins ago', encryptionStatus: 'AES-256 Hashed', clientHash: 'c81e728d9d4c2f636f067f89cc14862c1f54316a738676bb2d358be85ffcf88e' },
 ];
 
 const INITIAL_ADMINS: CampusAdmin[] = [
@@ -557,7 +557,7 @@ export default function AdminUsers() {
                   <option value="Safe">Safe</option>
                   <option value="Mild Stress">Mild Stress</option>
                   <option value="Monitored">Monitored</option>
-                  <option value="Clinical Priority">Clinical Priority</option>
+                  <option value="Counselling Priority">Counselling Priority</option>
                 </select>
               </div>
             </div>
@@ -608,7 +608,7 @@ export default function AdminUsers() {
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-black text-[#111111] mb-1">Clinical Specialization</label>
+                    <label className="block text-xs font-black text-[#111111] mb-1">Counselling Specialization</label>
                     <input
                       value={form.specialization}
                       onChange={e => setForm(f => ({ ...f, specialization: e.target.value }))}
@@ -793,7 +793,7 @@ export default function AdminUsers() {
                           <option value="Safe">Safe</option>
                           <option value="Mild Stress">Mild Stress</option>
                           <option value="Monitored">Monitored</option>
-                          <option value="Clinical Priority">Clinical Priority</option>
+                          <option value="Counselling Priority">Counselling Priority</option>
                         </select>
                       </td>
                       <td className="py-3 px-4 font-mono text-[#111111]/60 text-[11px]">{std.lastActivity}</td>
@@ -977,7 +977,7 @@ export default function AdminUsers() {
               </div>
 
               <div>
-                <label className="block text-xs font-black text-[#111111] mb-1">Clinical Specialization</label>
+                <label className="block text-xs font-black text-[#111111] mb-1">Counselling Specialization</label>
                 <input
                   value={editingCounselor.specialization || ''}
                   onChange={e => setEditingCounselor({ ...editingCounselor, specialization: e.target.value })}
@@ -1113,7 +1113,7 @@ export default function AdminUsers() {
                   <option value="Safe">Safe (Routine Wellness)</option>
                   <option value="Mild Stress">Mild Stress (Academic/Sleep)</option>
                   <option value="Monitored">Monitored (Active Follow-up)</option>
-                  <option value="Clinical Priority">Clinical Priority (SOS Triage)</option>
+                  <option value="Counselling Priority">Counselling Priority (SOS Triage)</option>
                 </select>
               </div>
 

@@ -296,7 +296,7 @@ export default function AIChat() {
                 </div>
                 <div className="space-y-sm">
                   <div className="p-3 rounded-xl rounded-tl-none bg-gradient-to-br from-[#ffb689]/20 to-[#ffdbc8]/10 border border-[#ffb689]/30 text-sm">
-                    <p className="text-[10px] font-bold text-[#ffb689] mb-1 uppercase tracking-wider">Clinical Counselor</p>
+                    <p className="text-[10px] font-bold text-[#ffb689] mb-1 uppercase tracking-wider">Counselling Counselor</p>
                     {msg.text}
                   </div>
                   <span className="text-[10px] text-on-surface-variant opacity-60 px-1">Counselor • {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>

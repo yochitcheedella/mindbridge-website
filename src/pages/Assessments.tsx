@@ -8,7 +8,7 @@ const PHQ9 = {
   id: 'phq9' as const,
   name: 'PHQ-9',
   title: 'Depression & Mood Screening',
-  subtitle: 'Patient Health Questionnaire (9 Clinical Items)',
+  subtitle: 'Patient Health Questionnaire (9 Counselling Items)',
   emoji: '🧠',
   color: 'from-blue-600 to-indigo-700',
   intro: 'Over the last 2 weeks, how often have you been bothered by any of the following occurrences?',
@@ -27,9 +27,9 @@ const PHQ9 = {
   interpret: (score: number) => {
     if (score <= 4)  return { label: 'Minimal',             color: 'text-emerald-400', bg: 'bg-emerald-500/20 border-emerald-500/40', advice: 'Your responses suggest healthy mood equilibrium. Keep maintaining your supportive habits!' };
     if (score <= 9)  return { label: 'Mild Depression',     color: 'text-amber-300',   bg: 'bg-amber-500/20 border-amber-500/40',   advice: 'Mild symptoms observed. Consider leveraging our CBT Reframing suite or speaking to a peer campus counselor.' };
-    if (score <= 14) return { label: 'Moderate Depression', color: 'text-orange-400',  bg: 'bg-orange-500/20 border-orange-500/40',  advice: 'Moderate stress load. Booking a confident clinical counseling session via the platform is highly recommended.' };
+    if (score <= 14) return { label: 'Moderate Depression', color: 'text-orange-400',  bg: 'bg-orange-500/20 border-orange-500/40',  advice: 'Moderate stress load. Booking a confident counselling counseling session via the platform is highly recommended.' };
     if (score <= 19) return { label: 'Moderately Severe',   color: 'text-rose-400',    bg: 'bg-rose-500/20 border-rose-500/40',    advice: 'Significant depressive interference. Please connect with a VIT counselor this week for a supportive care plan.' };
-    return            { label: 'Severe Depression',       color: 'text-red-500 font-extrabold animate-pulse', bg: 'bg-red-600/30 border-red-500', advice: 'Critical depressive exhaustion detected. Please utilize our Emergency Crisis SOS immediately to connect with clinical support.' };
+    return            { label: 'Severe Depression',       color: 'text-red-500 font-extrabold animate-pulse', bg: 'bg-red-600/30 border-red-500', advice: 'Critical depressive exhaustion detected. Please utilize our Emergency Crisis SOS immediately to connect with counselling support.' };
   },
 };
 
@@ -138,7 +138,7 @@ export default function Assessments() {
     setHistory(updated);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
 
-    // Sync securely with backend clinical dashboard if user is authenticated
+    // Sync securely with backend counselling dashboard if user is authenticated
     if (isLoggedIn()) {
       try {
         await apiFetch('/api/clinical/assessments', {
@@ -175,13 +175,13 @@ export default function Assessments() {
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F4C542] text-[#111111] border border-[#111111] text-xs font-mono font-bold uppercase tracking-wider mb-2">
               <Brain size={14} />
-              <span>Standardized Clinical Psychometrics</span>
+              <span>Standardized Counselling Psychometrics</span>
             </div>
             <h1 className="text-3xl font-heading font-extrabold text-[#111111]">
-              {assessment ? `${assessment.name} — ${assessment.title}` : 'Clinical Diagnostic Suite'}
+              {assessment ? `${assessment.name} — ${assessment.title}` : 'Counselling Diagnostic Suite'}
             </h1>
             <p className="text-xs sm:text-sm text-[#111111]/70 max-w-2xl mt-1">
-              {assessment ? `Completion Progress: ${answered} of ${totalQ} questions answered` : 'Gold-standard clinical psychological questionnaires utilized by institutional mental health professionals.'}
+              {assessment ? `Completion Progress: ${answered} of ${totalQ} questions answered` : 'Gold-standard counselling psychological questionnaires utilized by institutional mental health professionals.'}
             </p>
           </div>
         </div>
@@ -209,7 +209,7 @@ export default function Assessments() {
                 </div>
 
                 <div className="mt-6 pt-4 border-t border-[#111111]/20 flex items-center justify-between text-xs font-bold text-[#111111] transition-colors">
-                  <span>Begin Clinical Screening</span>
+                  <span>Begin Counselling Screening</span>
                   <ChevronRight size={18} className="transform group-hover:translate-x-1 transition-transform" />
                 </div>
               </div>
@@ -328,7 +328,7 @@ export default function Assessments() {
           </div>
 
           <div className={`p-8 rounded-3xl border ${result.bg} max-w-xl mx-auto space-y-3 shadow-lg`}>
-            <div className="text-xs uppercase font-mono tracking-widest text-white font-semibold">Clinical Stratification Label</div>
+            <div className="text-xs uppercase font-mono tracking-widest text-white font-semibold">Counselling Stratification Label</div>
             <div className={`text-3xl sm:text-4xl font-heading font-extrabold ${result.color}`}>
               {result.label}
             </div>

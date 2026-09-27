@@ -37,8 +37,8 @@ async def create_assessment(
     db: Session = Depends(get_db)
 ):
     """
-    Records a clinical psychometric questionnaire score (PHQ-9, GAD-7, MBI-Student Burnout).
-    Automatically recalculates the anonymous student's baseline clinical risk indicator.
+    Records a counselling psychometric questionnaire score (PHQ-9, GAD-7, MBI-Student Burnout).
+    Automatically recalculates the anonymous student's baseline counselling risk indicator.
     """
     student_id = current_user.get("user_id") if current_user.get("role") == "student" else None
 
@@ -55,7 +55,7 @@ async def create_assessment(
     )
     db.add(assessment_record)
 
-    # Elevate student risk score if severity reaches clinical concern
+    # Elevate student risk score if severity reaches counselling concern
     if student_id and t_type in ["phq9", "gad7", "burnout", "mbi-s", "mbi"]:
         student = db.query(Student).filter(Student.id == student_id).first()
         if student:
@@ -144,7 +144,7 @@ async def get_soap_notes(
     db: Session = Depends(get_db)
 ):
     """
-    Fetches clinical SOAP notes for counseling reviews and case handoffs.
+    Fetches counselling SOAP notes for counseling reviews and case handoffs.
     """
     if current_user.get("role") not in ["psychologist", "admin"]:
         raise HTTPException(status_code=403, detail="Unauthorized access to confidential EHR records")

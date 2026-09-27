@@ -371,7 +371,7 @@ export default function AnonymousAudioCall() {
                       <FileText size={20} />
                     </div>
                     <div>
-                      <div className="text-sm font-bold text-white">Document Clinical SOAP Notes</div>
+                      <div className="text-sm font-bold text-white">Document Counselling SOAP Notes</div>
                       <div className="text-xs text-on-surface-variant">Record observations under anonymous token</div>
                     </div>
                   </div>
@@ -398,7 +398,7 @@ export default function AnonymousAudioCall() {
                   onClick={() => navigate('/psychologist/dashboard')}
                   className="w-full py-3.5 bg-white/5 hover:bg-white/10 border border-border-internal rounded-xl font-semibold text-sm text-center transition-all flex items-center justify-center gap-2 text-on-surface"
                 >
-                  <Home size={16} /> Return to Clinical Dashboard
+                  <Home size={16} /> Return to Counselling Dashboard
                 </button>
               </div>
             </div>

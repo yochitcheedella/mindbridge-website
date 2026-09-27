@@ -147,7 +147,7 @@ async def health_check():
 # ── Legacy mock analytics (psychologist dashboard fallback) ────────────────────
 @app.get("/api/analytics/pulse", tags=["analytics"])
 async def get_clinical_pulse():
-    """Quick clinical pulse endpoint — real data sourced from /api/risk/analytics."""
+    """Quick counselling pulse endpoint — real data sourced from /api/risk/analytics."""
     return {
         "active_students": 1402,
         "high_risk_alerts": 3,

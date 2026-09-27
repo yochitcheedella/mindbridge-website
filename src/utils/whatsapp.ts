@@ -166,7 +166,7 @@ Warm regards,
 }
 
 /**
- * Professional clinical intake alert notification for the counsellor.
+ * Professional counselling intake alert notification for the counsellor.
  * Includes student name (or alias), college name, department, year, scheduled slot, and session mode.
  */
 export function buildCounselorBookingMessage(params: {
@@ -193,13 +193,13 @@ export function buildCounselorBookingMessage(params: {
   const displayStudentPhone = studentPhone ? formatDisplayPhone(studentPhone) : 'Provided via Portal';
   const effectiveCollege = collegeName || institution || 'Vishnu Institute of Technology (VIT)';
 
-  return `🔔 *Clinical Intake Alert — MindBridge Counselling* 🔔
+  return `🔔 *Counselling Intake Alert — MindBridge Counselling* 🔔
 
 Dear ${counselorName},
 
-A student has scheduled a counselling consultation with you. Please review the clinical intake details below:
+A student has scheduled a counselling consultation with you. Please review the counselling intake details below:
 
-📋 *Clinical Intake Details:*
+📋 *Counselling Intake Details:*
 • 👤 *Student Name (or Alias):* ${studentName} ${bookingMode === 'anonymous' ? '(Anonymous Alias)' : '(Verified Name)'}
 • 🏛️ *College Name:* ${effectiveCollege}
 • 📚 *Department:* ${department || 'General'}
@@ -208,7 +208,7 @@ A student has scheduled a counselling consultation with you. Please review the c
 • 🎯 *Session Mode:* ${mode}
 • 📞 *Student WhatsApp:* ${displayStudentPhone}
 
-Please log in to your MindBridge Counsellor Dashboard to review the student's clinical intake or start the consultation at the scheduled time.
+Please log in to your MindBridge Counsellor Dashboard to review the student's counselling intake or start the consultation at the scheduled time.
 
 Best regards,
 *${VWC_HELPLINE_NAME}*
